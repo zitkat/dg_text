@@ -1,0 +1,46 @@
+\newpage
+\paragraph{Example 2} Based on [Hartmann]
+On $\Omega = \langle 0, 1 \rangle^2$ we will poisson equation
+\begin{equation}
+\varepsilon \cdot \left( \pdiff{^2 u}{x^2} + \pdiff{^2 u}{y^2} \right) = g
+\end{equation}
+i.e
+\begin{equation}
+- \varepsilon \Delta u = g
+\end{equation}
+where  $\varepsilon$ is diffusion coefficient and $g$ is a source 
+function. We setup boundary condition and source function in such way that the exact solution $u_{exact}$ is
+\begin{equation}
+u_{exact} =  \sin\left(\frac{1}{2} \, \pi x_{1}\right) \sin\left(\frac{1}{2} \, \pi x_{2}\right)
+\end{equation}
+Solving for $g$ yields
+\begin{equation}
+\begin{aligned}
+	g = \frac{1}{2} \, \pi^{2} \varepsilon \sin\left(\frac{1}{2} \, \pi x_{1}\right) \sin\left(\frac{1}{2} \, \pi 
+		x_{2}\right) +\\ \frac{1}{2} \, \pi \cos\left(\frac{1}{2} \, \pi x_{2}\right) \sin\left(\frac{1}{2} \, \pi 
+		x_{1}\right) + \\\frac{1}{2} \, \pi \cos\left(\frac{1}{2} \, \pi x_{1}\right) \sin\left(\frac{1}{2} \, \pi 
+		x_{2}\right)
+\end{aligned}
+\end{equation}
+We set boundary conditions to match analytical solution.
+Again different values of coefficient $Cw$ in penalty term then yield different convergence behavior as demonstrated in 
+Figure \ref{fig:conv2}
+
+\begin{figure}[ht]
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/diffusion_only_hartmann-cells-cw10_d1}
+	\end{minipage}
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/diffusion_only_hartmann-cells-cw100_d1}
+	\end{minipage}
+
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/diffusion_only_hartmann-cells-cw1000_d1}
+	\end{minipage}
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/diffusion_only_hartmann-cells-cw10000_d1}
+	\end{minipage}
+	
+	\caption{Example 2 Convergence graph for different choice of $C_w$}
+	\label{fig:conv2}
+\end{figure}

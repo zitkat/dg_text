@@ -1,0 +1,123 @@
+\section{Example PDEs}
+In the following examples we will busy ourselves solving following equations:\\
+\paragraph{Transient advection} equation in one resp. two dimensions
+\begin{equation}
+	\label{eq:ex_advection}
+	\pdiff{p}{t} + a\fdiff{p}{x} = 0.
+\end{equation}
+resp.
+\begin{equation}
+	\pdiff{p}{t} + \vec{a}\cdot\nabla{p}{x} = 0
+\end{equation}
+in Sfepy declarative notation these equations have the same form. See Listing 
+\ref{lst:advection}
+\setcounter{lstannotation}{0}
+\begin{lstlisting}[language=Python, caption={Advection equation}
+\label{lst:advection}]
+equations = {'Advection': 
+  # transient
+  "dw_volume_dot.i.Omega(v, p)"
+ 
+  "- dw_s_dot_mgrad_s.i.Omega(a.val, p[-1], v)" /*!\lann{lsta:history}!*/
+  "+ dw_dg_advect_laxfrie_flux.i.Omega(a.flux, a.val, v, p[-1])"  /*!\lann{lsta:flux}!*/
+  "= 0"
+  }
+\end{lstlisting}
+\begin{itemize}
+	\item[\ref{lsta:history}] \pysauce{"p[-1]"} ensures the variable object stores 
+	history one step backwards in time facilitating forward nature of advection terms and 
+	time stepping solvers
+	\item[\ref{lsta:flux}] \pysauce{"a.flux"} is an optional material argument 
+	representing $\alpha$ coefficient in \eqref{eq:lax-frieflux}
+\end{itemize}
+Laplace equation in two dimension
+\begin{equation}
+	\label{eq:ex_laplace}
+	\pdiff{^2 u}{x^2} + \pdiff{^2 u}{y^2} = 0
+\end{equation}
+discretization of this equation using Sfepy terms can be found in Listing 
+\ref{lst:laplace};\\
+Static advection-diffusion equation with right hand side of the form
+\begin{equation}
+\label{eq:ex_advdiff}
+\pdiff{p}{x} + \pdiff{p}{y} - D \cdot \left( \pdiff{^2 p}{x^2} + \pdiff{^2 
+p}{y^2} \right) = g
+\end{equation}
+i.e
+\begin{equation}
+\vec{a} \cdot \nabla p - D \Delta p = g,
+\end{equation}
+where $\vec{a} = [1, 1]^T$ is advection velocity $D$ is diffusion coefficient and $g$ is 
+a source function. Sfepy discretization using symmetric scheme and penalty term can be 
+found in Listing 
+\ref{lst:advdiff}.
+\setcounter{lstannotation}{0}
+\begin{lstlisting}[language=Python, caption=Static advection-diffusion equation
+\label{lst:advdiff}]
+equations = {'adv_diff' :
+	# advection
+	"- dw_s_dot_mgrad_s.i.Omega(a.val, p, v)"
+	"+ dw_dg_advect_laxfrie_flux.i.Omega(a.flux, a.val, v, p)"
+	# diffusion
+	"+ dw_laplace.i.Omega(D.val, v, p) "
+	"+ dw_dg_diffusion_flux.i.Omega(D.val, p, v)"
+	"+ dw_dg_diffusion_flux.i.Omega(D.val, v, p)"
+	# penalty
+	"+ dw_dg_interior_penalty.i.Omega(D.val, D.cw, v, p)"
+	# source
+	"- dw_volume_lvf.i.Omega(g.val, v)"
+	"= 0"
+	}
+\end{lstlisting}
+Transient viscous Burgers equation in two dimensions
+\begin{equation}
+\label{eq:ex_burgers}
+	\pdiff{p}{t} + \frac{1}{2}\left(\pdiff{p^2}{x} + \pdiff{p^2}{y}\right)  - 
+	D \cdot \left( \pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} \right) 
+	= g,
+\end{equation}
+or
+\begin{equation}
+	\pdiff{p}{t} + \nabla \cdot \vec{f}(p) - D\Delta p = g.
+\end{equation}
+with $\vec{f}(p) = \frac{1}{2}[p^2, p^2]^T = \frac{1}{2}\vec{a} p^2$ in Sfepy this 
+equation is represented as illustrated in Listing \ref{lst:burgers}.
+\setcounter{lstannotation}{0}
+\begin{lstlisting}[language=Python, caption=Viscous Burgers equation \label{lst:burgers}]
+burg_velo = nm.array([1., 1.])
+
+def bf(p):
+	return .5*burg_velo * p[..., None] ** 2
+
+def bf_d(p):
+	return burg_velo * p[..., None]
+
+equations = {'Burgers':
+	# transient
+	"dw_volume_dot.i.Omega(v, p)"
+	#  non-linear hyperbolic terms
+	"- dw_ns_dot_grad_s.i.Omega(bf, bf_d, p[-1], v)" /*!\lann{lsta:nonlin}!*/
+	"+ dw_dg_nonlinear_laxfrie_flux.i.Omega(bf, bf_d, v, p[-1])"
+	#  diffusion
+	"+ dw_laplace.i.Omega(D.val, v, p[-1])"
+	"+ dw_dg_diffusion_flux.i.Omega(D.val, p, v)"
+	"+ dw_dg_diffusion_flux.i.Omega(D.val, v, p)"
+	# penalty
+	"+ dw_dg_interior_penalty.i.Omega(D.val, D.Cw, v, p[-1])"
+	# source
+	"- dw_volume_lvf.i.Omega(g.val, v)"
+	" = 0"
+	}
+\end{lstlisting}
+\begin{itemize}
+	\item[\ref{lsta:nonlin}] Nonlinear terms require as parameters function and its 
+	derivative.
+\end{itemize}
+
+%\section{Post-processing}
+%
+%\subsection{Visualization using GMSH}
+%
+%\subsection{Visualization using \pysauce{plot_1D_dg.py}}
+%
+%\subsection{Numerical order estimation}

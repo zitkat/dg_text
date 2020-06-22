@@ -1,0 +1,66 @@
+\begin{example}[Advection-diffusion 2D]
+\label{ex:quart1}
+Based on Example 1 from \cite{Antonietti2013},
+we will solve equation \eqref{eq:ex_advdiff} in $\Omega = \langle 0, 1 \rangle^2$.
+%\begin{equation}
+%	\pdiff{u}{x} + \pdiff{u}{y} - D \cdot \left( \pdiff{^2 u}{x^2} + \pdiff{^2 
+%u}{y^2} \right) = g
+%\end{equation}
+%i.e
+%\begin{equation}
+%	\vec{a} \cdot \nabla u - D \Delta u = g
+%\end{equation}
+%where $\vec{a} = [1, 1]^T$ is advection velocity, $D$ is diffusion coefficient 
+%and $g$ is a source function.
+We setup boundary conditions and source function $g$ in such way that 
+the exact solution $u_{exact}$ is
+\begin{equation}
+	u_{exact}(x,y) =  -{\left(y^{2} - y\right)} \sin\left(2 \, \pi x\right).
+\end{equation}
+Solving for $g$ yields
+\begin{equation}
+	g = \\
+	 -2 \, \pi {\left(y^{2} - y\right)} \cos\left(2 \, \pi x\right) - 2 \, {\left(2 \, 
+	 \pi^{2} 
+	{\left(y^{2} - y\right)} \sin\left(2 \, \pi x\right) - D\sin\left(2 \, \pi 
+	x\right)\right)} 
+	 - {\left(2 \, y - 1\right)} \sin\left(2 \, \pi x\right).
+\end{equation}
+matching  boundary conditions are
+\begin{equation}
+	\begin{aligned}
+	&u(x) = 0, \quad x \in \partial\Omega\\
+	&\nabla u(x) = [-2\pi(y^2 - y)\cos(2 \pi x), -(2 y - 1)\sin(2\pi  x)]^T, \quad x \in 
+	\partial\Omega.
+	\end{aligned}
+\end{equation}
+Different values of coefficient $C_w$ in penalty term then yield different 
+convergence behavior as demonstrated in Figure \ref{fig:qconv1} and 
+\Cref{fig:orders_quarteroni1}. Both figures illustrate "gluing" effect of penalty term 
+which increases with $C_w$ coefficient and counteracts discontinuities between elements 
+which are the main source of error in this example.
+
+\begin{figure}[h!]
+	\centering
+	\begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
+		\vspace{0pt} 
+		\includegraphics[width=0.49\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni1_2_4}
+		&
+		\vspace{0pt} 
+		\includegraphics[width=0.49\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni1_2_3}
+	\end{tabular}
+	
+%	\includegraphics[scale=.5]{../figs/parametric/advdiff_2D/ord_quarteroni1}
+	\caption{\Cref{ex:quart1} average order for different choice of $C_w$}
+	\label{fig:orders_quarteroni1}
+\end{figure}
+
+
+
+\end{example}
+\begin{figure}[p!]
+	\centering
+	\includegraphics[height=\textheight]{../figs/parametric/advdiff_2D/quarteroni1}
+	\caption{\Cref{ex:quart1} convergence graphs for different choice of $C_w$}
+	\label{fig:qconv1}
+\end{figure}

@@ -1,0 +1,57 @@
+\newpage
+\paragraph{Example 10}
+In $\Omega = \langle 0, 1 \rangle$ we will solve Poisson equation
+\begin{equation}
+\varepsilon \cdot \pdiff{^2 u}{x^2} = g
+\end{equation}
+where  $\varepsilon$ is diffusion coefficient and $g$ a source function. We setup boundary conditions and source 
+function in such way that the exact solution $u_{exact}$ is
+\begin{equation}
+u_{exact} = \sin(2\pi x)
+\end{equation}
+Solving for $g$ yields
+\begin{equation}
+	g = 4\pi^2\varepsilon\sin(2\pi x)
+\end{equation}
+We set boundary conditions to match analytical solution as follows
+\begin{equation}
+	\begin{aligned}
+		&u(0) = 0,      &u(1) = 0\\
+		&u_x(0) = 2\pi, &u_x(1) = 2\pi.
+	\end{aligned}
+\end{equation}
+
+Again different values of coefficient $Cw$ in penalty term then yield different convergence behavior as demonstrated in 
+Figure \ref{fig:conv_diff1D}
+
+\begin{figure}[h]
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/convs/diff1D-cells-cw10_d1_t2}
+	\end{minipage}
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/convs/diff1D-cells-cw100_d1_t2}
+	\end{minipage}
+
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/convs/diff1D-cells-cw1000_d1_t2}
+	\end{minipage}
+	\begin{minipage}[b]{0.5\linewidth}
+		\includegraphics[width=\textwidth]{../figs/convs/diff1D-cells-cw10000_d1_t2}
+	\end{minipage}
+	
+	\caption{Example 10 Convergence graph for different choice of $C_w$}
+	\label{fig:conv_diff1D}
+\end{figure}
+
+To demonstrate what is going on with the error we include plots of numerical solution, exact solution and their 
+absolute difference, see Figure \ref{fig:diff1D_sol-err}. For higher orders the solution remains relatively smooth, 
+without any oscillations or irregularities, however it gets "overblown".
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[scale=.25]{../figs/err-sols/diff1D-err-sol-i20cw1_d1_t2}
+%	\includegraphics[scale=.25]{../figs/err-sols/diff1D-err-sol-i20cw100_d1_t2}
+%	\includegraphics[scale=.25]{../figs/err-sols/diff1D-err-sol-i20cw10000_d1_t2}
+%	\caption{Example 10 Exact solution (gray), numerical solution (orange) and their absolute difference (red) for 
+%		different orders and $h$. The left $y$ axes correspond to the solutions, the right ones to their difference.}
+%	\label{fig:diff1D_sol-err}
+%\end{figure}

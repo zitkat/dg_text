@@ -1,0 +1,180 @@
+% !TeX spellcheck = en_US
+%%
+%% Text of diploma thesis
+%%
+%% Tomáš Zítka
+%%
+
+%needed packages
+\documentclass{book}
+\usepackage[english]{babel} 
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{enumerate}
+\usepackage{amssymb, amsmath}
+\usepackage{natbib}
+\usepackage{ae}
+
+\usepackage[all]{xy}
+
+
+
+
+
+
+
+% colors
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{deepblue}{rgb}{0, 0, 0.5}
+\definecolor{deepred}{rgb}{0.6, 0, 0}
+\definecolor{deepgreen}{rgb}{0, 0.5, 0}
+
+
+\usepackage{tikz}
+
+% links style
+\usepackage[unicode]{hyperref}
+\hypersetup{
+	colorlinks,
+	linkcolor={red!50!black},
+	citecolor={blue!50!black},
+	urlcolor={blue!80!black}
+}
+
+
+% acronyms
+%\usepackage[acronym, xindy]{glossaries}
+%\makenoidxglossaries
+%\input{./texts/zkratky}
+
+% code typeseting
+\usepackage{listings}
+\lstset{numbers=none,
+		stepnumber=2,
+		numbersep=5pt,
+		numbers=none,
+		tabsize=4,	
+		frame=lines,
+		language=Python,
+		otherkeywords={self},
+		breaklines=true,
+		breakatwhitespace=true,
+		basicstyle=\ttfamily,%\footnotesize
+		keywordstyle=\bfseries\color{deepblue},
+		commentstyle=\small\color{gray},
+		stringstyle=\color{deepgreen},
+		showstringspaces=false
+}
+
+
+%inline code typesseting
+\newcommand{\shellcmd}[1]{\texttt{#1}}
+\newcommand{\pysauce}[1]{\lstinline!#1!}
+
+% some logos 
+\providecommand{\Microsoft}{{\sffamily Microsoft}}	
+\providecommand{\Windows}{{\sffamily Windows}}	
+
+%TO-DOcomand
+\providecommand{\todo}{\textbf{TODO }}
+
+
+% math stuff
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{princ}{Principle}
+\newtheorem{axiom}{Axiom}[chapter]
+\newtheorem{claim}{Proposition}
+\newtheorem{Lemma}{Lemma}
+
+\providecommand{\bracesanddots}[4]{$\langle$#1$\rangle$:$\langle$#2$\rangle$:$\langle$#3$\rangle$:$\langle$#4$\rangle$}
+\providecommand{\anglebracs}[1]{$\langle$#1$\rangle$}
+\providecommand{\manglebracs}[1]{\langle#1\rangle}
+\providecommand{\norm}[1]{\left\lVert#1\right\rVert}
+\providecommand{\abs}[1]{\left\lvert#1\right\rvert}
+\providecommand{\doteq}{\,\dot = \,}
+\newcommand{\pdiff}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\fdiff}[2]{\frac{\text{d}#1}{\text{d}#2}}
+\newcommand{\Laplace}{\Delta}
+\newcommand{\DAlambert}{\mathop{}\!\mathbin\Box}
+
+% number classes
+\providecommand{\realc}{\mathbb{R}}
+\providecommand{\naturc}{\mathbb{N}}
+\providecommand{\finaturc}{\mathbb{FN}}
+\providecommand{\fisnaturc}{\mathbb{F^*N}}
+\providecommand{\comc}{\mathbb{C}}
+
+% classes
+\providecommand{\bV}{\mathbf{V}}
+\providecommand{\bFV}{\mathbf{FV}}
+\providecommand{\bFsV}{\mathbf{F^*V}}
+
+% domains
+\providecommand{\fU}{\mathfrak{U}}
+\providecommand{\fM}{\mathfrak{M}}
+
+% universes
+\providecommand{\cala}{\mathcal{A}}
+\providecommand{\calc}{\mathcal{C}}
+\providecommand{\calv}{\mathcal{V}}
+\providecommand{\calw}{\mathcal{W}}
+
+% convenient math functions
+\newcommand\tg{\qopname\relax o{tg}}
+\newcommand\tgh{\qopname\relax o{tgh}}
+\newcommand\sign{\qopname\relax o{sign}}
+\newcommand\cotg{\qopname\relax o{cotg}}
+\newcommand\atg{\qopname\relax o{arctg}}
+\newcommand\im{\qopname\relax o{Im}}
+\newcommand\re{\qopname\relax o{Re}}
+
+\newcommand{\Cls}{\mathrm{Cls}}
+\newcommand{\Set}{\mathrm{Set}}
+\newcommand{\Fin}{\mathrm{Fin}}
+\newcommand{\Nat}{\mathrm{Nat}}
+
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\rng}{\mathrm{rng}}
+
+% terms
+\newcommand{\st}{$\sigma$-tříd}
+\newcommand{\pt}{$\pi$-tříd}
+
+
+\numberwithin{equation}{section}
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\numberwithin{table}{section}
+
+
+\begin{document}
+
+\tableofcontents
+
+\newpage
+\section{Diffusion \& advection}
+\input{conv_quart1.tex}
+\newpage
+\input{conv_quart2.tex}
+\newpage
+\input{conv_quart3.tex}
+\newpage
+\input{conv_advection_1D.tex}
+
+\newpage
+\section{Diffusion}
+%\input{conv_diff1D.tex}
+%\input{conv_hartmann.tex}
+\input{conv_laplace.tex}
+
+\newpage
+\section{Burgess with diffusion}
+%\input{conv_kucera}
+%\input{conv_burgess_hesthaven.tex}
+
+\bibliographystyle{plain}
+\bibliography{dg_fem_literature}
+	
+\end{document}

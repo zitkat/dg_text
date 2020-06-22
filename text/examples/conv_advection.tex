@@ -1,0 +1,30 @@
+\newpage
+\paragraph{Example 7} In $\Omega = \langle 0, 1 \rangle^2$ we will solve equation
+\begin{equation}
+		\pdiff{u}{t} +\pdiff{u}{x} = 0
+\end{equation}
+i.e
+\begin{equation}
+\pdiff{u}{t} +\vec{a} \cdot \nabla u  = 0
+\end{equation}
+where $\vec{a} = [1, 0]^T$ is advection velocity. We set the initial condition $u(0, \vec{x})$ to
+\begin{equation}
+	u_{smooth} = \begin{cases}
+				g(x)\cdot g(y),\quad &0.1 < x < .3, 0.1 < y < .3\\
+				0, \quad &\text{elsewhere}
+	\end{cases}
+\end{equation}
+where
+\begin{equation}
+	g(\xi) = \exp\left(\frac{1}{10(\xi - 0.2)^2 - 1}+ 1\right)
+\end{equation}
+And prescribe periodic boundary condition for $x = 0 $ and $x = 1$ part of the domain boundary, this results in the 
+solution at time $t = ;1$ to be the same as initial condition i.e.
+\begin{equation}
+	u(1, \vec{x}) = u_{init}.
+\end{equation}
+We then compare these to test convergence.
+\begin{figure}[h]
+	
+	\label{fig:adv_conv}
+\end{figure}

@@ -1,0 +1,129 @@
+In this work we present implementation of discontinuous Galerkin Finite 
+Elements Method (DG FEM) in software package SfePy (Simple Finite Elements for 
+Python) and results of experimental measurement of convergence of the method. 
+%and its comparison to grad-div, SUPGand PSPG stabilization of the classical FEM 
+%methods. 
+We consider several model problems, the basic one being linear 
+advection with constant advection speed
+$$
+\pdiff{p}{t} - \vec{a}\nabla\cdot p = 0
+$$
+with boundary conditions
+$$
+\begin{array}{ll}
+p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in } \Gamma_D \subset \partial\Omega \\
+$$
+$$
+\pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{ in } \Gamma_N \subset \partial\Omega.
+\end{array}
+$$
+Which we gradually generalize adding source term $g$, nonlinearity $\vec{f}$ 
+and diffusion
+\begin{equation*}
+	\pdiff{p}{t} + \nabla\cdot \vec{f}(p) - D\Delta p = g.
+\end{equation*}
+First main goal of this work is to provide implementation of discontinuous Galerkin 
+method which could be used to empirically study the behavior of the method but also in 
+academic and potentially real world applications and in education. 
+Second main goal is to use this implementation to analyze behavior of the method when 
+applied to chosen model problems based on equations above especially with regard to 
+choice of different fluxes and penalty terms (see below).
+
+The work is divided as follows: The introductory chapter summarizes literature on 
+and basic concepts of DG FEM and introduces Sfepy. In second chapter we derive the 
+method for model problem and explore theory behind it. Third chapter describes 
+in detail Sfepy package and implementation of the method. Fourth chapter 
+presents setup and results of numerical experiments measuring convergence 
+%with regard to the newest theoretical results presented in \cite{Roe2017}. 
+%Fifth 
+%chapter presents comparison with grad-div, SUPG \cite{Rapin2007} and PSPG 
+%stabilization solved by an Oseen solver\cite{} applied to advection-diffusion 
+%equation. 
+In the concluding chapter we discuss the results and present 
+suggestions for future work.
+
+\section{Basic concepts and literature overview}
+In continuous or classical finite element discretization of partial differential equation 
+the solution is approximated by as combination of basis functions whose supports span 
+across multiple geometrical elements of the mesh discretizing computational domain. This 
+enforces continuity of the solution and provides a way of transferring information 
+between the elements. In discontinuous Galerkin FE methods on the other hand the 
+basis functions used in approximation of test and state variable have supports limited to 
+the individual geometrical elements, much like piecewise approximation in finite volume 
+(FV) methods. This leads to compact discretization stencils and allows for 
+discontinuities in solution but also requires fluxes at element interfaces to be 
+introduced in order to transfer information between elements. As we shall see these 
+properties of the DG FE methods prove to be useful in some applications and burden in 
+others.
+
+Discontinuous approximation and compact stencil makes DG FEM appealing for 
+multi-domain and multi-physics simulations \cite{DiPietro2012}.
+Possibility to approximate discontinuous solutions proves useful in modeling so-called 
+shock waves in nonlinear conservation laws with small dissipation \cite{Kucera}(see 
+\Cref{ex:burgers_hest}). Inherent discontinuity of solution, however, brings difficulties 
+for diffusion 
+dominated or otherwise naturally continuous problems and forces introduction of so-called 
+penalty terms (more in Section \ref{se:diff_term}, \cite{Antonietti2013} and  
+\cite{Kucera}). Introduction of fluxes provides great flexibility of DG FEM and allows 
+for straightforward implementation of conservation laws which endows method with 
+good stability properties when approximating advection dominated problems. 
+Disadvantages of use of fluxes are complicated theoretical analysis of the 
+methods and lack of exact solution to Riemann problem for high order approximation in 
+individual mesh elements. Use of approximate fluxes for solving Riemann problems with 
+non-constant initial data introduces oscillations not present in FV methods 
+mandating use of so-called limiters (more in Section \ref{se:limiters}, 
+\cite{Krivodonova2007} and \todo). The FE nature of DG FEM and use of fluxes allows the 
+DG FEM 
+to be interpreted both as Galerkin projection onto suitable energy spaces as well as high 
+order classical upwind finite volume schemes \cite{Georgoulis2011}. 
+
+
+
+
+Although studied thoroughly, as wast array of literature cited above suggests, DG FE 
+methods still pose research challenges and promise new and potentially useful results for 
+numerical modeling. Among challenges are those mentioned aboveAmong great promises is so 
+called super-convergece observed for certain problems \cite{Roe2017} which yet awaits to 
+be leveraged in applications.
+
+
+\section{SfePy -- Simple Finite Elements for Python}
+
+Simple finite elements for Python (SfePy, 
+\url{http://sfepy.org/}) is a software 
+package providing FE based methods along with wide range of tools for defining, solving 
+and post-processing variety of coupled PDEs in 1D, 2D and 3D. It can be viewed both as a 
+black-box PDE solver, and as a Python package which can be used for building custom 
+application \cite{Cimrman_Lukes_Rohan_2019}. The code of the package is open-source 
+published under New BSD-3 Clause license \cite{bsd3-lic} and is available on Github 
+(\url{https://github.com/sfepy/sfepy}) %\cite{sfepy-git}.
+Detailed documentation with many examples can be found in 
+\cite{sfepy-doc}.
+
+SfePy can use many FE based terms to 
+build the PDEs to be solved. This approach is reflected in Section \ref{ch:theory}
+where the discretization of the equation is divided into discretization of individual 
+terms, these are then implemented individually in Chapter \ref{ch:implementation}. As of 
+time of writing Sfepy supports classical FEM and isogeomteric analysis (IGA) based FEM 
+and 
+provides tools for setting up, solving and post-processing problems in applications like 
+homogenization of porous media, acoustic waves in thin perforated layers,  finite element 
+formulation of Schroedinger equation or flow of a two-phase non-Newtonian fluid medium in 
+a general domain \cite{Cimrman_Lukes_Rohan_2019}.
+
+There are several other software packages implementing  DG FEM, some of the currently 
+available codes are:
+hpGEM \cite{hpgem2007} (\url{https://hpgem.org/}) which provides implementation of 
+so-called $hp$-methods in C++; 
+FEniCS project \cite{fenics2015} (\url{https://fenicsproject.org/}) which is well 
+established numerical software build on C/C++;
+PyFR \cite{pyfr2014} (\url{http://www.pyfr.org/}) which is  Python based framework for 
+solving advection-diffusion type problems that leverages locality of DG FE methods to run 
+computations efficiently on modern streaming architectures, such as Graphical 
+Processing Units (GPUs).
+
+
+
+
+
+

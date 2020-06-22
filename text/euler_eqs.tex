@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage[tbtags]{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{pstricks}
+\usepackage{pst-plot}
+\usepackage{subfigure}
+
+\newcommand{\bigo}{\ensuremath{\mathcal{O}}}
+\newcommand{\XX}{\ensuremath{\mathcal{X}}}
+\newcommand{\X}{\ensuremath{x}}
+
+\begin{document}
+\begin{center}
+{\bf CME306 / CS205B Theory Homework 8}
+\end{center}
+\renewcommand{\u}{\ensuremath{{\bf u}}}
+
+\section*{Euler equations}
+For incompressible flow the inviscid 1D Euler equations decouple to:
+\begin{align*}
+  \rho_t + u\rho_x = 0 \\
+  u_t + \frac{p_x}{\rho} = 0 \\
+  e_t + ue_x = 0
+\end{align*}
+
+The 3D Euler equations are given by
+\begin{equation}
+  \begin{pmatrix}
+    \rho \\ \rho u \\ \rho v \\ \rho w \\ E
+  \end{pmatrix}_t + 
+  \begin{pmatrix}
+    \rho u \\ \rho u^2 + p \\ \rho uv \\ \rho uw \\ (E+p)u
+  \end{pmatrix}_x + 
+  \begin{pmatrix}
+    \rho v \\ \rho uv \\ \rho v^2 + p \\ \rho vw \\ (E+p)v
+  \end{pmatrix}_y + 
+  \begin{pmatrix}
+    \rho w \\ \rho uw \\ \rho vw \\ \rho w^2 + p \\ (E+p)w
+  \end{pmatrix}_z = 0
+\end{equation}
+where $\rho$ is the density, $\u = (u,v,w)$ are the velocities, $E$ is the total energy per unit volume and $p$ is the pressure.  The total energy is the sum of the internal energy and
+the kinetic energy.
+\begin{align*}
+  E &= \rho\left(e + \frac{1}{2}\|\u\|^2\right) \\
+  &= \rho e + \rho(u^2 + v^2 + w^2)/2
+\end{align*}
+where $e$ is the internal energy per unit mass.  The assumption of incompressiblity gives
+\begin{equation}
+  \nabla\cdot\u = u_x + v_y + w_z = 0,
+\end{equation}
+Show that in 3D the inviscid Euler equations with the assumption of incompressible flow decouple to:
+\begin{align*}
+  \rho_t+\u\cdot{\nabla}\rho &=0 \\
+  u_t+\u \cdot{\nabla}u+\frac{p_x}{\rho} &=0 \\
+  v_t+\u\cdot{\nabla}v+\frac{p_y}{\rho} &=0 \\
+  w_t+\u\cdot{\nabla}w+\frac{p_z}{\rho} &=0\\
+  e_t+\u\cdot{\nabla}e &=0
+\end{align*}
+
+\pagebreak
+\section*{Compressible Flow}
+Find the Jacobian and the right eigenvectors for Euler's equations in 1-D, {\em (hint: it is useful, in the calculation of the eigenvectors, to consider the enthalpy $H = \frac{E + p}{\rho}$, and the sound speed $c = \sqrt{\frac{\gamma p}{\rho}}$).
+\begin{equation}
+  \begin{pmatrix}
+    \rho \\ \rho u \\ E
+  \end{pmatrix}_t + 
+  \begin{pmatrix}
+    \rho u \\ \rho u^2 + p \\ Eu + pu
+  \end{pmatrix}_x = 0.
+\end{equation}
+You should assume the ideal gas law as your equation of state,
+\begin{equation}
+  p(\rho,e) = (\gamma - 1)\rho e.
+\end{equation}
+
+\end{document}
