@@ -67,24 +67,21 @@ penalty terms (more in Section \ref{se:diff_term}, \cite{Antonietti2013} and
 \cite{Kucera}). Introduction of fluxes provides great flexibility of DG FEM and allows 
 for straightforward implementation of conservation laws which endows method with 
 good stability properties when approximating advection dominated problems. 
-Disadvantages of use of fluxes are complicated theoretical analysis of the 
+Disadvantages of the use of fluxes are complicated theoretical analysis of the 
 methods and lack of exact solution to Riemann problem for high order approximation in 
 individual mesh elements. Use of approximate fluxes for solving Riemann problems with 
-non-constant initial data introduces oscillations not present in FV methods 
-mandating use of so-called limiters (more in Section \ref{se:limiters}, 
-\cite{Krivodonova2007} and \todo). The FE nature of DG FEM and use of fluxes allows the 
-DG FEM 
-to be interpreted both as Galerkin projection onto suitable energy spaces as well as high 
-order classical upwind finite volume schemes \cite{Georgoulis2011}. 
-
-
-
+rough initial data with large gradients introduces oscillations not present in FV methods 
+mandating use of so-called limiters (more in \Cref{se:limiters}, \cite[Sec. 
+3.2.4]{DiPietro2012} and \cite{Krivodonova2007}). The FE nature of DG FEM and use of 
+fluxes allows the DG FEM to be interpreted both as Galerkin projection onto suitable 
+energy spaces as well as high order classical upwind finite volume schemes 
+\cite{Georgoulis2011}. 
 
 Although studied thoroughly, as wast array of literature cited above suggests, DG FE 
 methods still pose research challenges and promise new and potentially useful results for 
-numerical modeling. Among challenges are those mentioned aboveAmong great promises is so 
-called super-convergece observed for certain problems \cite{Roe2017} which yet awaits to 
-be leveraged in applications.
+numerical modeling. Among challenges are those mentioned above. Among great promises is 
+so called super-convergence observed for certain problems \cite{Roe2017} which yet awaits 
+to be leveraged in applications.
 
 
 \section{SfePy -- Simple Finite Elements for Python}

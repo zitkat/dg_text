@@ -174,7 +174,7 @@ dimension
 
 This is local basis commonly used in literature \cite{Hesthaven2008}, 
 \cite{Bokhove2008}, however there are also other usable bases, which must not 
-be orthogonal [\todo cite] or polynomial [\todo cite]. We will always use full 
+be orthogonal or polynomial \cite{Yuan2006}. We will always use full 
 basis of the functions, however implementations contains mechanism to omit some 
 of them for testing purposes.
 
@@ -335,10 +335,10 @@ Le_{\Omega_h}^{M}$ we can choose $W_j^k = 1 \; \forall \;
 j, k$, using summation notation for clarity we can then write terms on the  right-hand 
 side of \eqref{eq:disc_hyp_term} as 
 \begin{equation}\label{eq:hyp_stiff_app}
-		a^C_{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla\psi^j, 
+		a^C_\mathrm{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla\psi^j, 
 \end{equation}
 \begin{equation}\label{eq:hyp_flux_app}
-	a^F_{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
+	a^F_\mathrm{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
 	p_{out})\cdot\psi^j.
 \end{equation}
 where $\mathbf{p}$ denotes vector of unknowns $P^k_i$, note that we do not include the 
@@ -453,22 +453,24 @@ vanishes outside element $T^k$ and hence
 \end{eqnarray}
 holds, we obtain
 \begin{equation}\label{eq:diff_left_approx}
-	a^L_{diff}(\mathbf{p}) = \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] \approx
+	a^L_\mathrm{diff}(\mathbf{p}) = \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] 
+	\approx
 		\elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}[\psi_j] =
 		\elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j,
 \end{equation}
 \begin{equation}\label{eq:diff_right_approx}
-		a^R_{diff}(\mathbf{p}) =\elbint D \manglebracs{\nabla w }\cdot \vec{n} [p] \approx
+		a^R_\mathrm{diff}(\mathbf{p}) =\elbint D \manglebracs{\nabla w }\cdot \vec{n} [p] 
+		\approx
 			\elbint D \manglebracs{\nabla \psi_j }\cdot \vec{n} [P^k_i\psi_i] =
 			\elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n} 
 			[P^k_i\psi_i],
 \end{equation}\label{eq:diff_laplace_approx}
 \begin{equation}\label{key}
-	a^C_{diff}(\mathbf{p})=\elint D\nabla p \nabla w \approx
+	a^C_\mathrm{diff}(\mathbf{p})=\elint D\nabla p \nabla w \approx
 		\elint D\nabla P^k_i\psi_i \nabla \psi_j,
 \end{equation}
 \begin{equation}\label{eq:diff_penalty_approx}
-		a^P_{diff}(\mathbf{p})=\nu \elbint \sigma [p][w] \approx
+		a^P_\mathrm{diff}(\mathbf{p})=\nu \elbint \sigma [p][w] \approx
 	 	\nu \elbint \sigma [P^k_i\psi_i][\psi_j] 
 	 	= \nu \elbint \sigma [P^k_i\psi_i]\psi_j.
 \end{equation}
@@ -728,17 +730,18 @@ the strictest limiting, whereas $\alpha_i = 1$ is the mildest limiter possible \
 \pysauce{dg.limiters.MomentLimiter1D}, see Section \ref{se:i_moment_lim_1D} for details.
 
 \subsubsection{Two-dimensional limiting}
-In this section we describe extension of moment limiter to tensor-product meshes in two 
+In this section we describe extension of moment limiter to regular tensor-product meshes 
+in two 
 space dimensions.
 [\todo element indicies]
 [\todo basis indicies]
 \begin{multline}
 \tilde{P}^{k,m}_{i,j} =
 	\text{minmod}\big(P^{k,m}_{i,j}, 
-								 \alpha_j(P^{k,m+1}_{i,j-1} - P^{k,m}_{i,j-1}),
-							     \alpha_j(P^{k,m}_{i,j-1} - P^{k,m-1}_{i,j-1}),\\
-								 \alpha_i(P^{k+1,m}_{i-1,j} - P^{k+1,m}_{i-1,j}),
-								 \alpha_i(P^{k-1,m}_{i-1,j} - P^{k,m}_{i-1,j})\big)
+					  \alpha_j(P^{k,m+1}_{i,j-1} - P^{k,m}_{i,j-1}),
+					  \alpha_j(P^{k,m}_{i,j-1} - P^{k,m-1}_{i,j-1}),\\
+					  \alpha_i(P^{k+1,m}_{i-1,j} - P^{k+1,m}_{i-1,j}),
+					  \alpha_i(P^{k-1,m}_{i-1,j} - P^{k,m}_{i-1,j})\big)
 \end{multline}
 
 
