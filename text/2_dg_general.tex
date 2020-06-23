@@ -171,7 +171,6 @@ dimension
 \begin{equation}\label{eq:dim_legh}
 	N_{dof} = \text{dim}(Le_{\Omega_h}^{M}) = N\cdot N_{base}
 \end{equation}
-
 This is local basis commonly used in literature \cite{Hesthaven2008}, 
 \cite{Bokhove2008}, however there are also other usable bases, which must not 
 be orthogonal or polynomial \cite{Yuan2006}. We will always use full 
@@ -335,14 +334,18 @@ Le_{\Omega_h}^{M}$ we can choose $W_j^k = 1 \; \forall \;
 j, k$, using summation notation for clarity we can then write terms on the  right-hand 
 side of \eqref{eq:disc_hyp_term} as 
 \begin{equation}\label{eq:hyp_stiff_app}
-		a^C_\mathrm{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla\psi^j, 
+		a^C_\mathrm{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j, 
 \end{equation}
 \begin{equation}\label{eq:hyp_flux_app}
 	a^F_\mathrm{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
-	p_{out})\cdot\psi^j.
+	p_{out})\cdot\psi_j.
 \end{equation}
-where $\mathbf{p}$ denotes vector of unknowns $P^k_i$, note that we do not include the 
-sign in front of the flux term.
+where $\mathbf{p}$ denotes vector of unknowns $P^k_i$ grouped by element as follows
+\begin{equation}
+	\mathbf{p} = \left(P^0_0, P^0_1, P^0_2, \ldots, P^0_{N_{base}-1}, \; \ldots \; ,
+	P^{N}_0, P^{N}_1, P^{N}_2, \ldots, P^{N}_{N_{base} - 1}  \right)
+\end{equation}
+Note that in \eqref{eq:hyp_flux_app} we do not include the sign in front of the flux term.
 This finalizes discretization of general hyperbolic term $\nabla\cdot\vec{f}(p) 
 \cdot w$, the two terms -- integral over element $T^k$ (often called stiffness 
 term) and integral over its surface $\partial T^k$ -- are implemented in SfePy 
@@ -417,7 +420,7 @@ on the boundary $\partial T^k$ we define, using notation from \eqref{eq:avrg},
 	\label{eq:avrg_grad_state}
 \end{equation}
 Substituting \eqref{eq:avrg_grad_state} to \eqref{eq:diff_after_green} we get 
-so called incomplete scheme
+so-called incomplete scheme
 \begin{equation}
 		\elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] - \elint D\nabla p \nabla w
 \end{equation}
@@ -443,7 +446,7 @@ we denote
 \end{equation} 
 We further proceed as for hyperbolic term. By replacing $p$ and $w$ by their 
 finite dimensional approximations \eqref{eq:state_epprox} and 
-\eqref{eq:test_approx} and using the fact that the test function $\psi_i$ 
+\eqref{eq:test_approx} and using the fact that the test function $\psi^k_i$ 
 vanishes outside element $T^k$ and hence
 \begin{eqnarray}
 	\manglebracs{\psi^k_i} = \frac{\psi^k_i}{2},
@@ -529,25 +532,37 @@ By applying analogous [approximation] to the transient term we obtain
 \end{equation}
 Using this discretization in \eqref{eq:hyp_diff_trans} we obtain system of 
 ordinary differential equations for unknown coefficients 
-$P^k_i$ in variable $t$
+$P^k_i(t)$ in variable $t$
 \begin{equation}\label{eq:time_diff}
-	M \fdiff{\mathbf{p}}{t}(t) +(\mathbf{p}(t)) = 0
+	\mathbf{M}  \fdiff{\mathbf{p}}{t}(t) + \mathcal{L}(\mathbf{p}(t)) = 0,
 \end{equation}
-where 
+where $\mathcal{L}$  is composed from discretized terms  derived in previous 
+sections and $\mathbf{M}$ is a matrix composed of blocks $M^k,\; k=0, \ldots , N$ of the 
+form
 \begin{equation}
-	M_{kij} = \elint\psi_i\psi_j
+(M^k)_{ij} = ( \psi_i,\psi_j)_{T^k}.
 \end{equation}
-is matrix of scalar products of basis functions, often called mass matrix and  
-$\mathcal{L}$  is composed of discretizations of terms derived in previous sections.
-Since in our setting basis functions are orthogonal on an element and vanish 
-outside of it, $M$ is diagonal and its inverse is trivial. We rewrite  
+Since the basis functions are orthogonal with respect to the scalar product 
+\eqref{eq:scalar_prod_dk} individual blocks are diagonal. Since basis function 
+$\psi^k_i$ vanish outside of the element $T^k$, matrix $\mathbf{M}$ is block diagonal 
+\begin{equation}
+\mathbf{M}  = \begin{pmatrix}
+		M^0      &    0   &\cdots&  0   &\cdots&0\\
+		0		 &   M^1  &      &      &      &\\
+		\vdots	 &    0   &\ddots&      &  0   &\vdots\\
+	  \vdots     & \vdots &      & M^k  &      &\\
+		\vdots   & \vdots & 0    &      &\ddots&0\\
+		0    	 &   0    &\cdots&\cdots&   0  &M^{N} 
+	\end{pmatrix}.
+\end{equation}
+Thanks to this the inverse of $\mathbf{M}$ is trivial and we can rewrite 
 \eqref{eq:time_diff} as
 \begin{equation}
-	 \fdiff{\mathbf{p}}{t}(t) + M^{-1}\mathcal{L}(\mathbf{p}(t)) = 0
+	 \fdiff{\mathbf{p}}{t}(t) + \mathbf{M}^{-1}\mathcal{L}(\mathbf{p}(t)) = 0,
 \end{equation}
 denoting
 \begin{equation}
-	\bar{\mathcal{L}} = M^{-1}\mathcal{L} 
+	\bar{\mathcal{L}} =\mathbf{M}^{-1}\mathcal{L}, 
 \end{equation}
 we can write equation 
 \eqref{eq:time_diff} in the form
@@ -563,7 +578,7 @@ total variations diminishing Runge-Kutta scheme of 3rd order.
 derivation by forward difference i.e.
 \begin{equation}
 	\fdiff{\mathbf{p}}{t}(t) \approx 	\frac{\mathbf{p}^{n + 1} - 
-	\mathbf{p}^{n}}{\Delta t}
+	\mathbf{p}^{n}}{\Delta t},
 \end{equation}
 where $n$ denotes time step. Substituting into equation \eqref{eq:time_simple} 
 yields
@@ -577,11 +592,11 @@ get
 \mathbf{p}^{n + 1} = \mathbf{p}^{n} - {\Delta t} 
 \bar{\mathcal{L}}(\mathbf{p}^n, t^n).
 \end{equation}
-Forward Euler scheme is first order in time. We use it to define the so called 
+Forward Euler scheme is first order in time. We use it to define the so-called 
 total variation diminishing property of $\bar{\mathcal{L}}$, that is the total 
 variation of the numerical solution in one dimension
 \begin{equation}\label{eq:TV}
-	TV(p) = \sum_{k} \abs{p_{k + 1} - p_{k}}	
+	TV(p) = \sum_{k} \abs{p_{k + 1} - p_{k}},	
 \end{equation}
 where $k$ ranges over subsequent 1D mesh elements, does not increase with time i.e.
 \begin{equation}
@@ -611,15 +626,18 @@ accuracy in time.
 
 
 \subsection{Hyperbolic term stability requirement}
-
+Courant-Fridrichs-Levy condition adjusted for high order approximation mandates 
 \begin{equation}
-	\Delta t \leq c\frac{\Delta x^2}{\varepsilon} \cdot \frac{1}{2M + 1}
+	\Delta t \leq c\frac{\Delta x^2}{D} \cdot \frac{1}{2M + 1},
 \end{equation} 
+where $c \leq 1$ is adjustable parameter.
+
 
 \subsection{Elliptic term stability requirement}
 \begin{equation}\label{eq:cfl_cond}
-	\Delta t \leq c\frac{\Delta x}{\norm{\vec{a}}} \cdot \frac{1}{2M + 1}
+	\Delta t \leq c\frac{\Delta x}{\norm{\vec{a}}} \cdot \frac{1}{2M + 1},
 \end{equation}
+where $c \leq 1$ is adjustable parameter.
 
 \newpage
 \section{Initial condition discretization}
@@ -664,7 +682,6 @@ the missing outer value $p_{out}$ in boundary elements is substituted by
 \begin{itemize}
 	\item value of Dirichlet boundary condition, 
 	\item value in corresponding neighbor cell on periodic boundary,
-	\item calculated value to satisfy Newton boundary condition,
 \end{itemize} 
 whenever there is no direct neighbor.
 In implementations this is ensured in terms themselves by getting corresponding values 
@@ -721,7 +738,7 @@ variables
 and $\alpha_i$ is limiting coefficient dependent on the order, Krivodonova 
 \cite{Krivodonova2007} proposes to take $\alpha_i$ from range
 \begin{equation}
-	\frac{1}{2(2i -1)} \leq \alpha_i \leq 1.
+	\frac{1}{2(2n -1)} \leq \alpha_n \leq 1.
 \end{equation}
 Choosing $\alpha_i$ outside this region results in either loss of accuracy or numerical 
 instability \cite[p. 882]{Krivodonova2007}. Lower bound of the interval corresponds to 
@@ -731,8 +748,7 @@ the strictest limiting, whereas $\alpha_i = 1$ is the mildest limiter possible \
 
 \subsubsection{Two-dimensional limiting}
 In this section we describe extension of moment limiter to regular tensor-product meshes 
-in two 
-space dimensions.
+in two space dimensions.
 [\todo element indicies]
 [\todo basis indicies]
 \begin{multline}
@@ -743,7 +759,7 @@ space dimensions.
 					  \alpha_i(P^{k+1,m}_{i-1,j} - P^{k+1,m}_{i-1,j}),
 					  \alpha_i(P^{k-1,m}_{i-1,j} - P^{k,m}_{i-1,j})\big)
 \end{multline}
-
+where 
 
 \begin{equation}
 	\frac{1}{2\sqrt{4n^2 - 1}} \leq \alpha_n \leq \sqrt{\frac{2n - 1}{2n + 1}}

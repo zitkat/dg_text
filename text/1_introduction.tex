@@ -4,21 +4,22 @@ Python) and results of experimental measurement of convergence of the method.
 %and its comparison to grad-div, SUPGand PSPG stabilization of the classical FEM 
 %methods. 
 We consider several model problems, the basic one being linear 
-advection with constant advection speed
+advection with constant advection speed $\vec{a}$
 $$
-\pdiff{p}{t} - \vec{a}\nabla\cdot p = 0
+\pdiff{p}{t} - \vec{a}\cdot\nabla p = 0,
 $$
 with boundary conditions
 $$
 \begin{array}{ll}
-p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in } \Gamma_D \subset \partial\Omega \\
+p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in } \Gamma_D \subset 
+\partial\Omega, \\
 $$
 $$
 \pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{ in } \Gamma_N \subset \partial\Omega.
 \end{array}
 $$
 Which we gradually generalize adding source term $g$, nonlinearity $\vec{f}$ 
-and diffusion
+and diffusion $D$
 \begin{equation*}
 	\pdiff{p}{t} + \nabla\cdot \vec{f}(p) - D\Delta p = g.
 \end{equation*}

@@ -102,11 +102,12 @@ options = {'nls'             : 'newton',   /*!\annotation{lsta:laplace_opts}!*/
 	using \pysauce{Gmsh} (\url{http://gmsh.info/}, \cite{Remacle2007}).
 \end{itemize}
 All the test problems studied in Chapter \ref{ch:convergence} are specified using this 
-declarative approach, codes can be found in (\todo Attachment B? 
+declarative approach, codes can be found in (\todo Attachment? 
 \url{https://github.com/zitkat/dg_examples})
 
 \section{Sfepy architecture}
-In SfePy individual problem is represented by \pysauce{Problem} object which brings together various other objects:
+Components in the problem specification file are parsed into various Python objects  
+brought together in the \pysauce{Problem} object, the most important are:
 \begin{itemize}
 	\item \pysauce{Equation} -- representing the equation to be solved,
 	\item \pysauce{EssentialBC} -- representing Dirichlet boundary conditions,

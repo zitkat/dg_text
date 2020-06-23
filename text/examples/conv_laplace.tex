@@ -22,10 +22,10 @@ We set boundary conditions to match analytical solution as follows
 		&u_y(x, 0) = b, & u_y(x, b) = 0.
 	\end{aligned}
 \end{equation}
-In our setting we chose $a=1$, $b=1$, $c=0$. Again different values of 
+In our setting we chose $a=1$, $b=1$, $c=0$. Different values of 
 coefficient $C_w$ in penalty term yield different convergence behavior as demonstrated in 
 Figures \ref{fig:conv_laplace} and \ref{fig:orders_lapalce}.  \Cref{fig:orders_lapalce} 
-may suggest that high order method to not meet expected convergence rate, they however 
+may suggest that high order method do not meet expected convergence rate, they however 
 still attain lowest error as illustrated in \Cref{fig:conv_laplace}. This is due to 
 polynomial solution which can be approximated very accurately even on coarse mesh and 
 refining does not provide much benefit.
@@ -42,7 +42,8 @@ refining does not provide much benefit.
 		
 \includegraphics[width=0.49\textwidth]{../figs/parametric/diffusion_2D/ord_laplace_2_3}
 	\end{tabular}
-	\caption{\Cref{ex:laplace} average order for different choice of $C_w$}
+	\caption{\Cref{ex:laplace} average order for different choice of $C_w$ for 
+	quadrilaterals (left) and triangles (right).}
 	\label{fig:orders_lapalce}
 \end{figure}
 
@@ -67,6 +68,7 @@ refining does not provide much benefit.
 	\centering
 	\includegraphics[height=\textheight]{../figs/parametric/diffusion_2D/laplace}
 		
-	\caption{\Cref{ex:laplace} Convergence graph for different choice of $C_w$}
+	\caption{\Cref{ex:laplace} Convergence graph for different choice of $C_w$  for 
+		quadrilaterals (left) and triangles (right).}
 	\label{fig:conv_laplace}
 \end{figure}

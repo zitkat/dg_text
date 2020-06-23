@@ -43,9 +43,12 @@ stepping solvers.
 \pysauce{DGField} class inherits from \pysauce{Field} base class, this provides it with the basic functionality needed
 to be used in problem specification. From methods implemented in \pysauce{DGField} the most relevant to DG FEM are:
 \begin{itemize}
-	\item \pysauce{get_both_facet_state_vals}
-	\item \pysauce{get_both_facet_base_vals}
-	\item \pysauce{get_facet_neighbor_idx}
+	\item \pysauce{get_both_facet_state_vals} -- which returns values of state on 
+	opposing sides of the boundary for each element
+	\item \pysauce{get_both_facet_base_vals} -- which returns values of basis functions 
+	on opposing sides of the boundary for each element
+	\item \pysauce{get_facet_neighbor_idx} -- which returns indicies of cell neighbors 
+	for individual facets along with index of the facet within th neighboring cell 
 	\item \pysauce{get_bc_facet_values}
 	\item \pysauce{get_facet_boundary_idx}
 	\item \pysauce{get_facet_vols}
@@ -65,14 +68,14 @@ and simplex subclasses.
 
 
 
-\subsection{Advection flux term implementation}
+\subsection{Hyperbolic flux term implementation}
 \label{se:adv_flux_term_imp}
-\pysauce{AdvectDGFluxTerm} corresponds with discretized term defined in 
-\Cref{se:hyp_term}. Part of the main term function capturing computation of cell 
-fluxes can be seen in listing below
+\pysauce{AdvectionDGFluxTerm} corresponds with discretized term \eqref{eq:hyp_flux_app} 
+where $\vec{f}(p) = \vec{a}p$. Part of the main term function capturing computation of 
+cell fluxes can be seen in Listing \ref{lst:adv_flux} below. Variables 
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of advection cell 
-fluxes]
+fluxes \label{lst:adv_flux}]
 fc_n = field.get_cell_normals_per_facet(region)
 # get maximal wave speeds at facets
 C = nm.abs(nm.einsum("ifk,ik->if", fc_n, advelo))
@@ -94,15 +97,21 @@ upwind = (1 - self.alpha) / 2. * nm.einsum("if,ifk,ifq->ifkq",
 cell_fluxes = nm.einsum("ifk,ifkq,dfq,ifq->id",
                          fc_n, central + upwind, fc_b, weights)
 \end{lstlisting}
-\ref{lsta:advflux_central} \pysauce{numpy.einsum} uses Einstein summation convention for 
-expressing tensor contractions for details see \cite{einsum-doc}.
+\begin{itemize}
+	\item[\ref{lsta:advflux_central}] \pysauce{numpy.einsum} uses Einstein 
+	summation convention for expressing tensor contractions for details see 
+	\cite{einsum-doc}.
+\end{itemize}
 
+
+
+General hyperbolic term is implemented in class \pysauce{NonlinearHyperbolicDGFluxTerm}
 
 
 
 \subsection{Diffusion flux term implementation}
 \label{se:diff_flux_term_imp}
-
+\setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of diffusion cell 
 fluxes]
 if self.mode == 'avg_state':
@@ -131,6 +140,7 @@ elif self.mode == 'avg_virtual':
 
 \subsection{Difusion penalty term implementation}
 \label{se:diff_penal_term_imp}
+\setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of penalty cell 
 fluxes]
 approx_order = field.approx_order
@@ -175,27 +185,35 @@ the neutral limiter is implemented in \pysauce{IdentityLimiter}.
 \label{se:i_moment_lim_1D}
 Code listing below shows implementation of moment limiter introduced in \ref{sse:moment_lim_1D} omitting some details 
 for brevity.
+\setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Moment limiter for 1D]
 idx = nm.arange(nm.shape(u[0, 1:-1])[0])
-idx_bc = nm.arange(nm.shape(u[0, :])[0])
 
 nu = nm.copy(u)
 tilu = nm.zeros(u.shape[1:])
 for ll in range(self.n_el_nod - 1, 0, -1):
-  tilu[idx] = minmod(nu[ll, 1:-1][idx],
+  tilu[idx] = minmod(nu[ll, 1:-1][idx], 
                      nu[ll-1, 2:][idx] - nu[ll-1, 1:-1][idx],
-					 nu[ll-1, 1:-1][idx] - nu[ll-1, :-2][idx])
+					 nu[ll-1, 1:-1][idx] - nu[ll-1, :-2][idx])  /*!\lann{lsta:lim1}!*/
 
   idx = idx[nm.where(abs(tilu[idx] - nu[ll, 1:-1][idx])
-						> MACHINE_EPS)[0]]
-if len(idx_bc) == 0:
-  break
-nu[ll, 1:-1][idx] = tilu[idx]
+											> MACHINE_EPS)[0]] /*!\lann{lsta:lim2}!*/
+if len(idx) == 0:
+  break /*!\lann{lsta:lim3}!*/
+nu[ll, 1:-1][idx] = tilu[idx] /*!\lann{lsta:lim4}!*/
 \end{lstlisting}
-
+\begin{itemize}
+	\item [\ref{lsta:lim1}] compute the limiting value $\tilde{u}$
+	\item [\ref{lsta:lim2}] extract indicies where the limiting value is larger than 
+	current solution
+	\item[\ref{lsta:lim3}] if none of the coefficients required limiting we stop
+    \item [\ref{lsta:lim3}] replace old values with limited ones
+	
+\end{itemize}
 
 \subsubsection{Moment limiter -- 2D}
 \label{se:i_moment_lim_2D}
+\setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Moment limiter for 
 cartesian grid]
 for ii, jj in reversed(list(

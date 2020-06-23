@@ -3,7 +3,7 @@ In the following examples we will busy ourselves solving following equations:\\
 Transient advection equation in one resp. two dimensions
 \begin{equation}
 	\label{eq:ex_advection}
-	\pdiff{p}{t} + a\fdiff{p}{x} = 0.
+	\pdiff{p}{t} + a\pdiff{p}{x} = 0.
 \end{equation}
 resp.
 \begin{equation}
@@ -25,15 +25,15 @@ equations = {'Advection':
 \end{lstlisting}
 \begin{itemize}
 	\item[\ref{lsta:history}] \pysauce{"p[-1]"} ensures the variable object stores 
-	history one step backwards in time facilitating forward nature of advection terms and 
-	time stepping solvers
+	history one step backwards in time facilitating forward nature of time stepping 
+	solvers
 	\item[\ref{lsta:flux}] \pysauce{"a.flux"} is an optional material argument 
 	representing $\alpha$ coefficient in \eqref{eq:lax-frieflux}
 \end{itemize}
 Laplace equation in two dimension
 \begin{equation}
 	\label{eq:ex_laplace}
-	\pdiff{^2 u}{x^2} + \pdiff{^2 u}{y^2} = 0
+	\pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} = 0
 \end{equation}
 discretization of this equation using Sfepy terms can be found in Listing 
 \ref{lst:laplace};\\
@@ -43,11 +43,11 @@ Static advection-diffusion equation with right hand side of the form
 \pdiff{p}{x} + \pdiff{p}{y} - D \cdot \left( \pdiff{^2 p}{x^2} + \pdiff{^2 
 p}{y^2} \right) = g
 \end{equation}
-i.e
+i.e.,
 \begin{equation}
 \vec{a} \cdot \nabla p - D \Delta p = g,
 \end{equation}
-where $\vec{a} = [1, 1]^T$ is advection velocity $D$ is diffusion coefficient and $g$ is 
+where $\vec{a} = [1, 1]^T$ is advection velocity, $D$ is diffusion coefficient and $g$ is 
 a source function. Sfepy discretization using symmetric scheme and penalty term can be 
 found in Listing 
 \ref{lst:advdiff}.
@@ -69,19 +69,24 @@ equations = {'adv_diff' :
 	"= 0"
 	}
 \end{lstlisting}
-Transient viscous Burgers equation in two dimensions
+Transient viscous Burgers equation in one resp. two dimensions
+\begin{equation}
+\pdiff{p}{t} + \frac{1}{2}\pdiff{p^2}{x} - D \cdot\pdiff{^2 p}{x^2} = g,
+\end{equation}
+resp.
 \begin{equation}
 \label{eq:ex_burgers}
 	\pdiff{p}{t} + \frac{1}{2}\left(\pdiff{p^2}{x} + \pdiff{p^2}{y}\right)  - 
 	D \cdot \left( \pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} \right) 
 	= g,
 \end{equation}
-or
+i.e.,
 \begin{equation}
 	\pdiff{p}{t} + \nabla \cdot \vec{f}(p) - D\Delta p = g.
 \end{equation}
-with $\vec{f}(p) = \frac{1}{2}[p^2, p^2]^T = \frac{1}{2}\vec{a} p^2$ in Sfepy this 
-equation is represented as illustrated in Listing \ref{lst:burgers}.
+with $\vec{f}(p) = \frac{1}{2}[p^2, p^2]^T = \frac{1}{2}\vec{a} p^2$. In SfePy 
+declarative notation these equations have again the same form represented in Listing 
+\ref{lst:burgers}.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Viscous Burgers equation \label{lst:burgers}]
 burg_velo = nm.array([1., 1.])

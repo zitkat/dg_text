@@ -19,7 +19,8 @@ We omit analytical forms of $g$ and boundary conditions for brevity.
 Different values of coefficient $C_w$ in penalty term then yield only slightly different 
 convergence behavior as demonstrated in Figure \ref{fig:kucera_conv} and 
 \Cref{fig:kucera_orders}. In this case the solution does not feature any sharp steps and 
-increase in penalty coefficient leads to increase in accuracy. 
+increase in penalty coefficient leads to increase in accuracy. In \Cref{fig:sol_kucera} 
+this effect is clearly visible in sample solution, similarly to \Cref{ex:quart1}
 \end{example}
 
 \begin{figure}[h!]
@@ -41,15 +42,16 @@ increase in penalty coefficient leads to increase in accuracy.
 	\centering
 	\begin{subfigure}{.5\textwidth}	
 		\centering	
-		\includegraphics[width=\linewidth]{../figs/err-sols/0_1_0_0_0_0_0_0_0_sol-h256o02.0.png}
+		\includegraphics[width=\linewidth]{../figs/sols/0_1_0_0_0_0_0_0_0_sol-h256o02}
 		\caption{$C_w = 1$}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering	
-		\includegraphics[width=\linewidth]{../figs/err-sols/2_1_2_0_0_0_0_0_0_sol-h256o02.0.png}
+		\includegraphics[width=\linewidth]{../figs/sols/2_1_2_0_0_0_0_0_0_sol-h256o02}
 		\caption{$C_w = 15$}
 	\end{subfigure}
 	\caption{Solutions of \Cref{ex:kucera} for different values of $C_w$}
+	\label{fig:sol_kucera}
 \end{figure}
 
 \begin{figure}[p!]
