@@ -74,14 +74,14 @@ and broken Sobolev space on $\Omega_h$ as
 	\in \Omega_h \right\}
 \end{equation}
 In finite dimensional discretization we will work in finite dimensional 
-subspaces of $W^{1, 2}(\Omega_h)$. On each element $T^k$ we express local 
-solution as linear combination of polynomial basis functions
+subspaces of $W^{1, 2}(\Omega_h)$. On each element $T^k$ we express 
+solution $p(t, \vec{x})$ locally as a linear combination of polynomial basis functions
 \begin{equation}
 \label{eq:el_lin_comb}
-	p_h^k(t, \vec{x}) \approx \sum\limits_{n=0}^{N_{base} - 1} 
+	p(t, \vec{x})|_{T^k} \approx p_h^k(t, \vec{x}) = \sum\limits_{n=0}^{N_{base} - 1} 
 	P_n^k\psi^k_n(\vec{x}),
 \end{equation}
-i.e. as function from local space
+i.e. as a function in local space
 \begin{equation}
 	V_{T^k} = \text{span}\big\{ \psi_n^k(\vec{x}), \; n = 0,1, \dots  
 	N_{base}-1\big\},
@@ -98,9 +98,9 @@ us to represent discontinuous solution, unlike in the classical FEM, where
 supports of basis functions overlap, spanning multiple elements and  thus 
 enforcing continuity of solution.
 
-In our setting $\psi_n^k(\vec{x})$ is composed of Legendre polynomials shifted 
-to interval $[0, 1]$ in such a way that set $\{\psi_n^k(\vec{x}),\; i = 0,1, 
-\dots  N_{base} - 1\}$ is orthogonal with respect to local scalar product
+In our setting $\psi_n^k(\vec{x})$ is composed of Legendre polynomials, shifted 
+to interval $[0, 1]$, in such a way that set $\{\psi_n^k(\vec{x}),\; i = 0,1, 
+\dots  N_{base} - 1\}$ is orthogonal with respect to the local scalar product
 \begin{equation}
 	\label{eq:scalar_prod_dk}
 	(p, v)_{T^k} = \int_{T^k} p \cdot v.
@@ -116,11 +116,11 @@ hence forming basis of $N_{base}$-dimensional space.
 %of $\Omega_h$; as number of basis functions, provides maximal number of basis 
 %function for given order which remain orthogonal. 
 
-Concrete shape of $\psi_n^k(\vec{x})$ depends on topology of the elements. For 
+Concrete shape of $\psi_n^k(\vec{x})$ depends on topology of the mesh elements. For 
 tensor product meshes i.e. quadrilateral elements we use straight-forward 
 tensor product of Legendre polynomials. If we denote $M$ the order of 
-approximation, $d$ dimension of geometric space and $L^\alpha(\xi)$ the shifted 
-Legendre polynomial of order $\alpha$ in variable $\xi$, then we get 
+approximation, $d$ dimension of geometric space (i.e., 2 in our case) and $L^\alpha(\xi)$ 
+the shifted Legendre polynomial of order $\alpha$ in variable $\xi$, we get 
 quadrilateral element basis functions in the form
 \begin{equation}
 \psi_n^k(\vec{x}) = L^r(x)L^s(y)\quad r, s = 0,1, \dots, M
@@ -757,13 +757,15 @@ in two space dimensions.
 					  \alpha_j(P^{k,m+1}_{i,j-1} - P^{k,m}_{i,j-1}),
 					  \alpha_j(P^{k,m}_{i,j-1} - P^{k,m-1}_{i,j-1}),\\
 					  \alpha_i(P^{k+1,m}_{i-1,j} - P^{k+1,m}_{i-1,j}),
-					  \alpha_i(P^{k-1,m}_{i-1,j} - P^{k,m}_{i-1,j})\big)
+					  \alpha_i(P^{k-1,m}_{i-1,j} - P^{k,m}_{i-1,j})\big),
 \end{multline}
 where 
-
 \begin{equation}
-	\frac{1}{2\sqrt{4n^2 - 1}} \leq \alpha_n \leq \sqrt{\frac{2n - 1}{2n + 1}}
-\end{equation} 
+	\frac{1}{2\sqrt{4n^2 - 1}} \leq \alpha_n \leq \sqrt{\frac{2n - 1}{2n + 1}}.
+\end{equation}
+Here leveraged the fact that we assume the mesh to be [regular tensor-product] and 
+introduced new notation indexing mesh elements as $T^{k,m}$
+
 
 
 %$$
