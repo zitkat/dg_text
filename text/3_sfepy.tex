@@ -51,8 +51,8 @@ integrals = {'i': 2 * approx_order}
 
 equations = {'the_equation':    /*!\annotation{lsta:laplace_eq}!*/
 		"dw_laplace.i.Omega(D.val, v, p) " 
-	    " + dw_dg_diffusion_flux.i.Omega(D.val, p, v)" 
-	    " + dw_dg_diffusion_flux.i.Omega(D.val, v, p)" 
+	    " - dw_dg_diffusion_flux.i.Omega(D.val, p, v)" 
+	    " - dw_dg_diffusion_flux.i.Omega(D.val, v, p)" 
 	    " + dw_dg_interior_penalty.i.Omega(D.val, D.Cw, v, p)"
 	    "= 0"}
 

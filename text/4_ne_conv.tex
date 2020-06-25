@@ -33,7 +33,7 @@ equations = {'Advection':
 Laplace equation in two dimension
 \begin{equation}
 	\label{eq:ex_laplace}
-	\pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} = 0
+	- D \left(\pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} \right)= 0
 \end{equation}
 discretization of this equation using Sfepy terms can be found in Listing 
 \ref{lst:laplace};\\
@@ -60,8 +60,8 @@ equations = {'adv_diff' :
 	"+ dw_dg_advect_laxfrie_flux.i.Omega(a.flux, a.val, v, p)"
 	# diffusion
 	"+ dw_laplace.i.Omega(D.val, v, p) "
-	"+ dw_dg_diffusion_flux.i.Omega(D.val, p, v)"
-	"+ dw_dg_diffusion_flux.i.Omega(D.val, v, p)"
+	"- dw_dg_diffusion_flux.i.Omega(D.val, p, v)"
+	"- dw_dg_diffusion_flux.i.Omega(D.val, v, p)"
 	# penalty
 	"+ dw_dg_interior_penalty.i.Omega(D.val, D.cw, v, p)"
 	# source
@@ -101,12 +101,12 @@ equations = {'Burgers':
 	# transient
 	"dw_volume_dot.i.Omega(v, p)"
 	#  non-linear hyperbolic terms
-	"- dw_ns_dot_grad_s.i.Omega(bf, bf_d, p[-1], v)" /*!\lann{lsta:nonlin}!*/
-	"+ dw_dg_nonlinear_laxfrie_flux.i.Omega(bf, bf_d, v, p[-1])"
+	"- dw_ns_dot_grad_s.i.Omega(bf, bf_d, p[-1], v)" /*!\lann{lsta:nl1}!*/
+	"+ dw_dg_nonlinear_laxfrie_flux.i.Omega(bf, bf_d, v, p[-1])" /*!\lann{lsta:nl2}!*/
 	#  diffusion
 	"+ dw_laplace.i.Omega(D.val, v, p[-1])"
-	"+ dw_dg_diffusion_flux.i.Omega(D.val, p, v)"
-	"+ dw_dg_diffusion_flux.i.Omega(D.val, v, p)"
+	"- dw_dg_diffusion_flux.i.Omega(D.val, p[-1], v)"
+	"- dw_dg_diffusion_flux.i.Omega(D.val, v, p[-1])"
 	# penalty
 	"+ dw_dg_interior_penalty.i.Omega(D.val, D.Cw, v, p[-1])"
 	# source
@@ -115,6 +115,7 @@ equations = {'Burgers':
 	}
 \end{lstlisting}
 \begin{itemize}
-	\item[\ref{lsta:nonlin}] Nonlinear terms require as parameters function and its 
+	\item[\ref{lsta:nl1}, \ref{lsta:nl1}] Nonlinear terms require as parameters function 
+	and its 
 	derivative.
 \end{itemize}
