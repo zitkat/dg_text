@@ -129,7 +129,21 @@ and dimensions of the approximation space is
 \begin{equation}
 	N_{base} = (M + 1)^d.
 \end{equation}
-
+The mapping between $n$ and $r$ and $s$ (ordering of basis functions) 
+\begin{equation}
+\label{eq:bindx}
+	n = indx(r, s)
+\end{equation}
+with its reverses
+\begin{equation}
+	r = indx_1(n),\; s = indx_2(n)
+\end{equation}
+is theoretically arbitrary, in practice we choose it so that the basis functions are ordered hierarchically i.e.
+\begin{equation}
+	n > m \Leftrightarrow indx_1(n) + indx_2(n) > indx_1(m) + indx_2(m)
+\end{equation}
+Used mapping is probably best expressed using procedural programming language,
+see Listing \ref{lst:iter_by_order}.
 %and for "cube" is
 %\begin{equation}
 %\psi_n^k(\vec{x}) = L^r(x)L^s(y)L^d(z)\quad r,s,d = 0,1, \dots, Ord \text{ 
@@ -748,24 +762,32 @@ the strictest limiting, whereas $\alpha_i = 1$ is the mildest limiter possible \
 
 \subsubsection{Two-dimensional limiting}
 In this section we describe extension of moment limiter to regular tensor-product meshes 
-in two space dimensions.
-[\todo element indicies]
-[\todo basis indicies]
+in two dimensions.
 \begin{multline}
-\tilde{P}^{k,m}_{i,j} =
-	\text{minmod}\big(P^{k,m}_{i,j}, 
-					  \alpha_j(P^{k,m+1}_{i,j-1} - P^{k,m}_{i,j-1}),
-					  \alpha_j(P^{k,m}_{i,j-1} - P^{k,m-1}_{i,j-1}),\\
-					  \alpha_i(P^{k+1,m}_{i-1,j} - P^{k+1,m}_{i-1,j}),
-					  \alpha_i(P^{k-1,m}_{i-1,j} - P^{k,m}_{i-1,j})\big),
+\tilde{P}^{k,m}_{r,s} =
+	\text{minmod}\big(P^{k,m}_{r,s}, 
+					  \alpha_s(P^{k,m+1}_{r,s-1} - P^{k,m}_{r,s-1}),
+					  \alpha_s(P^{k,m}_{r,s-1} - P^{k,m-1}_{r,s-1}),\\
+					  \alpha_r(P^{k+1,m}_{r-1,s} - P^{k+1,m}_{r-1,s}),
+					  \alpha_r(P^{k-1,m}_{r-1,s} - P^{k,m}_{r-1,s})\big),
 \end{multline}
-where 
+where $P^{k, m}_{r,s}$ denotes coefficient at basis function $\phi_n$ of the form
+$$
+\phi_n = L^r(x)L^s(y)
+$$
+i.e.,
+$$
+n = indx(r, s).
+$$
+Further we leveraged the fact that we assume the mesh to be regular uniform 
+Cartesian grid and introduced new notation indexing mesh elements as $T^{k,m}$ where $k$ 
+ranges over rows and $m$ over columns.
+The region of stability for $\alpha_n$ i different due to normalization of basis functions
 \begin{equation}
-	\frac{1}{2\sqrt{4n^2 - 1}} \leq \alpha_n \leq \sqrt{\frac{2n - 1}{2n + 1}}.
+\frac{1}{2\sqrt{4n^2 - 1}} \leq \alpha_n \leq \sqrt{\frac{2n - 1}{2n + 1}},
 \end{equation}
-Here leveraged the fact that we assume the mesh to be [regular tensor-product] and 
-introduced new notation indexing mesh elements as $T^{k,m}$
-
+we choose upper bound as $\alpha$ again. The two-dimensional limiter is implemented in 
+class \pysauce{dg.limiters.MomentLimiter2D}, see \Cref{se:i_moment_lim_2D}. 
 
 
 %$$

@@ -64,8 +64,22 @@ Legendre polynomial spaces are implemented in two classes
 \pysauce{PolySpace}. It implements method \pysauce{_eval_base} which is used to 
 get values of basis functions as well as their derivatives. It also contains 
 methods for evaluating Legendre and Jacobi polynomials common to tensor-product 
-and simplex subclasses.
-
+and simplex subclasses. These classes are accompanied by two function \pysauce{get_n_el_nod}, which returns number of basis functions for given order , dimension and type of basis, and generator \pysauce{iter_by_order} (\ref{lst:iter_by_order}) which generates tuples of $r$ and $s$ in desired hierarchical order.
+\setcounter{lstannotation}{0}
+\begin{lstlisting}[language=Python, caption= Itaration over $r$ and $s$ indicies of basis functions \label{lst:iter_by_order}]
+for k in range(porder):
+	for r in range(k + 1):
+		yield r, k - r /*!\lann{lsta:yield}!*/
+if not extended: return
+for s in range(1, porder):
+	for r in range(1, porder):
+		if r + s <= porder - 1:
+			continue
+		yield r, s
+\end{lstlisting}
+\begin{itemize}
+	\item[\ref{lsta:yield}] \pysauce{yield} keyword turns function into generator usable in for-cycle, for example in Listing \ref{lst:limiter_2D}.
+\end{itemize}
 
 
 \subsection{Hyperbolic flux term implementation}
@@ -213,9 +227,17 @@ nu[ll, 1:-1][idx] = tilu[idx] /*!\lann{lsta:lim4}!*/
 
 \subsubsection{Moment limiter -- 2D}
 \label{se:i_moment_lim_2D}
+We list implementation of 2D limiter for reference in Listing \ref{lst:limiter_2D}. Limiter is implemented according to \Cref{se:limiters}.
+
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Moment limiter for 
-cartesian grid]
+cartesian grid \label{lst:limiter_2D}]
+for ll, (ii, jj) in enumerate(
+						iter_by_order(self.field.approx_order, 
+									  2,
+									  extended=ex)):
+  nu[ii, jj, ...] = u[ll]  /*!\lann{lsta:indx_to}!*/
+
 for ii, jj in reversed(list(
 					iter_by_order(
 						self.field.approx_order, 2,
@@ -243,7 +265,18 @@ for ii, jj in reversed(list(
   if len(idx) == 0:
   	break
   nu[ii, jj, idx] = tilu[idx]
+for ll, (ii, jj) in enumerate(
+						iter_by_order(self.field.approx_order, 
+									  2,   # dim
+									  extended=ex)):
+  resu[ll] = nu[ii, jj]  /*!\lann{lsta:indx_from}!*/
+
 \end{lstlisting}
+\begin{itemize}
+	\item[\ref{lsta:indx_to}] Reshape solution array for indexing using $r$ and $s$ indicies, effectively removing need for explicit inverse of index mapping from \eqref{eq:bindx}.
+	
+	\item [\ref{lsta:indx_from}] Convert back to linear index.
+\end{itemize}
 
 
 \subsection{Time stepping solvers implementation}
