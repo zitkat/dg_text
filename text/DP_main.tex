@@ -63,7 +63,6 @@
 }
 
 \lstset{escapeinside={/*!}{!*/}}
-
 \newcounter{lstannotation}
 \setcounter{lstannotation}{0}
 \renewcommand{\thelstannotation}{\ding{\number\numexpr181+\arabic{lstannotation}}}
@@ -99,6 +98,8 @@
 \providecommand{\anglebracs}[1]{$\langle$#1$\rangle$}
 \providecommand{\manglebracs}[1]{\langle#1\rangle}
 \providecommand{\norm}[1]{\left\lVert#1\right\rVert}
+\providecommand{\Ltwonorm}[1]{\norm{#1}_{L^2}}
+\providecommand{\Linfnorm}[1]{\norm{#1}_{L^\infty}}
 \providecommand{\abs}[1]{\left\lvert#1\right\rvert}
 \providecommand{\doteq}{\,\dot = \,}
 \newcommand{\pdiff}[2]{\frac{\partial#1}{\partial#2}}
@@ -264,17 +265,7 @@ Finally we present results of convergence studies for various problem setups.
 
 \input{4_ne_conv.tex}
 
-\section{Examples}
-Inspired by \cite{Kucera} we present plots depicting average order over several 
-mesh refinements, this might not be ideal measure of the method behavior, nevertheless it 
-still provides us with convenient indicator. Accompanied with plots of $L^2$ error it 
-allows us to reason about method over several varying parameters, notably it reveals 
-relationship between diffusion coefficient and penalty term in examples including 
-diffusion terms.
 
-In \Cref{ex:adv1D} we explore behavior of DG FE method for 1D pure advection time 
-dependent problem with and without limiting, in examples \ref{ex:quart1}, \ref{ex:quart2} 
-and \ref{ex:quart3} we ...
 
 \input{examples/conv_advection_1D.tex}
 \newpage
@@ -297,7 +288,7 @@ and \ref{ex:quart3} we ...
 
 
 \section*{Acknowledgment}
- DPP v rámci řešení projektu GACR 16-03823S
+This work was partially supported by project GACR 16-03823S.
 
 %\section{Doc test}
 %\begin{equation}

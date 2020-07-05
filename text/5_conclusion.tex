@@ -1,9 +1,47 @@
+% !TeX spellcheck = en_US
+%%
+%% Text of diploma thesis
+%%
+%% Tomáš Zítka
+%%
+\paragraph{Implementation}
+In this work we implemented discontinuous Galerkin method into SfePy package. SfePy uses 
+term based syntax for building discretizations of equations, we implemented several 
+new terms, namely linear advection flux term, general hyperbolic flux term, diffusion 
+flux and diffusion penalty term, and general term for computing integral
+$$
+\int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j. 
+$$
+Along with wide range of terms already present in SfePy this allows users to discretize 
+variety of useful equations. To enable solving transient equations we implemented two 
+explicit time stepping solvers, forward Euler and TVD Runge-Kutta of 3rd order 
+solver. Moreover we implemented moment limiters for 1D and 2D transient problems.
 
+\paragraph{Analysis}
+To study properties of the method we measured convergence rates for seven example 
+problems chosen from literature. For some of them we present results to our knowledge not 
+available in literature. For transient problems the performance of the method is hindered 
+by used time stepping solvers, nevertheless the method still performs to the expectations.
+[\todo more on examples when they are finished]
 
-Possible improvements:
+\paragraph{Possible improvements and suggestions for further work}
+Although from the time and memory requirements perspective the implementation of the 
+method scales well enough with SfePy capabilities, there is still room for improvement. 
+Calls of \pysauce{numpy.einsum} could use optimized tensor contraction path, which could 
+be retained between individual term evaluation (i.e. between time steps). 
+The implementation of limiters is rather ad-hoc and refactoring it to bring it in line 
+with design of other SfePy elements would help making code more readable and their usage 
+simpler and more versatile. 
+
+One important feature available in SfePy missing from this DG FEM implementation is 
+ability to solve systems of PDEs. This lack could inspire future work as it would 
+requires substantial modification of flux terms as well as implementation of  
+strategies for evolving systems of interest like Euler or Navier-Stokes equations. 
+Further besides implemented Lax-Friedrichs flux there is variety of other fluxes for 
+examples Godunov flux or some problem specific fluxes like [\todo cite] designed 
+specifically for solving Euler equation Thanks to versatility of problem specification 
+this would also unlock large potential for further study of the method behavior. 
+
 \begin{itemize}
-	\item optimization for einsum
 	\item Godunov and other fluxes
-	\item systems of PDEs
-	\item better limiter implementation
 \end{itemize}

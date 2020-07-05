@@ -1,7 +1,12 @@
+% !TeX spellcheck = en_US
+%%
+%% Text of diploma thesis
+%%
+%% Tomáš Zítka
+%%
 \section{Problem specification}
 Before we delve into inner workings of Sfepy numerical code lets introduce the so-called 
-declarative problem specification format. The format relies on Python data structures 
-namely dictionaries, see 
+declarative problem specification format. The format relies on Python dictionaries, see 
 Listing \ref{lst:laplace} for model problem specification for 2D Laplace equation on 
 domain $[0, 1] \times [0, 1]$ simplified from \Cref{ex:laplace}. It 
 contains dictionaries declaring components of the problem like regions in geometric 
@@ -75,12 +80,12 @@ options = {'nls'             : 'newton',   /*!\annotation{lsta:laplace_opts}!*/
 	\shellcmd{(data type, number of components, region name, approximation order, field 
 	type, polyspace)} here field \pysauce{'f'} is field for discretization of real scalar 
 	variable in region \pysauce{"Omega"} using discontinuous Galerkin method of order 
-	\pysauce{approx_order} in space of Legendre polynomials. 
+	\pysauce{approx_order} in space of Legendre polynomials, 
 	\item[\ref{lsta:laplace_vars}]  here \pysauce{'p'} is unknown state variable we are 
 	solving for and \pysauce{'v'} is test variable, they are both discretized using field 
-	\pysauce{'f'} defined above.
+	\pysauce{'f'} defined above,
 	\item[\ref{lsta:laplace_bcf}]  function \pysauce{bcs} is called during solution, it 
-	is supposed to produce values of boundary conditions.
+	is supposed to produce values of boundary conditions,
 	\item[\ref{lsta:laplace_bcf}] \pysauce{dgebcs} dictionary sets up boundary 
 	conditions specifically for DG FE methods, it creates map between boundary regions 
 	and, variables and values of functions that determine boundary conditions
@@ -97,9 +102,8 @@ options = {'nls'             : 'newton',   /*!\annotation{lsta:laplace_opts}!*/
 	various solvers including \pysauce{mumps} \cite{MUMPS:2}
 	
 	\item[\ref{lsta:laplace_opts}] various options, \pysauce{'output_format' : 'msh'} and 
-	\pysauce{'format_variant' : 'gmsh'} ensure output in form suitable for 
-	post-processing 
-	using \pysauce{Gmsh} (\url{http://gmsh.info/}, \cite{Remacle2007}).
+	\pysauce{'format_variant' : 'gmsh'} ensure output in format suitable for 
+	post-processing using \pysauce{Gmsh} (\url{http://gmsh.info/}, \cite{Remacle2007}).
 \end{itemize}
 All the test problems studied in Chapter \ref{ch:convergence} are specified using this 
 declarative approach, codes can be found in (\todo Attachment? 

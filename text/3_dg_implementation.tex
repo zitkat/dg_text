@@ -1,4 +1,9 @@
-
+% !TeX spellcheck = en_US
+%%
+%% Text of diploma thesis
+%%
+%% Tomáš Zítka
+%%
 \section{DG components}
 Having laid out structure of the SfePy problem and objects needed to create it and work 
 with it we now present DG FEM
@@ -78,7 +83,8 @@ for s in range(1, porder):
 		yield r, s
 \end{lstlisting}
 \begin{itemize}
-	\item[\ref{lsta:yield}] \pysauce{yield} keyword turns function into generator usable in for-cycle, for example in Listing \ref{lst:limiter_2D}.
+	\item[\ref{lsta:yield}] \pysauce{yield} keyword turns function into generator usable 
+	in for cycles, for example in Listing \ref{lst:limiter_2D}.
 \end{itemize}
 
 
@@ -86,7 +92,7 @@ for s in range(1, porder):
 \label{se:adv_flux_term_imp}
 \pysauce{AdvectionDGFluxTerm} corresponds with discretized term \eqref{eq:hyp_flux_app} 
 where $\vec{f}(p) = \vec{a}p$. Part of the main term function capturing computation of 
-cell fluxes can be seen in Listing \ref{lst:adv_flux} below. Variables 
+cell fluxes can be seen in Listing \ref{lst:adv_flux} below. 
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of advection cell 
 fluxes \label{lst:adv_flux}]
