@@ -19,24 +19,25 @@ where $f$ is sufficiently smooth vector function $f: \realc
 \rightarrow\realc^n$, with the boundary conditions
 \begin{align}\label{eq:diff_bcs}
 p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in } 
-				\Gamma_{Dir} \subset \partial\Omega \\
-\pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{ in 
-} \Gamma_{New} \subset \partial\Omega
+                \Gamma_{Dir} \subset \partial\Omega \\
+%\pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{ 
+%in 
+%} \Gamma_{New} \subset \partial\Omega
 \end{align}
 or in the transient form
 \begin{equation}
-	\label{eq:hyp_diff_trans}
-	\pdiff{p}{t} + \nabla\cdot \vec{f}(p) -  \nabla \cdot (D \nabla p) = g
+    \label{eq:hyp_diff_trans}
+    \pdiff{p}{t} + \nabla\cdot \vec{f}(p) -  \nabla \cdot (D \nabla p) = g
 \end{equation}
 with boundary conditions of the same form and initial condition
 \begin{equation}
-	\label{eq:diff_ic}
-	p(0, \vec{x}) = p_0(\vec{x}).
+    \label{eq:diff_ic}
+    p(0, \vec{x}) = p_0(\vec{x}).
 \end{equation}
 For this problem we will be concerned with discretization of the generally 
 nonlinear hyperbolic term covered in \Cref{se:hyp_term}
 \begin{equation}
-	\nabla\cdot \vec{f}(p)
+    \nabla\cdot \vec{f}(p),
 \end{equation}
 which also covers discretization of linear advection term
 \begin{equation}
@@ -44,11 +45,11 @@ which also covers discretization of linear advection term
 \end{equation}
 diffusion term covered in \Cref{se:diff_term}
 \begin{equation}
-	-  \nabla \cdot (D \nabla p)
+    -  \nabla \cdot (D \nabla p);
 \end{equation}
 source term in \Cref{se:source_term}
 \begin{equation}
-	g
+    g;
 \end{equation}
 and finally in \Cref{se:time_theory} we will 
 treat discretization of temporal derivative term
@@ -59,57 +60,66 @@ treat discretization of temporal derivative term
 
 \section{Finite dimensional discontinuous approximation space}
 In order to discretize the terms and further the equations we first need to 
-establish approximation space we will use similarly to continuous FEM. We start 
-by choosing suitable computational domain $\Omega_h$ which approximates domain 
-$\Omega$. Since SfePy supports simplex and tensor product meshes, we will be 
-concerned with space filling tessellations containing only triangles or 
-only quadrangles. Subscript $h$ denotes average diameter of the elements, $N$ 
-number of elements of $\Omega_h$ and individual elements will be denoted by 
-$T^k$ for $k=0, \ldots, N - 1$. Creating this suitable tessellation for 
-arbitrary computational domain is by no means trivial task, however for the 
-time being we will assume selected computational domain and mesh satisfies all 
-conditions required bellow. First we define piecewise continuous functions 
-space on $\Omega_h$ as 
+establish approximation space we will use, similarly to continuous FEM. We 
+start by choosing suitable computational domain $\Omega_h$ which approximates 
+domain $\Omega$. Since SfePy supports simplex and tensor product meshes, we 
+will be concerned with space filling tessellations containing line segments 
+for 1D problems respective only triangles or only quadrangles for 2D 
+problems. Subscript $h$ denotes average diameter of the elements, 
+$N$ will denote the number of elements of $\Omega_h$ and individual elements 
+will be denoted by $T^k$ for $k=0, \ldots, N - 1$. Creating this suitable 
+tessellation for arbitrary computational domain is by no means trivial task, 
+however for the time being we will assume selected computational domain and 
+mesh satisfies all conditions required bellow. First we define space of 
+piecewise continuous functions  on $\Omega_h$ as 
 \begin{equation}
-	C^1(\Omega_h) =  \left\{v;\; v\vert_{T^k} \in C^1 \quad \forall T^k \in 
-	\Omega_h \right\}
+    C^1(\Omega_h) =  \left\{v;\; v\vert_{T^k} \in C^1 \quad \forall T^k \in 
+    \Omega_h \right\}
 \end{equation}
 and broken Sobolev space on $\Omega_h$ as
 \begin{equation}\label{eq:sobh}
-	W^{1, 2}(\Omega_h) = \left\{v;\; v\vert_{T^k} \in W^{1, 2}\quad \forall T^k 
-	\in \Omega_h \right\}
+    W^{1, 2}(\Omega_h) = \left\{v;\; v\vert_{T^k} \in W^{1, 2}\quad \forall T^k 
+    \in \Omega_h \right\}
 \end{equation}
 In finite dimensional discretization we will work in finite dimensional 
 subspaces of $W^{1, 2}(\Omega_h)$. On each element $T^k$ we express 
 solution $p(t, \vec{x})$ locally as a linear combination of polynomial basis functions
 \begin{equation}
 \label{eq:el_lin_comb}
-	p(t, \vec{x})|_{T^k} \approx p_h^k(t, \vec{x}) = \sum\limits_{n=0}^{N_{base} - 1} 
-	P_n^k\psi^k_n(\vec{x}),
+    p(t, \vec{x})|_{T^k} \approx p_h^k(t, \vec{x}) = \sum\limits_{n=0}^{N_{base} - 1} 
+    P_n^k\psi^k_n(\vec{x}),
 \end{equation}
 i.e. as a function in local space
 \begin{equation}
-	V_{T^k} = \text{span}\big\{ \psi_n^k(\vec{x}), \; n = 0,1, \dots  
-	N_{base}-1\big\},
+    V_{T^k} = \text{span}\big\{ \psi_n^k(\vec{x}), \; n = 0,1, \dots  
+    N_{base}-1\big\},
 \end{equation}
 where $N_{base}$ is number of basis functions we use in approximation and hence 
 dimension of approximation space. This number is directly tied to approximation 
-order and is dependent on the type of mesh element. We also require that
+order and is dependent on the type of mesh elements. We also require that
 \begin{equation}
-	\text{supp}\big\{\psi_n^k(\vec{x}\big)\} = T^k \quad n \in \{0,1, 
-	\dots  N_{base}-1\}.
+    \text{supp}\big\{\psi_n^k(\vec{x}\big)\} = T^k \quad n \in \{0,1, 
+    \dots  N_{base}-1\}.
 \end{equation}
 This means that basis functions are localized to individual elements and allow 
 us to represent discontinuous solution, unlike in the classical FEM, where 
 supports of basis functions overlap, spanning multiple elements and  thus 
 enforcing continuity of solution.
 
-In our setting $\psi_n^k(\vec{x})$ is composed of Legendre polynomials, shifted 
-to interval $[0, 1]$, in such a way that set $\{\psi_n^k(\vec{x}),\; i = 0,1, 
-\dots  N_{base} - 1\}$ is orthogonal with respect to the local scalar product
+In 1D setting $\psi_n^k(\vec{x})$ is composed of Legendre polynomials shifted 
+and truncated to interval $[0, 1]$, we denote $L^r(x)$ the Legendre 
+polynomial of order $r$. These Legendre polynomials are orthogonal and hence 
+the set  $\{\psi_n^k(x)| \; \psi_n = L^n, \; n = 0,1, \dots  N_{base} - 
+1\}$ forms basis of  $N_{base}$ dimensional space we denote $M = N_{base} - 
+1$ maximal order of used Legendre polynomials.
+
+In 2D the basis functions $\psi_n^k(\vec{x})$ are composed from Legendre 
+polynomials  in such a way that set $\{\psi_n^k(\vec{x})| \; n = 0,1, \dots  
+N_{base} - 1\}$ is orthogonal with respect to the local 
+scalar product
 \begin{equation}
-	\label{eq:scalar_prod_dk}
-	(p, v)_{T^k} = \int_{T^k} p \cdot v.
+    \label{eq:scalar_prod_dk}
+    (p, v)_{T^k} = \int_{T^k} p \cdot v.
 \end{equation}
 hence forming basis of $N_{base}$-dimensional space. 
 
@@ -125,31 +135,15 @@ hence forming basis of $N_{base}$-dimensional space.
 Concrete shape of $\psi_n^k(\vec{x})$ depends on topology of the mesh elements. For 
 tensor product meshes i.e. quadrilateral elements we use straight-forward 
 tensor product of Legendre polynomials. If we denote $M$ the order of 
-approximation, $d$ dimension of geometric space (i.e., 2 in our case) and $L^\alpha(\xi)$ 
-the shifted Legendre polynomial of order $\alpha$ in variable $\xi$, we get 
+approximation, $d$ dimension of geometric space (i.e., 2 in our case), we get 
 quadrilateral element basis functions in the form
 \begin{equation}
 \psi_n^k(\vec{x}) = L^r(x)L^s(y)\quad r, s = 0,1, \dots, M
 \end{equation}
-and dimensions of the approximation space is
+and dimension of the approximation space is
 \begin{equation}
-	N_{base} = (M + 1)^d.
+    N_{base} = (M + 1)^d.
 \end{equation}
-The mapping between $n$ and $r$ and $s$ (ordering of basis functions) 
-\begin{equation}
-\label{eq:bindx}
-	n = indx(r, s)
-\end{equation}
-with its reverses
-\begin{equation}
-	r = indx_1(n),\; s = indx_2(n)
-\end{equation}
-is theoretically arbitrary, in practice we choose it so that the basis functions are ordered hierarchically i.e.
-\begin{equation}
-	n > m \Leftrightarrow indx_1(n) + indx_2(n) > indx_1(m) + indx_2(m)
-\end{equation}
-Used mapping is probably best expressed using procedural programming language,
-see Listing \ref{lst:iter_by_order}.
 %and for "cube" is
 %\begin{equation}
 %\psi_n^k(\vec{x}) = L^r(x)L^s(y)L^d(z)\quad r,s,d = 0,1, \dots, Ord \text{ 
@@ -162,40 +156,56 @@ $$
 \left\{ x^ry^s,  \quad r, s = 0,1, \dots, M \text{ s.t. } r + s \leq M\right\}
 $$
 with respect to scalar product \eqref{eq:scalar_prod_dk}
-and its shape is much more elaborate, the Jacobi polynomials are needed to 
+and its shape is much more elaborate. The Jacobi polynomials are needed to 
 represent the basis. If we denote $J^{\alpha, \beta}_m$ the $m$-th order 
 Jacobi polynomial, the individual basis functions can be written in the form 
 \cite{Hesthaven2008}
 \begin{equation}
-	\psi_n^k(\vec{x}) = J_r(a)J^{2s+1, 0}_s(b)(1 - b)^r\quad r, s = 0,1, \dots, 
-	Ord \text{ s.t. } r + s = n \leq Ord
+    \psi_n^k(\vec{x}) = J_r(a)J^{2s+1, 0}_s(b)(1 - b)^r\quad r, s = 0,1, \dots, 
+    Ord \text{ s.t. } r + s = n \leq Ord
 \end{equation}
 where
 \begin{equation}
-	a = 2 \frac{1 + x}{1 - y} - 1, b = y.
+    a = 2 \frac{1 + x}{1 - y} - 1, b = y.
 \end{equation}
-that is we get local polynomial space of dimension
+We get local polynomial space of dimension
 \begin{equation}
-N_{base} =  \frac{(M + 1) \cdot (M + 2) \cdot ... \cdot (M + d)}{d!},
+N_{base} =  \frac{(M + 1) \cdot (M + 2) \cdot ... \cdot (M + d)}{d!}.
 \end{equation}
-
+In both 2D cases the mapping between $n$ and $r$ and $s$ (i.e. ordering of 
+basis functions) 
+\begin{equation}
+\label{eq:bindx}
+n = indx(r, s)
+\end{equation}
+with its reverses
+\begin{equation}
+r = indx_1(n),\; s = indx_2(n)
+\end{equation}
+is theoretically arbitrary, in practice we choose it so that the basis 
+functions are ordered hierarchically i.e.
+\begin{equation}
+n \leq m \Leftrightarrow indx_1(n) + indx_2(n) \leq indx_1(m) + indx_2(m)
+\end{equation}
+Used mapping is probably best expressed using procedural programming language,
+see Listing \ref{lst:iter_by_order}.
 In the whole computational domain $\Omega_h$ the solution can be than thought 
 of as being a member of direct sum of local spaces
 \begin{equation}
-	Le_{\Omega_h}^{M} = \bigoplus\limits_{T^k \in \Omega_h} V_{T^k}
+    Le_{\Omega_h}^{M} = \bigoplus\limits_{T^k \in \Omega_h} V_{T^k}
 \end{equation}
 which is finite dimensional subspace of broken Sobolev space defined in 
 \eqref{eq:sobh}, 
 that is $Le_{\Omega_h}^{M} \subset  W^{1,2}(\Omega_h)$, $Le$ stands for Legendre, it has 
 dimension
 \begin{equation}\label{eq:dim_legh}
-	N_{dof} = \text{dim}(Le_{\Omega_h}^{M}) = N\cdot N_{base}
+    N_{dof} = \text{dim}(Le_{\Omega_h}^{M}) = N\cdot N_{base}
 \end{equation}
 This is local basis commonly used in literature \cite{Hesthaven2008}, 
 \cite{Bokhove2008}, however there are also other usable bases, which must not 
 be orthogonal or polynomial \cite{Yuan2006}. We will always use full 
-basis of the functions, however implementations contains mechanism to omit some 
-of them for testing purposes.
+basis of the functions, however implementations contains mechanism to omit 
+some of them for testing purposes.
 
 \newpage
 \section{Spatial discretization}
@@ -203,17 +213,17 @@ We can now start formulating discretization in space domain. To discretize
 equation \eqref{eq:hyp_diff} in finite elements manner we first devise weak 
 formulation of the problem. First we choose the unknown $p$ and arbitrary test 
 function $w$ to be from $C^1(\Omega_h)$. And multiply equation 
-\eqref{eq:hyp_diff} by test function, we get
+\eqref{eq:hyp_diff} by a test function $w$ also from $C^1(\Omega_h)$, we get
 \begin{equation}
-	\nabla\cdot \vec{f}(p)\cdot w(\vec{x}) 
-	-  \nabla \cdot (D \nabla p)\cdot w( 
-	\vec{x}) = g\cdot w(\vec{x}),
+    \nabla\cdot \vec{f}(p)\cdot w(\vec{x}) 
+    -  \nabla \cdot (D \nabla p)\cdot w( 
+    \vec{x}) = g\cdot w(\vec{x}),
 \end{equation}
-after integration over the domain we get
+after integration over the domain $\Omega$ we get
 \begin{equation}\label{eq:hyp_int}
-	 \int_{\Omega}\nabla\cdot \vec{f}(p)\cdot w(\vec{x}) 
-	 - \int_{\Omega}\nabla \cdot (D \nabla p)\cdot w(\vec{x}) 
-	 = \int_{\Omega}g\cdot w(\vec{x}).
+     \int_{\Omega}\nabla\cdot \vec{f}(p)\cdot w(\vec{x}) 
+     - \int_{\Omega}\nabla \cdot (D \nabla p)\cdot w(\vec{x}) 
+     = \int_{\Omega}g\cdot w(\vec{x}).
 \end{equation}
 This holds for every cauchy sequence of functions ${p_n}$, ${w_n}$ and using 
 Lebesgue dominated convergence theorem we can formulate the problem on closure 
@@ -222,12 +232,12 @@ W^{1,2}(\Omega_h)$, obtaining the equation \eqref{eq:hyp_int} in the form (we
 drop 
 independent variables $t$ and $\vec{x}$ notations for brevity) 
 \begin{equation}
-	\label{eq:sum_int_hyp}
-	\sum\limits_{k=0}^{N}\left(
-	\elint\nabla\cdot \vec{f}(p)\cdot w
-	- \elint\nabla \cdot (D \nabla p)\cdot w 
-		\right)
- 	=\sum\limits_{k=0}^{N}\left(\elint g\cdot w\right).
+    \label{eq:sum_int_hyp}
+    \sum\limits_{k=0}^{N}\left(
+    \elint\nabla\cdot \vec{f}(p)\cdot w
+    - \elint\nabla \cdot (D \nabla p)\cdot w 
+        \right)
+     =\sum\limits_{k=0}^{N}\left(\elint g\cdot w\right).
 \end{equation}
 Having arrived to the "broken" integral formulation of the equation we will now 
 focus on discretization of individual terms within mesh elements.
@@ -238,21 +248,22 @@ focus on discretization of individual terms within mesh elements.
 Using Green's theorem on the first integral term in \eqref{eq:sum_int_hyp} we 
 get
 \begin{equation}
-	\label{eq:hyp_term}
-	\int_{T^k} \nabla\cdot \vec{f}(p)\cdot w = % \int_{T^k} \vec{f}\; \nabla p w = 
-	\int_{\partial{T^k}} \vec{n}\vec{f}(p)w - \int_{T^k} \vec{f}(p)\cdot\nabla w,
+    \label{eq:hyp_term}
+    \int_{T^k} \nabla\cdot \vec{f}(p)\cdot w = % \int_{T^k} \vec{f}\; \nabla p w = 
+    \int_{\partial{T^k}} \vec{n}\vec{f}(p)w - \int_{T^k} \vec{f}(p)\cdot\nabla w,
 \end{equation}
-where $\vec{n}$ is a normal vector to the boundary $\partial T^k$. 
-Approximation of the value of $\vec{f}$ on the boundary of the element plays 
-key role in 
-discretization using DG FE methods, the issue is that the 
-approximate solution is discontinuous across the boundary of an element and two 
-values are actually present, $p_{in}$ inner to the element and $p_{out}$ outer, 
-coming from its neighbor across particular part of the boundary. Since we deal with 2D 
+where $\vec{n}$ is the normal vector to the boundary of $T^k$ we denote 
+$\partial T^k$. Approximation of the value of $\vec{f}$ on the boundary of the 
+element plays key role in discretization using DG FE methods, the issue is 
+that the approximate solution is discontinuous across the boundary of an 
+element and two values are actually present, $p_{in}$ inner to the element and 
+$p_{out}$ outer, coming from its neighbor across particular part of the 
+boundary. Since we deal with 2D 
 elements with polygonal boundary the integral over the boundary can be expressed as sum 
-of integrals over line segments forming the boundary
+of integrals over line segments ${F^k_i}$, $i=0,1,2$ for triangular meshes or 
+$i=0,1,2,3$ for quadrilateral meshes, forming the boundary
 \begin{equation}
-	\sum_{i=0}^{N_f} \int_{F^k_i} \vec{n_f}\vec{f}(p)w
+    \sum_{i=0}^{N_f} \int_{F^k_i} \vec{n_f}\vec{f}(p)w
 \end{equation}
 If we denote $T^{k'}$ element sharing line segment $F^k_i$ with element $T^k$
 value $p_{out}$ corresponds to approximation in this element i.e. $p_{out} = 
@@ -261,9 +272,9 @@ boundary of $T^k$ implicitly assuming that $p_{out}$ changes as described above.
 approximate unknown value of $\vec{f}(p)$  we will use approximate flux $f^*(p_{in}, 
 p_{out})$ obtaining the first term on the right-hand side in the form
 \begin{equation}
-	\label{eq:flux_integral}
-	\int_{\partial{T^k}} \vec{n}\vec{f}(p)w = \int_{\partial{T^k}} \vec{n} 
-	\cdot f^{*} (p_{in}, p_{out})\cdot w.
+    \label{eq:flux_integral}
+    \int_{\partial{T^k}} \vec{n}\vec{f}(p)w = \int_{\partial{T^k}} \vec{n} 
+    \cdot f^{*} (p_{in}, p_{out})\cdot w.
 \end{equation}
 In our setting we will use so-called local Lax-Friedrichs flux 
 exclusively, although there are many other possible fluxes, for examples see 
@@ -272,38 +283,38 @@ in Section \ref{se:adv_flux_term_imp}). Lax-Friedrichs flux as given in
 \cite{Hesthaven2008} 
 is of the form
 \begin{equation}
-	\label{eq:lax-frieflux}
-	f^{*}(p_{in}, p_{out}) =   \frac{\vec{f}(p_{in}) + \vec{f}(p_{out})}{2}  + (1-\alpha) \vec{n}\frac{C}{2}(p_{in} - 
-	p_{out}),
+    \label{eq:lax-frieflux}
+    f^{*}(p_{in}, p_{out}) =   \frac{\vec{f}(p_{in}) + \vec{f}(p_{out})}{2}  + (1-\alpha) \vec{n}\frac{C}{2}(p_{in} - 
+    p_{out}),
 \end{equation}
 where $\alpha \in [0, 1]$ is parameter adjusting nature of the flux, $\alpha = 0$ for purely upwind scheme, 
 $\alpha = 1$ for central scheme,  and
 \begin{equation}
-	C = \max_{p \in [p_{in} : p_{out}]} \abs{n_x \pdiff{f_1}{p} + n_y \pdiff{f_2}{p}} =
-	    \max_{p \in [p_{in} : p_{out}]} \abs{\vec{n}\cdot\frac{d\vec{f}}{dp}(p)},
+    C = \max_{p \in [p_{in} : p_{out}]} \abs{n_x \pdiff{f_1}{p} + n_y \pdiff{f_2}{p}} =
+        \max_{p \in [p_{in} : p_{out}]} \abs{\vec{n}\cdot\frac{d\vec{f}}{dp}(p)},
 \end{equation}
 where $[p_{in} : p_{out}]$ denotes closed interval 
 $$\big[\min_{\partial{T^k}} (\min(p_{in}, p_{out})), 
-	   \max_{\partial{T^k}}(\max(p_{in}, p_{out}))\big].$$ 
+       \max_{\partial{T^k}}(\max(p_{in}, p_{out}))\big].$$ 
 Note that for linear case where $f(p) = \vec{a}p$ and $\frac{d\vec{f}}{dp}(p) = \vec{a}$  
 the $C$ reduces to
 \begin{equation}
-	C = |\vec{n}\vec{a}|.
+    C = |\vec{n}\vec{a}|.
 \end{equation}
 In this formulation $C$ constitutes upper bound on wave speed at the boundary interface.
 In order to simplify notation we denote "jump in" 
 quantity $p$ across boundary 
 \begin{equation}
-	[p] = p_{in} - p_{out}
+    [p] = p_{in} - p_{out}
 \end{equation}
 and the average of $p$ across boundary  
 \begin{equation}
-	\label{eq:avrg}
-	\manglebracs{p} = \frac{p_{in}+p_{out}}{2}.
+    \label{eq:avrg}
+    \manglebracs{p} = \frac{p_{in}+p_{out}}{2}.
 \end{equation}
 Using this notation we can write
 \begin{equation}
-	f^*(p_{in}, p_{out}) = \manglebracs{p} + (1-\alpha) \vec{n}\frac{C}{2}[p].
+    f^*(p_{in}, p_{out}) = \manglebracs{p} + (1-\alpha) \vec{n}\frac{C}{2}[p].
 \end{equation}
 
 
@@ -312,61 +323,63 @@ After approximating $p$ and $w$ on element $T^k$ as linear combinations of
 basis functions as in 
 \eqref{eq:el_lin_comb},
 \begin{align}\label{eq:state_epprox}
-	p(t, \vec{x}) \approx \sum\limits_{i=0}^{N_{base}-1} P_i^k\psi_i(\vec{x})
+    p(t, \vec{x}) \approx \sum\limits_{i=0}^{N_{base}-1} P_i^k\psi_i(\vec{x})
 \end{align}
 \begin{align}\label{eq:test_approx}
-	w(t, \vec{x}) \approx \sum\limits_{j=0}^{N_{base}-1} W_j^k\psi_j(\vec{x})
+    w(t, \vec{x}) \approx \sum\limits_{j=0}^{N_{base}-1} W_j^k\psi_j(\vec{x})
 \end{align}
 and substituting \eqref{eq:flux_integral} to \eqref{eq:hyp_term} we arrive to 
 %\begin{equation}
-%	\sum\limits_{k=0}^{N}
-%		\left(
-%			\int_{T^k}\pdiff{p}{t}\cdot w + \int_{T^k} \vec{f}(p)\cdot\nabla w - 
+%    \sum\limits_{k=0}^{N}
+%        \left(
+%            \int_{T^k}\pdiff{p}{t}\cdot w + \int_{T^k} \vec{f}(p)\cdot\nabla w - 
 %\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot w
-%		\right)
-%	= 0.
+%        \right)
+%    = 0.
 %\end{equation}
 
 %\begin{align}
-%	\sum\limits_{k=0}^{N}
-%		\left(\vphantom{\sum\limits_{i=0}^{N_{base}-1}} \right.
-%		& \int_{T^k}\pdiff{}{t}\sum\limits_{i=0}^{N_{base}-1} P_i^k(t)\psi_i\cdot 
+%    \sum\limits_{k=0}^{N}
+%        \left(\vphantom{\sum\limits_{i=0}^{N_{base}-1}} \right.
+%        & \int_{T^k}\pdiff{}{t}\sum\limits_{i=0}^{N_{base}-1} P_i^k(t)\psi_i\cdot 
 %\sum\limits_{j=0}^{N_{base}-1} 
 %W_j^k\psi_j\nonumber\\
-%	   +&\int_{T^k} \vec{f}\Big(\sum\limits_{i=0}^{N_{base}-1} 
+%       +&\int_{T^k} \vec{f}\Big(\sum\limits_{i=0}^{N_{base}-1} 
 %P_i^k(t)\psi_i\Big)\cdot\nabla\Big(\sum\limits_{j=0}^{N_{base}-1} 
 %W_j^k\psi_j\Big)\nonumber\\ 
-%	   -&\left.\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot 
+%       -&\left.\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot 
 %\sum\limits_{j=0}^{N_{base}-1} 
 %W_j^k\psi_j \right) = 0.
 %\end{align}
 \begin{multline}
-	\label{eq:disc_hyp_term}
-	\int_{T^k} \nabla\cdot \vec{f}(p)\cdot w \approx \int_{T^k} 
-	\vec{f}\Big(\sum\limits_{i=0}^{N_{base} - 1} 
-	P_i^k\psi_i\Big)\cdot\nabla\Big(\sum\limits_{j=0}^{N_{base} - 1} 
-	W_j^k\psi_j\Big)\\	
-	-\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot 
-	\sum\limits_{j=0}^{N_{base} - 1} W_j^k\psi_j
+    \label{eq:disc_hyp_term}
+    \int_{T^k} \nabla\cdot \vec{f}(p)\cdot w \approx \int_{T^k} 
+    \vec{f}\Big(\sum\limits_{i=0}^{N_{base} - 1} 
+    P_i^k\psi_i\Big)\cdot\nabla\Big(\sum\limits_{j=0}^{N_{base} - 1} 
+    W_j^k\psi_j\Big)\\    
+    -\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot 
+    \sum\limits_{j=0}^{N_{base} - 1} W_j^k\psi_j
 \end{multline}
 since this approximation holds for every test function $w \in 
 Le_{\Omega_h}^{M}$ we can choose $W_j^k = 1 \; \forall \; 
 j, k$, using summation notation for clarity we can then write terms on the  right-hand 
 side of \eqref{eq:disc_hyp_term} as 
 \begin{equation}\label{eq:hyp_stiff_app}
-		a^C_\mathrm{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j, 
+    a^C_\mathrm{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j, 
 \end{equation}
 \begin{equation}\label{eq:hyp_flux_app}
-	a^F_\mathrm{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
-	p_{out})\cdot\psi_j.
+    a^F_\mathrm{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
+    p_{out})\cdot\psi_j.
 \end{equation}
 where $\mathbf{p}$ denotes vector of unknowns $P^k_i$ grouped by element as follows
 \begin{equation}
-	\mathbf{p} = \left(P^0_0, P^0_1, P^0_2, \ldots, P^0_{N_{base}-1}, \; \ldots \; ,
-	P^{N}_0, P^{N}_1, P^{N}_2, \ldots, P^{N}_{N_{base} - 1}  \right)
+    \mathbf{p} = \left(P^0_0, P^0_1, P^0_2, \ldots, P^0_{N_{base}-1}, \; \ldots \; ,
+    P^{N}_0, P^{N}_1, P^{N}_2, \ldots, P^{N}_{N_{base} - 1}  \right).
 \end{equation}
-Note that in \eqref{eq:hyp_flux_app} we do not include the sign in front of the flux term.
-This finalizes discretization of general hyperbolic term $\nabla\cdot\vec{f}(p) 
+Note that in \eqref{eq:hyp_flux_app} we do not include the minus sign in front 
+of the flux term.
+This finalizes discretization of general hyperbolic term 
+$\nabla\cdot\vec{f}(p) 
 \cdot w$, the two terms -- integral over element $T^k$ (often called stiffness 
 term) and integral over its surface $\partial T^k$ -- are implemented in SfePy 
 as \pysauce{AdvectDGFluxTerm} and \pysauce{ScalarDotMGradScalarTerm} in special 
@@ -377,42 +390,42 @@ implementation.
 
 
 %\begin{equation}
-%	\sum\limits_{k=0}^{N}
-%	\left(
-%		\int_{T^k}\pdiff{}{t}P_i^k\psi^i\cdot W_j^k\psi^j + 
-%		\int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla W_j^k\psi^j 
-%		- \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
-%	\right) = 0.
+%    \sum\limits_{k=0}^{N}
+%    \left(
+%        \int_{T^k}\pdiff{}{t}P_i^k\psi^i\cdot W_j^k\psi^j + 
+%        \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla W_j^k\psi^j 
+%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%    \right) = 0.
 %\end{equation}
 %and using orthogonality of basis ${\psi_i}$ we get
 %\begin{equation}
-%	\sum\limits_{k=0}^{N}
-%	\left(
-%		\int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j + 
-%		\int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla W_j^k\psi^j 
-%		- \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
-%	\right) = 0.
+%    \sum\limits_{k=0}^{N}
+%    \left(
+%        \int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j + 
+%        \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla W_j^k\psi^j 
+%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%    \right) = 0.
 %\end{equation}
 %For simplicity we will be now concerned with the linear scalar advection equation with constant coefficient $\vec{a}$ 
 %representing advection velocity of the quantity $p$ i.e. $\vec{f}(p) = \vec{a}p$. This allows us to transform the formulation to
 %simpler form
 %\begin{equation}
-%	\label{eq:adv_disc1}
-%	\sum\limits_{k=0}^{N}
-%	\left(
-%		\int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j + 
-%		\int_{T^k} \vec{a}P_i^k\psi^i\cdot\nabla W_j^k\psi^j 
-%		- \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
-%	\right) = 0.
+%    \label{eq:adv_disc1}
+%    \sum\limits_{k=0}^{N}
+%    \left(
+%        \int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j + 
+%        \int_{T^k} \vec{a}P_i^k\psi^i\cdot\nabla W_j^k\psi^j 
+%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%    \right) = 0.
 %\end{equation}
 %\begin{eqnarray}
-%	\label{eq:adv_disc2}
-%	\sum\limits_{k=0}^{N}
-%	\left(
-%		\int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j + 
-%		\int_{T^k} \vec{a}P_i^kW_j^k\psi^i\cdot\nabla \psi^j 
-%		- \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
-%	\right) = 0.
+%    \label{eq:adv_disc2}
+%    \sum\limits_{k=0}^{N}
+%    \left(
+%        \int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j + 
+%        \int_{T^k} \vec{a}P_i^kW_j^k\psi^i\cdot\nabla \psi^j 
+%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%    \right) = 0.
 %\end{eqnarray}
 %...
 
@@ -431,35 +444,42 @@ $$
 $$
 we use Green's theorem as well, obtaining
 \begin{equation}
-	\label{eq:diff_after_green}
-	\elint\nabla \cdot (D \nabla p)\cdot w  = \elbint D(\nabla p\cdot\vec{n}) w - \elint D\nabla p \nabla w
+    \label{eq:diff_after_green}
+    \elint\nabla \cdot (D \nabla p)\cdot w  = \elbint D(\nabla p\cdot\vec{n}) w - \elint D\nabla p \nabla w
 \end{equation}
 on the boundary $\partial T^k$ we define, using notation from \eqref{eq:avrg},
 \begin{equation}
-	\nabla p = \frac{\nabla p_{in} + \nabla p_{out}}{2} = \manglebracs{\nabla p}.
-	\label{eq:avrg_grad_state}
+    \nabla p = \frac{\nabla p_{in} + \nabla p_{out}}{2} = \manglebracs{\nabla p}.
+    \label{eq:avrg_grad_state}
 \end{equation}
 Substituting \eqref{eq:avrg_grad_state} to \eqref{eq:diff_after_green} we get 
 so-called incomplete scheme
 \begin{equation}
-		\elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] - \elint D\nabla p \nabla w
+        \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] - \elint D\nabla p 
+        \nabla w.
 \end{equation}
-we get symmetric resp. non-symmetric scheme by adding term
-\begin{equation}
-	\elbint D \manglebracs{\nabla w }\cdot \vec{n} [p]
+Due to regularity of $p$ the $[p(t, \cdot)] = 0$ holds \cite[p. 14]{Kucera} and term
+\begin{equation}\label{eq:diff_right}
+    \elbint D \manglebracs{\nabla w }\cdot \vec{n} [p]
 \end{equation}
-with "$+$" resp. "$-$" sign \cite{Kucera}. However such scheme is not stable and we need 
-to compensate for
-the discontinuities of the $p$ across elements by adding interior penalty term \cite{Kucera, Antonietti2013}
+vanishes.
+We can then create symmetric resp. non-symmetric scheme by adding term 
+\eqref{eq:diff_right} with "$+$" resp. "$-$" sign \cite{Kucera}. However either of these 
+schemes is not stable and we need to compensate for the discontinuities of the $p$ across 
+element boundaries by adding interior penalty term \cite{Kucera, 
+Antonietti2013}
 \begin{equation}
-	\nu \elbint C_w \cdot \frac{Ord^2}{d(\partial T^k)} [p][w]
+    \nu \elbint C_w \cdot \frac{Ord^2}{d(\partial T^k)} [p][w]
 \end{equation}
 where constant $\nu$ captures properties of diffusion tensor $D$, in case $D = 
-\varepsilon, \; \varepsilon > 0$ we set $\nu = \varepsilon$; $C_w$ is parameter 
+\varepsilon, \; \varepsilon > 0$ we set $\nu = \varepsilon$ and $C_w$ is 
+parameter 
 at our disposal used to fine tune the penalty term.
-See section ... in chapter 
-\ref{ch:convergence} for details on choice of the value of $C_w$. And finally 
-$d(\partial T^k)$ is the volume of the boundary of $T^k$. To simplify notation 
+See examples \ref{ex:laplace} \ref{ex:quart1}, \ref{ex:quart2}, 
+\ref{burgers_hest} and \ref{ex:kucera} in chapter 
+\ref{ch:convergence} for effects of different choices of the value of $C_w$. 
+And finally $d(\partial T^k)$ is the volume of the boundary of $T^k$. To 
+simplify notation 
 we denote
 \begin{equation}\label{eq:diff_penalty_sigma}
 \sigma = \nu C_w \cdot \frac{Ord^2}{d(\partial T^k)}.
@@ -469,33 +489,39 @@ finite dimensional approximations \eqref{eq:state_epprox} and
 \eqref{eq:test_approx} and using the fact that the test function $\psi^k_i$ 
 vanishes outside element $T^k$ and hence
 \begin{eqnarray}
-	\manglebracs{\psi^k_i} = \frac{\psi^k_i}{2},
+    \manglebracs{\psi^k_i} = \frac{\psi^k_i}{2},
 \end{eqnarray}
 \begin{eqnarray}
     [\psi^k_i] = \psi^k_i
 \end{eqnarray}
-holds, we obtain
+holds, we obtain individual terms needed to discretize diffusion term in forms
 \begin{equation}\label{eq:diff_left_approx}
-	a^L_\mathrm{diff}(\mathbf{p}) = \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] 
-	\approx
-		\elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}[\psi_j] =
-		\elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j,
+    \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] 
+    \approx
+    a^L_\mathrm{diff}(\mathbf{p}) = 
+        \elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}[\psi_j] =
+        \elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j,
 \end{equation}
 \begin{equation}\label{eq:diff_right_approx}
-		a^R_\mathrm{diff}(\mathbf{p}) =\elbint D \manglebracs{\nabla w }\cdot \vec{n} [p] 
-		\approx
-			\elbint D \manglebracs{\nabla \psi_j }\cdot \vec{n} [P^k_i\psi_i] =
-			\elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n} 
-			[P^k_i\psi_i],
-\end{equation}\label{eq:diff_laplace_approx}
-\begin{equation}\label{key}
-	a^C_\mathrm{diff}(\mathbf{p})=\elint D\nabla p \nabla w \approx
-		\elint D\nabla P^k_i\psi_i \nabla \psi_j,
+        \elbint D \manglebracs{\nabla w }\cdot \vec{n} [p] 
+        \approx
+        a^R_\mathrm{diff}(\mathbf{p}) =
+            \elbint D \manglebracs{\nabla \psi_j }\cdot \vec{n} [P^k_i\psi_i] =
+            \elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n} 
+            [P^k_i\psi_i],
+\end{equation}
+\begin{equation}\label{eq:diff_laplace_approx}
+    \elint D\nabla p \nabla w 
+    \approx
+    a^C_\mathrm{diff}(\mathbf{p})=
+        \elint D\nabla P^k_i\psi_i \nabla \psi_j,
 \end{equation}
 \begin{equation}\label{eq:diff_penalty_approx}
-		a^P_\mathrm{diff}(\mathbf{p})=\nu \elbint \sigma [p][w] \approx
-	 	\nu \elbint \sigma [P^k_i\psi_i][\psi_j] 
-	 	= \nu \elbint \sigma [P^k_i\psi_i]\psi_j.
+        \elbint \sigma [p][w] 
+        \approx
+        a^P_\mathrm{diff}(\mathbf{p})=
+         \elbint \sigma [P^k_i\psi_i][\psi_j] 
+         = \elbint \sigma [P^k_i\psi_i]\psi_j.
 \end{equation}
 
 
@@ -504,11 +530,11 @@ holds, we obtain
 Discretization of source term is for DG FEM same as for continuous FEM, 
 in term
 \begin{equation}
-	\int_{\Omega_h} g\cdot w
+    \int_{\Omega_h} g\cdot w
 \end{equation}
 we take test function from the broken Legendre polyspace obtaining 
 \begin{equation}
-	\sum\limits_{k=0}^{N}\left(\elint g\cdot w\right)
+    \sum\limits_{k=0}^{N}\left(\elint g\cdot w\right)
 \end{equation}
 after substituting \eqref{eq:test_approx} and choosing $W_j^k = 1 \; \forall \; 
 j, k$ we get
@@ -519,7 +545,7 @@ j, k$ we get
 hence for element $T^k$ and test function $\psi_j$ the source term coefficient 
 is
 \begin{equation}
-	b_{source} = \elint g\cdot \psi_j.
+    b_{source} = \elint g\cdot \psi_j.
 \end{equation}
 
 \newpage
@@ -533,7 +559,7 @@ is
 %
 %\begin{equation}
 %\label{eq:sum_int_hyp_time}
-%\sum\limits_{k=0}^{N}\left(	\elint\pdiff{p}{t}\cdot w
+%\sum\limits_{k=0}^{N}\left(    \elint\pdiff{p}{t}\cdot w
 %\elint\nabla\cdot \vec{f}(p)\cdot w
 %- \elint\nabla \cdot (D \nabla p)\cdot w 
 %\right)
@@ -544,45 +570,47 @@ discretization of terms devised for stationary equation, with the important
 difference that the discretization coefficients in \eqref{eq:state_epprox} now 
 depend on time, that is
 \begin{equation}
-	P^k_i = P^k_i(t).
+    P^k_i = P^k_i(t).
 \end{equation}
-By applying analogous [approximation] to the transient term we obtain
+By applying analogous [\todo approximation] to the transient term we obtain
 \begin{equation}
-	\elint\pdiff{p}{t}(t)w \approx  \fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j. 
+    \elint\pdiff{p}{t}(t)w \approx  \fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j. 
 \end{equation}
 Using this discretization in \eqref{eq:hyp_diff_trans} we obtain system of 
 ordinary differential equations for unknown coefficients 
 $P^k_i(t)$ in variable $t$
 \begin{equation}\label{eq:time_diff}
-	\mathbf{M}  \fdiff{\mathbf{p}}{t}(t) + \mathcal{L}(\mathbf{p}(t)) = 0,
+    \mathbf{M}  \fdiff{\mathbf{p}}{t}(t) + \mathcal{L}(\mathbf{p}(t)) = 0,
 \end{equation}
 where $\mathcal{L}$  is composed from discretized terms  derived in previous 
-sections and $\mathbf{M}$ is a matrix composed of blocks $M^k,\; k=0, \ldots , N$ of the 
+sections and $\mathbf{M}$ is a matrix composed of blocks $M^{k,l},\; k,l=0, 
+\ldots , N$ of the 
 form
 \begin{equation}
-(M^k)_{ij} = ( \psi_i,\psi_j)_{T^k}.
+(M^{k,l})_{ij} = ( \psi^k_i,\psi^l_j)_{T^k}.
 \end{equation}
 Since the basis functions are orthogonal with respect to the scalar product 
-\eqref{eq:scalar_prod_dk} individual blocks are diagonal. Since basis function 
-$\psi^k_i$ vanish outside of the element $T^k$, matrix $\mathbf{M}$ is block diagonal 
+\eqref{eq:scalar_prod_dk} individual blocks are diagonal and since basis 
+function $\psi^k_i$ vanish outside of the element $T^k$, matrix $\mathbf{M}$ 
+is block diagonal 
 \begin{equation}
 \mathbf{M}  = \begin{pmatrix}
-		M^0      &    0   &\cdots&  0   &\cdots&0\\
-		0		 &   M^1  &      &      &      &\\
-		\vdots	 &    0   &\ddots&      &  0   &\vdots\\
-	  \vdots     & \vdots &      & M^k  &      &\\
-		\vdots   & \vdots & 0    &      &\ddots&0\\
-		0    	 &   0    &\cdots&\cdots&   0  &M^{N} 
-	\end{pmatrix}.
+        M^{0,0}      &    0   &\cdots&  0   &\cdots&0\\
+        0         &   M^{1,1}  &      &      &      &\\
+        \vdots     &    0   &\ddots&      &  0   &\vdots\\
+      \vdots     & \vdots &      & M^{k,k}  &      &\\
+        \vdots   & \vdots & 0    &      &\ddots&0\\
+        0         &   0    &\cdots&\cdots&   0  &M^{N,N} 
+    \end{pmatrix}.
 \end{equation}
 Thanks to this the inverse of $\mathbf{M}$ is trivial and we can rewrite 
 \eqref{eq:time_diff} as
 \begin{equation}
-	 \fdiff{\mathbf{p}}{t}(t) + \mathbf{M}^{-1}\mathcal{L}(\mathbf{p}(t)) = 0,
+     \fdiff{\mathbf{p}}{t}(t) + \mathbf{M}^{-1}\mathcal{L}(\mathbf{p}(t)) = 0,
 \end{equation}
 denoting
 \begin{equation}
-	\bar{\mathcal{L}} =\mathbf{M}^{-1}\mathcal{L}, 
+    \bar{\mathcal{L}} =\mathbf{M}^{-1}\mathcal{L}, 
 \end{equation}
 we can write equation 
 \eqref{eq:time_diff} in the form
@@ -597,14 +625,14 @@ total variations diminishing Runge-Kutta scheme of 3rd order.
 \paragraph{Forward Euler scheme} In forward euler scheme we approximate time 
 derivation by forward difference i.e.
 \begin{equation}
-	\fdiff{\mathbf{p}}{t}(t) \approx 	\frac{\mathbf{p}^{n + 1} - 
-	\mathbf{p}^{n}}{\Delta t},
+    \fdiff{\mathbf{p}}{t}(t) \approx     \frac{\mathbf{p}^{n + 1} - 
+    \mathbf{p}^{n}}{\Delta t},
 \end{equation}
 where $n$ denotes time step. Substituting into equation \eqref{eq:time_simple} 
 yields
 \begin{equation}
-	\frac{\mathbf{p}^{n + 1} - \mathbf{p}^{n}}{\Delta t} + 
-	 \bar{\mathcal{L}}(\mathbf{p}^n, t^n) = 0
+    \frac{\mathbf{p}^{n + 1} - \mathbf{p}^{n}}{\Delta t} + 
+     \bar{\mathcal{L}}(\mathbf{p}^n, t^n) = 0
 \end{equation}
 and after rearranging to obtain explicit equation for $\mathbf{p}^{n + 1}$ we 
 get
@@ -616,11 +644,11 @@ Forward Euler scheme is first order in time. We use it to define the so-called
 total variation diminishing property of $\bar{\mathcal{L}}$, that is the total 
 variation of the numerical solution in one dimension
 \begin{equation}\label{eq:TV}
-	TV(p) = \sum_{k} \abs{p_{k + 1} - p_{k}},	
+    TV(p) = \sum_{k} \abs{p_{k + 1} - p_{k}},    
 \end{equation}
 where $k$ ranges over subsequent 1D mesh elements, does not increase with time i.e.
 \begin{equation}
-	TV(\mathbf{p}^{n + 1}) \leq TV(\mathbf{p}^{n})
+    TV(\mathbf{p}^{n + 1}) \leq TV(\mathbf{p}^{n})
 \end{equation}
 under update by forward Euler scheme.
 This motivates usage of following TVD Runge-Kutta method \cite[p. 73]{Gottlieb2002}. 
@@ -631,31 +659,33 @@ This motivates usage of following TVD Runge-Kutta method \cite[p. 73]{Gottlieb20
 Third order total variations diminishing Runge-Kutta scheme \cite{Gottlieb2002} 
 is three step scheme that maintains the TVD property while achieving 3rd order 
 accuracy in time.
-\begin{equation}	
-	\begin{aligned}
-		\mathbf{p}^{(1)} &= \mathbf{p}^n - \Delta t  
-		\bar{\mathcal{L}}(\mathbf{p}^n), \\
-		\mathbf{\mathbf{p}}^{(2)} &= \frac{3}{4}\mathbf{p}^n 
-		+\frac{1}{4}\mathbf{p}^{(1)} - \frac{1}{4}\Delta t 
-		 \bar{\mathcal{L}}(\mathbf{p}^{(1)}),\\
-		\mathbf{p}^{(n+1)} &= \frac{1}{3}\mathbf{p}^n 
-		+\frac{2}{3}\mathbf{p}^{(2)} - \frac{2}{3}\Delta t 
-		 \bar{\mathcal{L}}(\mathbf{p}^{(2)}).
-	\end{aligned}
+\begin{equation}    
+    \begin{aligned}
+        \mathbf{p}^{(1)} &= \mathbf{p}^n - \Delta t  
+        \bar{\mathcal{L}}(\mathbf{p}^n), \\
+        \mathbf{\mathbf{p}}^{(2)} &= \frac{3}{4}\mathbf{p}^n 
+        +\frac{1}{4}\mathbf{p}^{(1)} - \frac{1}{4}\Delta t 
+         \bar{\mathcal{L}}(\mathbf{p}^{(1)}),\\
+        \mathbf{p}^{(n+1)} &= \frac{1}{3}\mathbf{p}^n 
+        +\frac{2}{3}\mathbf{p}^{(2)} - \frac{2}{3}\Delta t 
+         \bar{\mathcal{L}}(\mathbf{p}^{(2)}).
+    \end{aligned}
 \end{equation}
 
 
 \subsection{Hyperbolic term stability requirement}
-Courant-Fridrichs-Levy condition adjusted for high order approximation mandates 
+\todo Courant-Fridrichs-Levy condition adjusted for high order approximation 
+mandates 
 \begin{equation}
-	\Delta t \leq c\frac{\Delta x^2}{D} \cdot \frac{1}{2M + 1},
+    \Delta t \leq c\frac{\Delta x^2}{D} \cdot \frac{1}{2M + 1},
 \end{equation} 
 where $c \leq 1$ is adjustable parameter.
 
 
 \subsection{Elliptic term stability requirement}
+\todo
 \begin{equation}\label{eq:cfl_cond}
-	\Delta t \leq c\frac{\Delta x}{\norm{\vec{a}}} \cdot \frac{1}{2M + 1},
+    \Delta t \leq c\frac{\Delta x}{\norm{\vec{a}}} \cdot \frac{1}{2M + 1},
 \end{equation}
 where $c \leq 1$ is adjustable parameter.
 
@@ -669,12 +699,12 @@ is discretized in straight-forward manner as an orthogonal projection into the
 finite dimensional space $Le_{\Omega_h}^{M}$ on domain $\Omega_h$. That is
 by solving
 \begin{equation}\label{eq:init_proj}
-	(P^k_i)^0\elint\psi_i\psi_j = \elint p_0(\vec{x})\psi_j
+    (P^k_i)^0\elint\psi_i\psi_j = \elint p_0(\vec{x})\psi_j,
 \end{equation}
 for $(P^k_i)^0$. We use the mass matrix notation and the fact that 
 it is diagonal and get
 \begin{equation}
-	(P^k_i)^0 = \frac{1}{M_{ii}}\elint p_0(\vec{x})\psi_i
+    (P^k_i)^0 = \frac{1}{(\psi^k_i,\psi^k_i)_{T^k}}\elint p_0(\vec{x})\psi_i.
 \end{equation}
 
 
@@ -689,23 +719,22 @@ understanding to modify it. In our implementation treatment of boundary
 condition is separated from term implementation i.e. terms do not have any 
 information about boundary conditions, they are merely passed data, which 
 already satisfy BCs.
-
 In expressions
 \begin{equation}
-	  \manglebracs{p} = \frac{p_{in} + p_{out}}{2}
+      \manglebracs{p} = \frac{p_{in} + p_{out}}{2}
 \end{equation}
 and 
 \begin{equation}
-	[p] = p_{in} - p_{out}
+    [p] = p_{in} - p_{out}
 \end{equation}
 the missing outer value $p_{out}$ in boundary elements is substituted by
 \begin{itemize}
-	\item value of Dirichlet boundary condition, 
-	\item value in corresponding neighbor cell on periodic boundary,
+    \item value of Dirichlet boundary condition, 
+    \item value in corresponding neighbor cell on periodic boundary,
 \end{itemize} 
 whenever there is no direct neighbor.
 In implementations this is ensured in terms themselves by getting corresponding values 
-from \pysauce{DGField} through method \pysauce{get_both_facet_base_vals}..
+from \pysauce{DGField} through method \pysauce{get_both_facet_base_vals}.
 
 \newpage
 \section{Limiters}
@@ -718,13 +747,13 @@ limiters for 1D and
 
 \subsection{Moment limiter}
 Moment limiter due to Krivodonova \cite{Krivodonova2007} leverages idea that 
-coefficients for higher order basis functions in hierarchical basis represent 
-derivatives of lower order data and uses this to limit the derivative of 
-order $i$ in a given cell using derivatives of order $i - 1$ in neighboring 
-cells. This kind of limiter unlike others does not reduce the solution to 
-first-order accuracy.Unfortunately this kind of limiting is so far available 
-only in one dimensional problems and in two dimensional problems with tensor 
-product meshes.
+coefficients for higher order basis functions in hierarchically ordered 
+Legendre basis represent derivatives of lower order data and uses this to 
+limit the derivative of order $i$ in a given cell using derivatives of order 
+$i - 1$ in neighboring cells. This kind of limiter unlike others does not 
+reduce the solution to first-order accuracy. Unfortunately this kind of 
+limiting is so far available only in one dimensional problems and in two 
+dimensional problems with tensor product meshes.
 
 \subsubsection{One-dimensional limiting}
 \label{sse:moment_lim_1D}
@@ -738,27 +767,27 @@ highest order i.e. $i = N_{base}$ we subsequently replace
 $P_i^k$ with
 \begin{equation}
 \label{eq:limiter_1D}
-	\tilde{P}_i^k = \text{minmod}\left(P_i^k, 
-						\alpha_i(P_{i-1}^{k+1} - P_{i-1}^k), 
-						\alpha_i (P_{i-1}^k - P_{i-1}^{k-1})\right)
+    \tilde{P}_i^k = \text{minmod}\left(P_i^k, 
+                        \alpha_i(P_{i-1}^{k+1} - P_{i-1}^k), 
+                        \alpha_i (P_{i-1}^k - P_{i-1}^{k-1})\right)
 \end{equation}
 stopping when $P_i^k = \tilde{P}_i^k$. In the definition of limiter \eqref{eq:limiter_1D} 
 $\text{minmod}$ is a function of three 
 variables
 \begin{equation}
-	\text{minmod}(a,b,c) = 
-	\begin{cases}
-			\text{sign}(a)\min(\abs{a}, \abs{b}, \abs{c}) & \;\text{if}\; 	
-															\text{sign}(a) =
-															\text{sign}(b) = 
-															\text{sign}(c)\\
-														0 & \;\text{otherwise}
-	\end{cases}.
+    \text{minmod}(a,b,c) = 
+    \begin{cases}
+            \text{sign}(a)\min(\abs{a}, \abs{b}, \abs{c}) & \;\text{if}\;     
+                                                            \text{sign}(a) =
+                                                            \text{sign}(b) = 
+                                                            \text{sign}(c)\\
+                                                        0 & \;\text{otherwise}
+    \end{cases}.
 \end{equation}
 and $\alpha_i$ is limiting coefficient dependent on the order, Krivodonova 
 \cite{Krivodonova2007} proposes to take $\alpha_i$ from range
 \begin{equation}
-	\frac{1}{2(2n -1)} \leq \alpha_n \leq 1.
+    \frac{1}{2(2n -1)} \leq \alpha_n \leq 1.
 \end{equation}
 Choosing $\alpha_i$ outside this region results in either loss of accuracy or numerical 
 instability \cite[p. 882]{Krivodonova2007}. Lower bound of the interval corresponds to 
@@ -767,19 +796,21 @@ the strictest limiting, whereas $\alpha_i = 1$ is the mildest limiter possible \
 \pysauce{dg.limiters.MomentLimiter1D}, see Section \ref{se:i_moment_lim_1D} for details.
 
 \subsubsection{Two-dimensional limiting}
-In this section we describe extension of moment limiter to regular tensor-product meshes 
-in two dimensions.
+In this section we describe extension of moment limiter to regular 
+tensor-product meshes in two dimensions. We limit solution coefficient in 
+individual cells much like in 1D, this time we have to take into account 
+derivations in four directions, we also introduce some new notation
 \begin{multline}
 \tilde{P}^{k,m}_{r,s} =
-	\text{minmod}\big(P^{k,m}_{r,s}, 
-					  \alpha_s(P^{k,m+1}_{r,s-1} - P^{k,m}_{r,s-1}),
-					  \alpha_s(P^{k,m}_{r,s-1} - P^{k,m-1}_{r,s-1}),\\
-					  \alpha_r(P^{k+1,m}_{r-1,s} - P^{k+1,m}_{r-1,s}),
-					  \alpha_r(P^{k-1,m}_{r-1,s} - P^{k,m}_{r-1,s})\big),
+    \text{minmod}\big(P^{k,m}_{r,s}, 
+                      \alpha_s(P^{k,m+1}_{r,s-1} - P^{k,m}_{r,s-1}),
+                      \alpha_s(P^{k,m}_{r,s-1} - P^{k,m-1}_{r,s-1}),\\
+                      \alpha_r(P^{k+1,m}_{r-1,s} - P^{k+1,m}_{r-1,s}),
+                      \alpha_r(P^{k-1,m}_{r-1,s} - P^{k,m}_{r-1,s})\big),
 \end{multline}
 where $P^{k, m}_{r,s}$ denotes coefficient at basis function $\phi_n$ of the form
 $$
-\phi_n = L^r(x)L^s(y)
+\psi_n = L^r(x)L^s(y)
 $$
 i.e.,
 $$
@@ -788,7 +819,8 @@ $$
 Further we leveraged the fact that we assume the mesh to be regular uniform 
 Cartesian grid and introduced new notation indexing mesh elements as $T^{k,m}$ where $k$ 
 ranges over rows and $m$ over columns.
-The region of stability for $\alpha_n$ i different due to normalization of basis functions
+The region of stability for $\alpha_n$ is different due to normalization of 
+basis functions
 \begin{equation}
 \frac{1}{2\sqrt{4n^2 - 1}} \leq \alpha_n \leq \sqrt{\frac{2n - 1}{2n + 1}},
 \end{equation}

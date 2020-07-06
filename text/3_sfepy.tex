@@ -74,34 +74,34 @@ options = {'nls'             : 'newton',   /*!\annotation{lsta:laplace_opts}!*/
 	\item[\ref{lsta:laplace_reg}] \pysauce{regions} dictionary specifies different 
 	regions 
 	used in	boundary conditions specification, \pysauce{Omega} region is required for 
-	setting up fields, \pysauce{'edge'} regions are needed for BCs
+	setting up fields, \pysauce{'edge'} regions are needed for BCs.
 	\item[\ref{lsta:laplace_fields}]  \pysauce{fields} determine discretization spaces of 
-	variables and are defined using tuple of strings
+	variables and are defined using tuple of strings.
 	\shellcmd{(data type, number of components, region name, approximation order, field 
 	type, polyspace)} here field \pysauce{'f'} is field for discretization of real scalar 
 	variable in region \pysauce{"Omega"} using discontinuous Galerkin method of order 
-	\pysauce{approx_order} in space of Legendre polynomials, 
-	\item[\ref{lsta:laplace_vars}]  here \pysauce{'p'} is unknown state variable we are 
+	\pysauce{approx_order} in space of Legendre polynomials. 
+	\item[\ref{lsta:laplace_vars}]  Here \pysauce{'p'} is unknown state variable we are 
 	solving for and \pysauce{'v'} is test variable, they are both discretized using field 
-	\pysauce{'f'} defined above,
-	\item[\ref{lsta:laplace_bcf}]  function \pysauce{bcs} is called during solution, it 
-	is supposed to produce values of boundary conditions,
+	\pysauce{'f'} defined above.
+	\item[\ref{lsta:laplace_bcf}]  Function \pysauce{bcs} is called during solution, it 
+	is supposed to produce values of boundary conditions.
 	\item[\ref{lsta:laplace_bcf}] \pysauce{dgebcs} dictionary sets up boundary 
 	conditions specifically for DG FE methods, it creates map between boundary regions 
-	and, variables and values of functions that determine boundary conditions
-	\item[\ref{lsta:laplace_mat}] in materials we specify diffusion 
+	and, variables and values of functions that determine boundary conditions.
+	\item[\ref{lsta:laplace_mat}] In materials dictionary we specify diffusion 
 	coefficient $D$, the dot notation \pysauce{'.Cw'} 
 	causes material not to be broad-casted to quadrature points, which is convenient for 
 	constants parameterizing terms like $C_w$ or $\alpha$ in 
 	\eqref{eq:diff_penalty_sigma} 
-	resp. \eqref{eq:lax-frieflux}
-	\item[\ref{lsta:laplace_eq}] equation to solve composed from terms derived in 
-	Chapter \ref{ch:theory}
+	resp. \eqref{eq:lax-frieflux}.
+	\item[\ref{lsta:laplace_eq}] Equation to solve is composed from terms derived in 
+	Chapter \ref{ch:theory}.
 	
-	\item[\ref{lsta:laplace_solv}] linear and non-linear solvers to use, Sfepy supports 
+	\item[\ref{lsta:laplace_solv}] Linear and non-linear solvers to use, Sfepy supports 
 	various solvers including \pysauce{mumps} \cite{MUMPS:2}
 	
-	\item[\ref{lsta:laplace_opts}] various options, \pysauce{'output_format' : 'msh'} and 
+	\item[\ref{lsta:laplace_opts}] Various options, \pysauce{'output_format' : 'msh'} and 
 	\pysauce{'format_variant' : 'gmsh'} ensure output in format suitable for 
 	post-processing using \pysauce{Gmsh} (\url{http://gmsh.info/}, \cite{Remacle2007}).
 \end{itemize}
@@ -109,7 +109,7 @@ All the test problems studied in Chapter \ref{ch:convergence} are specified usin
 declarative approach, codes can be found in (\todo Attachment? 
 \url{https://github.com/zitkat/dg_examples})
 
-\section{Sfepy architecture}
+\section{SfePy architecture}
 Components in the problem specification file are parsed into various Python objects  
 brought together in the \pysauce{Problem} object, the most important are:
 \begin{itemize}
@@ -119,25 +119,27 @@ brought together in the \pysauce{Problem} object, the most important are:
 	\item \pysauce{InitialCondition} -- representing the initial condition, in case of transient problems,
 	\item \pysauce{TimeSteppingSolver} -- specifying time discretization scheme, in case of transient problems.
 \end{itemize}
-The \pysauce{Equation} is build by combining \pysauce{Term} objects which contain:
-\begin{itemize}
-	\item \pysauce{Variable} -- representing state and test variable,
-	\item \pysauce{Material} -- representing various material constants or functions,
-	\item \pysauce{Integral} -- representing gauss quadrature rule.
-\end{itemize}
-The \pysauce{Variable} object in turn contains reference to \pysauce{Field} object that represents type of the 
-discretization chosen (finite dimensional space represented by \pysauce{PolySpace} object) along with the computational 
-domain (\pysauce{Domain} object) which stores geometry including
-\pysauce{Region} objects used in definition of \pysauce{EssentialBC} and \pysauce{PeriodicBC}.
-
+The \pysauce{Equation} object is build by combining \pysauce{Term} objects these 
+represent individual integral terms which are evaluated in course of solving a problem.
 Due to interpreted nature of CPython (\url{https://github.com/python/cpython}) in which 
 Sfepy is mainly run and which is generally too slow for high-performance numerical 
-computation due to overhead from th interpreter, Sfepy relies on various approaches to 
+computation due to overhead from the interpreter, Sfepy relies on various approaches to 
 speed up the computation, in general it uses fast vectorized operations provided by NumPy 
 and Scipy \cite{SciPy-NMeth2020}. C and Cython are used in places where vectorization is 
 not possible, or is too difficult or unreadable \cite{Cimrman_Lukes_Rohan_2019}. 
-
-%\url{https://scipy.org/citing.html}
+Our implementation relies on NumPy vectorization, especially \pysauce{einsum} 
+function (mode details bellow). Terms keep references to other objects:
+\begin{itemize}
+	\item \pysauce{Variable} -- representing state and test variables,
+	\item \pysauce{Material} -- representing various material constants or functions,
+	\item \pysauce{Integral} -- representing gauss quadrature rule.
+\end{itemize}
+The \pysauce{Variable} object in turn contains reference to \pysauce{Field} object that 
+manages the chosen discretization -- finite dimensional space represented by 
+\pysauce{PolySpace} object and provides method needed to work with it along with the 
+computational domain (\pysauce{Domain} object) which stores geometry including
+\pysauce{Region} objects used in definition of \pysauce{EssentialBC} and 
+\pysauce{PeriodicBC}.
 
 
 

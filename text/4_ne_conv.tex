@@ -42,7 +42,7 @@ equations = {'Advection':
 	history one step backwards in time facilitating forward nature of time stepping 
 	solvers,
 	\item[\ref{lsta:flux}] \pysauce{"a.flux"} is an optional material argument 
-	representing $\alpha$ coefficient in \eqref{eq:lax-frieflux}
+	representing $\alpha$ coefficient in \eqref{eq:lax-frieflux}.
 \end{itemize}
 Laplace equation in two dimensions
 \begin{equation}
@@ -71,7 +71,8 @@ i.e.,
 \vec{a} \cdot \nabla p - D \Delta p = g,
 \end{equation}
 where $\vec{a} = [1, 1]^T$ is advection velocity, $D$ is diffusion coefficient and $g$ is 
-a source function. Combining discretization of the two previous equations we obtain 
+a source function. Combining discretization of the two previous equations we 
+obtain 
 discretized form
 \begin{multline}
 - \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j 
@@ -168,12 +169,13 @@ equations = {'burgers':
 
 \section{Examples}
 
-\paragraph{Measuring convergence} We define convergence rate $r$ as
+\paragraph{Measuring convergence} We define convergence rate $r$ as is common 
+in literature
 \begin{equation}
 %	num_order = nm.log(row["diff_l2"] / last_err) \
 %	/ nm.log(row["h"] ** dim / last_h ** dim)
 r = \frac{\log\left(\dfrac{\Ltwonorm{p - p_{h_{n}}}}{\Ltwonorm{p - p_{h_{n-1}}}}\right)}
-{\log\left(\dfrac{h^d_{n}}{h^d_{n-1}}\right)}
+{\log\left(\dfrac{h^d_{n}}{h^d_{n-1}}\right)}.
 \end{equation}
 Inspired by \cite{Kucera} we present plots depicting average convergence rate over 
 several mesh refinements, this might not be ideal measure of the method behavior, 
@@ -183,8 +185,8 @@ it reveals relationship between diffusion coefficient and penalty term in exampl
 including 
 diffusion terms.
 
-In \Cref{ex:adv1D} we explore behavior of DG FE method for 1D pure advection time 
-dependent problem with and without limiting, in examples \ref{ex:quart1}, \ref{ex:quart2} 
-and \ref{ex:quart3} we ...
+In \Cref{ex:adv1D} we explore behavior of DG FE method for 1D pure advection 
+time dependent problem with and without limiting, in examples \ref{ex:quart1}, 
+\ref{ex:quart2} and \ref{ex:quart3} we \todo ...
 
 

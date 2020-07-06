@@ -12,6 +12,7 @@
 \usepackage{subcaption}
 \usepackage[utf8]{inputenc}
 \usepackage{enumerate}
+\usepackage{booktabs}
 \usepackage{amssymb, amsmath}
 \usepackage{amsthm}
 \usepackage{natbib}
@@ -19,6 +20,7 @@
 \usepackage{pifont}
 \usepackage[all]{xy}
 \usepackage{thmtools}
+\usepackage{float, pdflscape}
 \renewcommand{\listtheoremname}{List of Examples}
 
 % colors
@@ -234,13 +236,13 @@
 \label{ch:theory}
 In this chapter we lay theoretical background for the concepts necessary to describe the 
 method and then derive the discretization of advection term $a\cdot\nabla(u)$, general 
-nonlinear hyperbolic term $\nabla\cdot f(u)$, diffusion term $\nabla \cdot (D 
-\nabla u)$ and source term $g(x)$ occurring in various PDEs namely, from the 
-simplest one: linear advection equation with constant and non-constant velocity, 
-advection with diffusion and sources, general nonlinear hyperbolic equation.
-Using the discretized terms we will formulate method for these equations. Towards the end 
-of the chapter we introduce limiters necessary for stabilization of the high order 
-versions of the scheme.
+nonlinear hyperbolic term $\nabla\cdot \vec{f}(u)$, diffusion term $D \Delta 
+u)$ and source term $g(x)$ occurring in various PDEs namely, from the 
+simplest one: linear advection equation with constant and non-constant 
+velocity, advection with diffusion and sources, general nonlinear hyperbolic 
+equation. Using the discretized terms we will formulate method for these 
+equations. Towards the end of the chapter we introduce limiters necessary for 
+stabilization of the high order versions of the method.
 
 \input{2_dg_general.tex}
 

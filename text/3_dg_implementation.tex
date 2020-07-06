@@ -4,61 +4,108 @@
 %%
 %% Tomáš Zítka
 %%
-\section{DG components}
+\section{DG method components}
 Having laid out structure of the SfePy problem and objects needed to create it and work 
-with it we now present DG FEM
-specific classes. Following the architecture of Sfepy, DG FE method implementation 
-comprises 
-of: \pysauce{DGField}, 
-\pysauce{LegendrePolySpace} and its subclasses \pysauce{LegendreTensorProductPolySpace} 
-and 
-\pysauce{LegendreSimplexPolySpace};
-DG specific terms: 
+with it we now present classes needed to implement DG FEM. Following the architecture of 
+Sfepy, DG FE method implementation comprises of: 
 \begin{itemize}
-	\item \pysauce{DGTerm} -- abstract base class,
-	\item \pysauce{AdvectionDGFluxTerm} -- name \pysauce{"dw_dg_advect_laxfrie_flux"},
-	\item \pysauce{NonlinearHyperbolicDGFluxTerm} -- name
-	\pysauce{"dw_dg_nonlinear_laxfrie_flux"}
-	\item \pysauce{NonlinearScalarDotGradTerm} -- name \pysauce{"dw_ns_dot_grad_s"},
-	\item \pysauce{DiffusionDGFluxTerm} -- name \pysauce{"dw_dg_diffusion_flux"},
-	\item \pysauce{DiffusionInteriorPenaltyTerm} --  name 
-	\pysauce{"dw_dg_interior_penalty"};
+    \item \pysauce{DGField}, 
+    \item \pysauce{LegendrePolySpace} and its subclasses
+    \item \pysauce{LegendreTensorProductPolySpace} and
+    \item \pysauce{LegendreSimplexPolySpace};
 \end{itemize}
+DG specific terms are summarized top portion of in \Cref{tab:terms}.
+
+\begin{landscape}
+    \begin{table}[p!]
+        \centering    
+        \caption{Table of terms used in DG method}    
+        \label{tab:terms}
+        \begin{tabular}{lccc}
+            \toprule
+            Class & Name & Symbol & Expression  \\ 
+            \midrule
+            \pysauce{AdvectionDGFluxTerm} & \pysauce{"dw_dg_advect_laxfrie_flux"}
+            & $a^F_\mathrm{adv}(\mathbf{p})$ 
+            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot\psi_j$ \\ 
+            \pysauce{NonlinearHyperbolicDGFluxTerm} & 
+            \pysauce{"dw_dg_nonlinear_laxfrie_flux"}
+            & $a^F_\mathrm{hyp}(\mathbf{p})$ 
+            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot\psi_j$ \\  
+            \pysauce{NonlinearScalarDotGradTerm} & \pysauce{"dw_ns_dot_grad_s"} 
+            & $a^C_\mathrm{hyp}(\mathbf{p})$
+            & $\int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j$ \\ 
+            \pysauce{DiffusionDGFluxTerm} & \pysauce{"dw_dg_diffusion_flux"} 
+            & \begin{tabular}{c}
+                $a^R_\mathrm{diff}(\mathbf{p})$\\
+                $a^L_\mathrm{diff}(\mathbf{p})$
+            \end{tabular}  
+            & \begin{tabular}{c}
+                $\elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n}[P^k_i\psi_i]$\\
+                $\elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j$
+            \end{tabular}  \\ 
+            \pysauce{DiffusionInteriorPenaltyTerm}& \pysauce{"dw_dg_interior_penalty"} 
+            & $a^P_\mathrm{diff}(\mathbf{p})$ & $\elbint \sigma [P^k_i\psi_i]\psi_j$ \\ 
+            \midrule
+            
+            \pysauce{ScalarDotMGradScalarTerm} & \pysauce{"dw_s_dot_mgrad_s"}
+            & $a^C_\mathrm{adv}(\mathbf{p})$ 
+            & $\int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j$ 
+            \\
+            \pysauce{LaplaceTerm} & \pysauce{"dw_laplace"} 
+            & $a^C_\mathrm{diff}(\mathbf{p})$ 
+            & $\elint D\nabla 
+            P^k_i\psi_i \nabla \psi_j$ \\
+            \pysauce{DotProductVolumeTerm} & \pysauce{"dw_volume_dot"} & -- & 
+            $\fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j$ \\ 
+            \bottomrule 
+        \end{tabular} 
+    \end{table}
+\end{landscape}
 DG specific boundary conditions:
 \begin{itemize}
-	\item \pysauce{DGEssentialBC},
-	\item \pysauce{DGPeriodicBC};
+    \item \pysauce{DGEssentialBC},
+    \item \pysauce{DGPeriodicBC};
 \end{itemize}
-multistage time stepping solvers: abstract base class \pysauce{DGMultiStageTS} 
-and two solvers used in numerical 
-experiments: \pysauce{EulerStepSolver}, \pysauce{TVDRK3StepSolver}. Finally limiters 
+multistage time stepping solvers: 
+\begin{itemize}
+    \item abstract base class \pysauce{DGMultiStageTS} and two solvers used in numerical  
+    experiments: 
+    \item \pysauce{EulerStepSolver},
+    \item \pysauce{TVDRK3StepSolver}.
+\end{itemize}
+ Finally limiters 
 were implemented as subclasses of \pysauce{DGLimiter} abstract class (which has 
 no counterpart in SfePy):
 \begin{itemize}
-	\item \pysauce{IdentityLimiter} -- provided for convenience to enable 
-	easily disabling limiter without changing 
-	syntax,
-	\item \pysauce{MomentLimiter1D} -- for 1D problems only,
-	\item \pysauce{MommentLimiter2D} -- only for 2D problems on regular tensor product 
-	meshes,
+    \item \pysauce{IdentityLimiter} -- provided for convenience to enable 
+    easily disabling limiter without changing 
+    syntax,
+    \item \pysauce{MomentLimiter1D} -- for 1D problems only,
+    \item \pysauce{MommentLimiter2D} -- only for 2D problems on regular tensor product 
+    meshes,
 \end{itemize} 
 Limiters are in problem composition used as post-stage hooks passed to time 
-stepping solvers.
+stepping solvers. For technical we also created \pysauce{DGVariable} class this was 
+necessary to bypass classical FE treatment of boundary conditions, otherwise it is 
+similar to original SfePy \pysauce{Variable} class and we its omit detailed description.
+
+
 \subsection{DG Field}
 \pysauce{DGField} class inherits from \pysauce{Field} base class, this provides it with the basic functionality needed
 to be used in problem specification. From methods implemented in \pysauce{DGField} the most relevant to DG FEM are:
 \begin{itemize}
-	\item \pysauce{get_both_facet_state_vals} -- which returns values of state on 
-	opposing sides of the boundary for each element
-	\item \pysauce{get_both_facet_base_vals} -- which returns values of basis functions 
-	on opposing sides of the boundary for each element
-	\item \pysauce{get_facet_neighbor_idx} -- which returns indicies of cell neighbors 
-	for individual facets along with index of the facet within th neighboring cell 
-	\item \pysauce{get_bc_facet_values}
-	\item \pysauce{get_facet_boundary_idx}
-	\item \pysauce{get_facet_vols}
-	\item \pysauce{get_facet_qp}
-	\item \pysauce{get_nodal_values}
+    \item \pysauce{get_both_facet_state_vals} -- which returns values of state on 
+    opposing sides of the boundary for each element
+    \item \pysauce{get_both_facet_base_vals} -- which returns values of basis functions 
+    on opposing sides of the boundary for each element
+    \item \pysauce{get_facet_neighbor_idx} -- which returns indicies of cell neighbors 
+    for individual facets along with index of the facet within th neighboring cell 
+    \item \pysauce{get_bc_facet_values}
+    \item \pysauce{get_facet_boundary_idx}
+    \item \pysauce{get_facet_vols}
+    \item \pysauce{get_facet_qp}
+    \item \pysauce{get_nodal_values}
 \end{itemize}
 
 \subsection{Legendre polynomial spaces implementation}
@@ -69,24 +116,38 @@ Legendre polynomial spaces are implemented in two classes
 \pysauce{PolySpace}. It implements method \pysauce{_eval_base} which is used to 
 get values of basis functions as well as their derivatives. It also contains 
 methods for evaluating Legendre and Jacobi polynomials common to tensor-product 
-and simplex subclasses. These classes are accompanied by two function \pysauce{get_n_el_nod}, which returns number of basis functions for given order , dimension and type of basis, and generator \pysauce{iter_by_order} (\ref{lst:iter_by_order}) which generates tuples of $r$ and $s$ in desired hierarchical order.
+and simplex subclasses. These classes are accompanied by two function 
+\pysauce{get_n_el_nod}, which returns number of basis functions for given order , 
+dimension and type of basis, and generator \pysauce{iter_by_order} 
+(\ref{lst:iter_by_order}) which generates tuples of $r$ and $s$ in desired hierarchical 
+order for example for approximation order $2$ and tensor-product basis this is: 
+\pysauce{(0, 0),
+    (0, 1),
+    (1, 0),
+    (0, 2),
+    (1, 1),
+    (2, 0)}. 
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption= Itaration over $r$ and $s$ indicies of basis functions \label{lst:iter_by_order}]
+\begin{lstlisting}[language=Python, caption= Iteration over $r$ and $s$ indicies of basis 
+functions \label{lst:iter_by_order}]
 for k in range(porder):
-	for r in range(k + 1):
-		yield r, k - r /*!\lann{lsta:yield}!*/
-if not extended: return
+    for r in range(k + 1):
+        yield r, k - r /*!\lann{lsta:yield}!*/
+if not extended: return  /*!\lann{lsta:extended}!*/
 for s in range(1, porder):
-	for r in range(1, porder):
-		if r + s <= porder - 1:
-			continue
-		yield r, s
+    for r in range(1, porder):
+        if r + s <= porder - 1:
+            continue
+        yield r, s
 \end{lstlisting}
 \begin{itemize}
-	\item[\ref{lsta:yield}] \pysauce{yield} keyword turns function into generator usable 
-	in for cycles, for example in Listing \ref{lst:limiter_2D}.
+    \item[\ref{lsta:yield}] \pysauce{yield} keyword turns function into generator usable 
+    in for cycles, for example in Listing \ref{lst:limiter_2D}.
+    \item[\ref{lsta:extended}] \pysauce{extended} flag differentiates simplex basis vrom 
+    tensor-product one which uses more basis functions.
 \end{itemize}
-
+To obtain values of Jacobi polynomials we used implementations provided by SciPy in 
+\pysauce{special} module.
 
 \subsection{Hyperbolic flux term implementation}
 \label{se:adv_flux_term_imp}
@@ -118,9 +179,9 @@ cell_fluxes = nm.einsum("ifk,ifkq,dfq,ifq->id",
                          fc_n, central + upwind, fc_b, weights)
 \end{lstlisting}
 \begin{itemize}
-	\item[\ref{lsta:advflux_central}] \pysauce{numpy.einsum} uses Einstein 
-	summation convention for expressing tensor contractions for details see 
-	\cite{einsum-doc}.
+    \item[\ref{lsta:advflux_central}] \pysauce{numpy.einsum} uses Einstein 
+    summation convention for expressing tensor contractions for details see 
+    \cite{einsum-doc}.
 \end{itemize}
 
 
@@ -131,29 +192,38 @@ General hyperbolic term is implemented in class \pysauce{NonlinearHyperbolicDGFl
 
 \subsection{Diffusion flux term implementation}
 \label{se:diff_flux_term_imp}
+\pysauce{DiffusionDGFluxTerm} implements both terms in \eqref{eq:diff_left_approx} and 
+\eqref{eq:diff_right_approx} this is thanks to two modes in which it can be used in 
+equation, this has already been demonstrated in for Laplace equation in Listing 
+\ref{lst:laplace} where 
+\pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, p, v)"} corresponds to 
+$a^R_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_state'} (\ref{lsta:avg_state}) and 
+\pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, v, p)"} corresponds to 
+$a^L_\mathrm{diff}(\mathbf{p})$ 
+and mode \pysauce{'avg_virtual'} (\ref{lsta:avg_virtual})
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of diffusion cell 
 fluxes]
-if self.mode == 'avg_state':
-	avgDdState = (nm.einsum("ikl,ifkq->ifkq",
-							 D, inner_facet_state_d) +
-				  nm.einsum("ikl,ifkq->ifkq",
-		     				 D,   outer_facet_state_d)) / 2.
+if self.mode == 'avg_state':  /*!\lann{lsta:avg_state}!*/
+    avgDdState = (nm.einsum("ikl,ifkq->ifkq",
+                             D, inner_facet_state_d) +
+                  nm.einsum("ikl,ifkq->ifkq",
+                              D,   outer_facet_state_d)) / 2.
 
-	# outer_facet_base is in DG zero 
-	# hence the jump is inner value
-	jmpBase = inner_facet_base
+    # outer_facet_base is in DG zero 
+    # hence the jump is inner value
+    jmpBase = inner_facet_base
 
-	cell_fluxes = nm.einsum("ifkq ,ifk,idfq,ifq->id",
-						 	 avgDdState, fc_n, jmpBase, weights)
+    cell_fluxes = nm.einsum("ifkq ,ifk,idfq,ifq->id",
+                              avgDdState, fc_n, jmpBase, weights)
 
-elif self.mode == 'avg_virtual':
-	avgDdbase = (nm.einsum("ikl,idfkq->idfkq",
-							D, inner_facet_base_d)) / 2.
-	
-	jmpState = inner_facet_state - outer_facet_state
-	cell_fluxes = nm.einsum("idfkq, ifk, ifq , ifq -> id",
-							 avgDdbase, fc_n, jmpState, weights)
+elif self.mode == 'avg_virtual':  /*!\lann{lsta:avg_virtual}!*/
+    avgDdbase = (nm.einsum("ikl,idfkq->idfkq",
+                            D, inner_facet_base_d)) / 2.
+    
+    jmpState = inner_facet_state - outer_facet_state
+    cell_fluxes = nm.einsum("idfkq, ifk, ifq , ifq -> id",
+                             avgDdbase, fc_n, jmpState, weights)
 
 \end{lstlisting}
 
@@ -175,12 +245,12 @@ nu = nm.trace(diff_tensor, axis1=-2, axis2=-1)[..., None] / \
 sigma = nu * Cw * approx_order ** 2 / facet_vols
 
 inner_facet_state, outer_facet_state, whs = \
-			field.get_both_facet_state_vals(state, region, 
-			                                derivative=False)
+            field.get_both_facet_state_vals(state, region, 
+                                            derivative=False)
 
 inner_facet_base, outer_facet_base, _ = \
-			field.get_both_facet_base_vals(state, region, 
-			                               derivative=False)
+            field.get_both_facet_base_vals(state, region, 
+                                           derivative=False)
 
 jmp_state = inner_facet_state - outer_facet_state
 jmp_base = inner_facet_base  # - outer_facet_base
@@ -214,21 +284,21 @@ tilu = nm.zeros(u.shape[1:])
 for ll in range(self.n_el_nod - 1, 0, -1):
   tilu[idx] = minmod(nu[ll, 1:-1][idx], 
                      nu[ll-1, 2:][idx] - nu[ll-1, 1:-1][idx],
-					 nu[ll-1, 1:-1][idx] - nu[ll-1, :-2][idx])  /*!\lann{lsta:lim1}!*/
+                     nu[ll-1, 1:-1][idx] - nu[ll-1, :-2][idx])  /*!\lann{lsta:lim1}!*/
 
   idx = idx[nm.where(abs(tilu[idx] - nu[ll, 1:-1][idx])
-											> MACHINE_EPS)[0]] /*!\lann{lsta:lim2}!*/
+                                            > MACHINE_EPS)[0]] /*!\lann{lsta:lim2}!*/
 if len(idx) == 0:
   break /*!\lann{lsta:lim3}!*/
 nu[ll, 1:-1][idx] = tilu[idx] /*!\lann{lsta:lim4}!*/
 \end{lstlisting}
 \begin{itemize}
-	\item [\ref{lsta:lim1}] compute the limiting value $\tilde{u}$
-	\item [\ref{lsta:lim2}] extract indicies where the limiting value is larger than 
-	current solution
-	\item[\ref{lsta:lim3}] if none of the coefficients required limiting we stop
-    \item [\ref{lsta:lim3}] replace old values with limited ones
-	
+    \item [\ref{lsta:lim1}] Compute the limiting value $\tilde{u}$.
+    \item [\ref{lsta:lim2}] Extract indicies where the limiting value is larger than 
+    current solution.
+    \item[\ref{lsta:lim3}] If none of the coefficients required limiting we stop.
+    \item [\ref{lsta:lim3}] Replace old values with limited ones.
+    
 \end{itemize}
 
 \subsubsection{Moment limiter -- 2D}
@@ -239,54 +309,55 @@ We list implementation of 2D limiter for reference in Listing \ref{lst:limiter_2
 \begin{lstlisting}[language=Python, caption=Moment limiter for 
 cartesian grid \label{lst:limiter_2D}]
 for ll, (ii, jj) in enumerate(
-						iter_by_order(self.field.approx_order, 
-									  2,
-									  extended=ex)):
+                        iter_by_order(self.field.approx_order, 
+                                      2,
+                                      extended=ex)):
   nu[ii, jj, ...] = u[ll]  /*!\lann{lsta:indx_to}!*/
 
 for ii, jj in reversed(list(
-					iter_by_order(
-						self.field.approx_order, 2,
-						extended=ex))):
+                    iter_by_order(
+                        self.field.approx_order, 2,
+                        extended=ex))):
   minmod_args = [nu[ii, jj, idx]]
   nbrhs = nbrhd_idx[idx]
   if ii - 1 >= 0:
-  	alf = nm.sqrt((2 * ii-1) / (2 * ii + 1))
-  	# right difference in x axis
-  	dx_r = alf*(nu[ii-1, jj, nbrhs[:, 1]] - nu[ii-1, jj, idx])
-  	# left differnce in x axis
-  	dx_l = alf*(nu[ii-1, jj, idx] - nu[ii-1, jj, nbrhs[:, 3]])
-  	minmod_args += [dx_r, dx_l]
+      alf = nm.sqrt((2 * ii-1) / (2 * ii + 1))
+      # right difference in x axis
+      dx_r = alf*(nu[ii-1, jj, nbrhs[:, 1]] - nu[ii-1, jj, idx])
+      # left differnce in x axis
+      dx_l = alf*(nu[ii-1, jj, idx] - nu[ii-1, jj, nbrhs[:, 3]])
+      minmod_args += [dx_r, dx_l]
   if jj - 1 >= 0:
-  	alf = nm.sqrt((2 * jj - 1) / (2 * jj + 1))
-  	# right i.e. element "up" difference in y axis
-  	dy_up = alf*(nu[ii, jj-1, nbrhs[:, 2]] - nu[ii, jj-1,  idx])
-  	# left i.e. element "down" difference in y axis
-  	dy_dn = alf*(nu[ii, jj-1,  idx] - nu[ii, jj-1,  nbrhs[:, 0]])
-  	minmod_args += [dy_up, dy_dn]
-  	
+      alf = nm.sqrt((2 * jj - 1) / (2 * jj + 1))
+      # right i.e. element "up" difference in y axis
+      dy_up = alf*(nu[ii, jj-1, nbrhs[:, 2]] - nu[ii, jj-1,  idx])
+      # left i.e. element "down" difference in y axis
+      dy_dn = alf*(nu[ii, jj-1,  idx] - nu[ii, jj-1,  nbrhs[:, 0]])
+      minmod_args += [dy_up, dy_dn]
+      
   tilu[idx] = minmod_seq(minmod_args)
   idx = idx[nm.where(abs(tilu[idx] - nu[ii, jj, idx]) > MACHINE_EPS)[0]]
   
   if len(idx) == 0:
-  	break
+      break
   nu[ii, jj, idx] = tilu[idx]
 for ll, (ii, jj) in enumerate(
-						iter_by_order(self.field.approx_order, 
-									  2,   # dim
-									  extended=ex)):
+                        iter_by_order(self.field.approx_order, 
+                                      2,   # dim
+                                      extended=ex)):
   resu[ll] = nu[ii, jj]  /*!\lann{lsta:indx_from}!*/
 
 \end{lstlisting}
 \begin{itemize}
-	\item[\ref{lsta:indx_to}] Reshape solution array for indexing using $r$ and $s$ indicies, effectively removing need for explicit inverse of index mapping from \eqref{eq:bindx}.
-	
-	\item [\ref{lsta:indx_from}] Convert back to linear index.
+    \item[\ref{lsta:indx_to}] Reshape solution array for indexing using $r$ and $s$ indicies, effectively removing need for explicit inverse of index mapping from \eqref{eq:bindx}.
+    
+    \item [\ref{lsta:indx_from}] Convert back to linear index.
 \end{itemize}
 
 
 \subsection{Time stepping solvers implementation}
-As demonstrated in \ref{se:time_theory} explicit DG FEM requires explicit time 
+As demonstrated in \Cref{se:time_theory} explicit DG FEM requires explicit 
+time 
 stepping solvers with multiple stages in one time step. These are not part of 
 rich collection of time stepping solvers included in Sfepy. We implemented 
 two of them: basic Euler solver, total-variations diminishing Runge-Kutta 
