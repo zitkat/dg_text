@@ -40,19 +40,19 @@
 	year = {2013}
 }
 
-
-@phdthesis{Kucera,
-	abstract = {This work is concerned with the theoretical analysis and practical applications of the discontinuous Galerkin finite element method. We derive a discontinuous Galerkin formulation for a model scalar convection-diffusion equa- tion with nonlinear convection and diffusion. The resulting symmetric, nonsym- metric and incomplete variants are theoretically analyzed and error estimates in the L2(H1)- and L∞(L2)-norms are derived. Since these error estimates are suboptimal in the latter norm, we use the Aubin-Nitsche technique to obtain L∞(L2)-optimal estimates. The proof admits nonconforming meshes, however this result is limited to the symmetric variant and linear diffusion. Numerical experiments are performed to verify these theoretical results by the experimental order of convergence. Further, we apply the discontinuous Galerkin method to the compressible Euler equations using a semi-implicit discretization with respect to time. We discuss the choice of boundary conditions and shock capturing. Several numerical examples show the resulting scheme is capable of computing transonic, supersonic and low-Mach flows. Finally, we treat the compressible Navier-Stokes equations, incorporating viscous terms into the semi-implicit numerical scheme for the Euler equations. The extension of the discontinuous Galerkin formulation of second order terms to systems of equations is discussed and a new approach is derived. Several numerical examples for the Navier-Stokes equations are pre- sented.},
-	author = {Ku{\v{c}}era, V{\'{a}}clav},
-	issn = {0025-7818},
-	keywords = {Discontinuous Galerkin method,compressible Euler equations,compressible Navier-Stokes equations,error analysis,nonlinear convection-diffusion equa- tion,numer- ical flux,optimal error estimates,semi-implicit linearized numerical scheme,shock capturing.},
-	mendeley-groups = {school/SNM/DG FEM},
-	pages = {1 --122},
-	pmid = {21110453},
-	school = {Charles University},
-	title = {{Higher order methods for the solution of compressible flows}},
-	type = {doctoral},
-	url = {http://www.ncbi.nlm.nih.gov/pubmed/21188320}
+@PhdThesis{Kucera,
+  author          = {Ku{\v{c}}era, V{\'{a}}clav},
+  title           = {{Higher order methods for the solution of compressible flows}},
+  school          = {Charles University in Prague},
+  year            = {2007},
+  type            = {Doctoral Thesis},
+  abstract        = {This work is concerned with the theoretical analysis and practical applications of the discontinuous Galerkin finite element method. We derive a discontinuous Galerkin formulation for a model scalar convection-diffusion equa- tion with nonlinear convection and diffusion. The resulting symmetric, nonsym- metric and incomplete variants are theoretically analyzed and error estimates in the L2(H1)- and L∞(L2)-norms are derived. Since these error estimates are suboptimal in the latter norm, we use the Aubin-Nitsche technique to obtain L∞(L2)-optimal estimates. The proof admits nonconforming meshes, however this result is limited to the symmetric variant and linear diffusion. Numerical experiments are performed to verify these theoretical results by the experimental order of convergence. Further, we apply the discontinuous Galerkin method to the compressible Euler equations using a semi-implicit discretization with respect to time. We discuss the choice of boundary conditions and shock capturing. Several numerical examples show the resulting scheme is capable of computing transonic, supersonic and low-Mach flows. Finally, we treat the compressible Navier-Stokes equations, incorporating viscous terms into the semi-implicit numerical scheme for the Euler equations. The extension of the discontinuous Galerkin formulation of second order terms to systems of equations is discussed and a new approach is derived. Several numerical examples for the Navier-Stokes equations are pre- sented.},
+  issn            = {0025-7818},
+  keywords        = {Discontinuous Galerkin method,compressible Euler equations,compressible Navier-Stokes equations,error analysis,nonlinear convection-diffusion equa- tion,numer- ical flux,optimal error estimates,semi-implicit linearized numerical scheme,shock capturing.},
+  mendeley-groups = {school/SNM/DG FEM},
+  pages           = {1 --122},
+  pmid            = {21110453},
+  url             = {http://www.ncbi.nlm.nih.gov/pubmed/21188320},
 }
 
 
@@ -503,27 +503,25 @@ year = {2001}
 }
 
 @Article{ufl2014,
-  author        = {Martin S. Aln\ae{}s and Anders Logg and Kristian B. \O{}lgaard and Marie E. Rognes and Garth N. Wells},
-  title         = {Unified Form Language: A domain-specific language for weak formulations of partial differential equations},
-  journal       = {ACM Transactions on Mathematical Software},
-  year          = {2014},
-  volume        = {40},
-  number        = {2},
-  __markedentry = {[tomas:]},
-  arxiv         = {1211.4047},
-  doi           = {10.1145/2566630},
+  author  = {Martin S. Aln\ae{}s and Anders Logg and Kristian B. \O{}lgaard and Marie E. Rognes and Garth N. Wells},
+  title   = {Unified Form Language: A domain-specific language for weak formulations of partial differential equations},
+  journal = {ACM Transactions on Mathematical Software},
+  year    = {2014},
+  volume  = {40},
+  number  = {2},
+  arxiv   = {1211.4047},
+  doi     = {10.1145/2566630},
 }
 
 @Article{fenics2015,
-  author        = {Martin S. Aln{\ae}s and Jan Blechta and Johan Hake and August Johansson and Benjamin Kehlet and Anders Logg and Chris Richardson and Johannes Ring and Marie E. Rognes and Garth N. Wells},
-  title         = {The FEniCS Project Version 1.5},
-  journal       = {Archive of Numerical Software},
-  year          = {2015},
-  volume        = {3},
-  number        = {100},
-  __markedentry = {[tomas:]},
-  doi           = {10.11588/ans.2015.100.20553},
-  page          = {9-23},
+  author  = {Martin S. Aln{\ae}s and Jan Blechta and Johan Hake and August Johansson and Benjamin Kehlet and Anders Logg and Chris Richardson and Johannes Ring and Marie E. Rognes and Garth N. Wells},
+  title   = {The FEniCS Project Version 1.5},
+  journal = {Archive of Numerical Software},
+  year    = {2015},
+  volume  = {3},
+  number  = {100},
+  doi     = {10.11588/ans.2015.100.20553},
+  page    = {9-23},
 }
 
 @Article{pyfr2014,
@@ -535,7 +533,7 @@ year = {2001}
   number        = {11},
   pages         = {3028 - 3040},
   issn          = {0010-4655},
-  __markedentry = {[tomas:6]},
+  __markedentry = {[tomas:]},
   abstract      = {High-order numerical methods for unstructured grids combine the superior accuracy of high-order spectral or finite difference methods with the geometric flexibility of low-order finite volume or finite element schemes. The Flux Reconstruction (FR) approach unifies various high-order schemes for unstructured grids within a single framework. Additionally, the FR approach exhibits a significant degree of element locality, and is thus able to run efficiently on modern streaming architectures, such as Graphical Processing Units (GPUs). The aforementioned properties of FR mean it offers a promising route to performing affordable, and hence industrially relevant, scale-resolving simulations of hitherto intractable unsteady flows within the vicinity of real-world engineering geometries. In this paper we present PyFR, an open-source Python based framework for solving advection–diffusion type problems on streaming architectures using the FR approach. The framework is designed to solve a range of governing systems on mixed unstructured grids containing various element types. It is also designed to target a range of hardware platforms via use of an in-built domain specific language based on the Mako templating engine. The current release of PyFR is able to solve the compressible Euler and Navier–Stokes equations on grids of quadrilateral and triangular elements in two dimensions, and hexahedral elements in three dimensions, targeting clusters of CPUs, and NVIDIA GPUs. Results are presented for various benchmark flow problems, single-node performance is discussed, and scalability of the code is demonstrated on up to 104 NVIDIA M2090 GPUs. The software is freely available under a 3-Clause New Style BSD license (see www.pyfr.org).
 Program summary
 Program title: PyFR v0.1.0 Catalogue identifier: AETY_v1_0 Program summary URL:http://cpc.cs.qub.ac.uk/summaries/AETY_v1_0.html Program obtainable from: CPC Program Library, Queen’s University, Belfast, N. Ireland Licensing provisions: New style BSD license No. of lines in distributed program, including test data, etc.: 12733 No. of bytes in distributed program, including test data, etc.: 214183 Distribution format: tar.gz Programming language: Python, CUDA and C. Computer: Variable, up to and including GPU clusters. Operating system: Recent version of Linux/UNIX. RAM: Variable, from hundreds of megabytes to gigabytes. Classification: 6.5, 12. External routines: Python 2.7, numpy, PyCUDA, mpi4py, SymPy, Mako Nature of problem: Compressible Euler and Navier–Stokes equations of fluid dynamics; potential for any advection–diffusion type problem. Solution method: High-order flux reconstruction approach suitable for curved, mixed, unstructured grids. Unusual features: Code makes extensive use of symbolic manipulation and runtime code generation through a domain specific language. Running time: Many small problems can be solved on a recent workstation in minutes to hours.},
@@ -569,6 +567,21 @@ Program title: PyFR v0.1.0 Catalogue identifier: AETY_v1_0 Program summary URL:h
   numpages   = {29},
   publisher  = {Academic Press Professional, Inc.},
   url        = {https://doi.org/10.1016/j.jcp.2006.02.013},
+}
+
+@InBook{Dolejsi2015,
+  pages         = {223--335},
+  title         = {Space-Time Discontinuous Galerkin Method},
+  publisher     = {Springer International Publishing},
+  year          = {2015},
+  author        = {Dolej{\v{s}}{\'i}, V{\'i}t and Feistauer, Miloslav},
+  address       = {Cham},
+  isbn          = {978-3-319-19267-3},
+  __markedentry = {[tomas:6]},
+  abstract      = {In Chap. 5we introduced and analyzed methods based on the combination of the DGM space discretization with the backward difference formula in time.},
+  booktitle     = {Discontinuous Galerkin Method: Analysis and Applications to Compressible Flow},
+  doi           = {10.1007/978-3-319-19267-3_6},
+  url           = {https://doi.org/10.1007/978-3-319-19267-3_6},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}

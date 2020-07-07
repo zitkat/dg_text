@@ -39,7 +39,7 @@ solution is shown in \Cref{fig:burgess_hesthaven_ext}
 	\label{fig:burgess_hesthaven_ext}
 \end{figure}
 Different values of coefficient $C_w$ in penalty term then different convergence 
-behavior as demonstrated in \Cref{fig:burgess_ordersunlimited}. In this case increasing 
+behavior as demonstrated in \Cref{fig:burgess_orders}. In this case increasing 
 coefficient $C_w$ is detrimental to the accuracy of the solution for $D=0.001$ as it 
 develops into steep step (cf. \cref{fig:burgess_hesthaven_ext}) whose approximation 
 requires discontinuity in approximate solution. For $D=0.01$ the diffusion leads to much 
@@ -59,9 +59,25 @@ beneficial, it also helps counteract oscillations similarly to limiter in
 		\vspace{0pt} 
 		\includegraphics[width=0.49\textwidth]{../figs/parametric/burgers_1D/orders_limited}
 	\end{tabular}
-	\caption{\Cref{ex:burgers_hest} average order for different choice of $C_w$}
-	\label{fig:burgess_ordersunlimited}
+	\caption{\Cref{ex:burgers_hest} average convergence rates for different choices of 
+	$C_w$}
+	\label{fig:burgess_orders}
 \end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
+        \vspace{0pt} 
+        \includegraphics[width=0.49\textwidth]{../figs/parametric/burgers_1D/orders_unlimited}
+        &
+        \vspace{0pt} 
+        \includegraphics[width=0.49\textwidth]{../figs/parametric/burgers_1D/orders_limited}
+    \end{tabular}
+    \caption{\Cref{ex:burgers_hest} average order for different choice of $C_w$}
+    \label{fig:burgess_sol}
+\end{figure}
+
 
 
 \begin{figure}[p!]

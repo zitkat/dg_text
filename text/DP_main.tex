@@ -235,9 +235,10 @@
 \chapter{Discontinous Galerkin Method}
 \label{ch:theory}
 In this chapter we lay theoretical background for the concepts necessary to describe the 
-method and then derive the discretization of advection term $a\cdot\nabla(u)$, general 
-nonlinear hyperbolic term $\nabla\cdot \vec{f}(u)$, diffusion term $D \Delta 
-u)$ and source term $g(x)$ occurring in various PDEs namely, from the 
+method and then derive the discretization of advection term $\vec{a}\cdot\nabla(p)$, 
+general 
+nonlinear hyperbolic term $\nabla\cdot \vec{f}(p)$, diffusion term $\nabla \cdot (D  
+\nabla p)$ and source term $g(x)$ occurring in various PDEs namely, from the 
 simplest one: linear advection equation with constant and non-constant 
 velocity, advection with diffusion and sources, general nonlinear hyperbolic 
 equation. Using the discretized terms we will formulate method for these 
@@ -298,9 +299,6 @@ This work was partially supported by project GACR 16-03823S.
 %	n_y\frac{\partial p}{\partial a_2} \right\rvert =
 %	\max_{p \in [1, 2]} \left\lvert  \ul{n} \cdot \nabla p \cdot \ul{a} \right\rvert
 %\end{equation}
-
-% TODO resolve citation format
-%\nocite{*}
 
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{plain}

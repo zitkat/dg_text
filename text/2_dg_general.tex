@@ -19,8 +19,8 @@ where $f$ is sufficiently smooth vector function $f: \realc
 \rightarrow\realc^n$, with the boundary conditions
 \begin{align}\label{eq:diff_bcs}
 p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in } 
-                \Gamma_{Dir} \subset \partial\Omega \\
-%\pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{ 
+                \Gamma_{Dir} \subset \partial\Omega 
+% \\ \pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{ 
 %in 
 %} \Gamma_{New} \subset \partial\Omega
 \end{align}
@@ -65,19 +65,19 @@ start by choosing suitable computational domain $\Omega_h$ which approximates
 domain $\Omega$. Since SfePy supports simplex and tensor product meshes, we 
 will be concerned with space filling tessellations containing line segments 
 for 1D problems respective only triangles or only quadrangles for 2D 
-problems. Subscript $h$ denotes average diameter of the elements, 
+problems. Subscript $h$ denotes minimal diameter of the elements, 
 $N$ will denote the number of elements of $\Omega_h$ and individual elements 
 will be denoted by $T^k$ for $k=0, \ldots, N - 1$. Creating this suitable 
 tessellation for arbitrary computational domain is by no means trivial task, 
 however for the time being we will assume selected computational domain and 
 mesh satisfies all conditions required bellow. First we define space of 
 piecewise continuous functions  on $\Omega_h$ as 
-\begin{equation}
+\begin{equation}\label{eq:sp_conth}
     C^1(\Omega_h) =  \left\{v;\; v\vert_{T^k} \in C^1 \quad \forall T^k \in 
     \Omega_h \right\}
 \end{equation}
 and broken Sobolev space on $\Omega_h$ as
-\begin{equation}\label{eq:sobh}
+\begin{equation}\label{eq:sp_sobh}
     W^{1, 2}(\Omega_h) = \left\{v;\; v\vert_{T^k} \in W^{1, 2}\quad \forall T^k 
     \in \Omega_h \right\}
 \end{equation}
@@ -121,18 +121,8 @@ scalar product
     \label{eq:scalar_prod_dk}
     (p, v)_{T^k} = \int_{T^k} p \cdot v.
 \end{equation}
-hence forming basis of $N_{base}$-dimensional space. 
-
-%Setting 
-%\begin{equation}
-%N_{base} =  \frac{(Ord + 1) \cdot (Ord + 2) \cdot ... \cdot (Ord + d)}{d!},
-%\end{equation}
-%where $Ord$ is desired order of approximation -- 0 for finite volumes, 1 for 
-%linear approximation, 2 for quadratic approximation etc. and $d$ is dimension 
-%of $\Omega_h$; as number of basis functions, provides maximal number of basis 
-%function for given order which remain orthogonal. 
-
-Concrete shape of $\psi_n^k(\vec{x})$ depends on topology of the mesh elements. For 
+hence forming basis of $N_{base}$-dimensional space. Concrete shape of 
+$\psi_n^k(\vec{x})$ depends on topology of the mesh elements. For 
 tensor product meshes i.e. quadrilateral elements we use straight-forward 
 tensor product of Legendre polynomials. If we denote $M$ the order of 
 approximation, $d$ dimension of geometric space (i.e., 2 in our case), we get 
@@ -231,8 +221,7 @@ of $C^1(\Omega_h)$ i.e. for $p \in W^{1,2}(\Omega_h)$ and  $w \in
 W^{1,2}(\Omega_h)$, obtaining the equation \eqref{eq:hyp_int} in the form (we 
 drop 
 independent variables $t$ and $\vec{x}$ notations for brevity) 
-\begin{equation}
-    \label{eq:sum_int_hyp}
+\begin{equation}\label{eq:sum_int_hyp}
     \sum\limits_{k=0}^{N}\left(
     \elint\nabla\cdot \vec{f}(p)\cdot w
     - \elint\nabla \cdot (D \nabla p)\cdot w 
@@ -265,9 +254,9 @@ $i=0,1,2,3$ for quadrilateral meshes, forming the boundary
 \begin{equation}
     \sum_{i=0}^{N_f} \int_{F^k_i} \vec{n_f}\vec{f}(p)w
 \end{equation}
-If we denote $T^{k'}$ element sharing line segment $F^k_i$ with element $T^k$
+If we denote $T^{k(i)}$ element sharing line segment $F^k_i$ with element $T^k$
 value $p_{out}$ corresponds to approximation in this element i.e. $p_{out} = 
-p^{k'}_h$. For simplicity of notation we continue using integral over the whole 
+p^{k(i)}_h$. For simplicity of notation we continue using integral over the whole 
 boundary of $T^k$ implicitly assuming that $p_{out}$ changes as described above. To 
 approximate unknown value of $\vec{f}(p)$  we will use approximate flux $f^*(p_{in}, 
 p_{out})$ obtaining the first term on the right-hand side in the form
@@ -377,7 +366,13 @@ where $\mathbf{p}$ denotes vector of unknowns $P^k_i$ grouped by element as foll
     P^{N}_0, P^{N}_1, P^{N}_2, \ldots, P^{N}_{N_{base} - 1}  \right).
 \end{equation}
 Note that in \eqref{eq:hyp_flux_app} we do not include the minus sign in front 
-of the flux term.
+of the flux term. For linear case term defined in \eqref{eq:hyp_flux_app} can be 
+rewritten as
+\begin{equation}
+     a^C_\mathrm{adv}(\mathbf{p}) = \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j.
+\end{equation} 
+
+
 This finalizes discretization of general hyperbolic term 
 $\nabla\cdot\vec{f}(p) 
 \cdot w$, the two terms -- integral over element $T^k$ (often called stiffness 
@@ -458,26 +453,27 @@ so-called incomplete scheme
         \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] - \elint D\nabla p 
         \nabla w.
 \end{equation}
-Due to regularity of $p$ the $[p(t, \cdot)] = 0$ holds \cite[p. 14]{Kucera} and term
+Due to regularity of $p$ the $[p(t, \cdot)] = 0$ holds \cite[p. 14]{Kucera} and the term:
 \begin{equation}\label{eq:diff_right}
     \elbint D \manglebracs{\nabla w }\cdot \vec{n} [p]
 \end{equation}
 vanishes.
 We can then create symmetric resp. non-symmetric scheme by adding term 
-\eqref{eq:diff_right} with "$+$" resp. "$-$" sign \cite{Kucera}. However either of these 
-schemes is not stable and we need to compensate for the discontinuities of the $p$ across 
-element boundaries by adding interior penalty term \cite{Kucera, 
-Antonietti2013}
+\eqref{eq:diff_right} with "$+$" resp. "$-$" sign \cite[p. 14]{Kucera}. This 
+"symmetrizes" the discretization with respect to $p$ and $w$, which is advantageous in 
+theoretical analysis \cite[p. 39]{Dolejsi2015}.
+However neither of these schemes is stable and we need to compensate for the 
+discontinuities of the $p$ across element boundaries by adding interior penalty term 
+\cite{Kucera, Antonietti2013, Dolejsi2015}
 \begin{equation}
-    \nu \elbint C_w \cdot \frac{Ord^2}{d(\partial T^k)} [p][w]
+    \nu \elbint C_w \cdot \frac{Ord^2}{d(\partial T^k)} [p][w],
 \end{equation}
-where constant $\nu$ captures properties of diffusion tensor $D$, in case $D = 
+where the constant $\nu$ captures properties of diffusion tensor $D$, in case $D = 
 \varepsilon, \; \varepsilon > 0$ we set $\nu = \varepsilon$ and $C_w$ is 
-parameter 
-at our disposal used to fine tune the penalty term.
-See examples \ref{ex:laplace} \ref{ex:quart1}, \ref{ex:quart2}, 
-\ref{burgers_hest} and \ref{ex:kucera} in chapter 
-\ref{ch:convergence} for effects of different choices of the value of $C_w$. 
+parameter at our disposal used to fine tune the penalty term.
+See examples \ref{ex:laplace}, \ref{ex:quart1}, \ref{ex:quart2}, 
+\ref{ex:burgers_hest} and \ref{ex:kucera} in Chapter 
+\ref{ch:convergence} for effects of different choices of $C_w$. 
 And finally $d(\partial T^k)$ is the volume of the boundary of $T^k$. To 
 simplify notation 
 we denote
@@ -523,7 +519,25 @@ holds, we obtain individual terms needed to discretize diffusion term in forms
          \elbint \sigma [P^k_i\psi_i][\psi_j] 
          = \elbint \sigma [P^k_i\psi_i]\psi_j.
 \end{equation}
-
+Using these we construct three variants of the discontinuous Galerkin method used for 
+elliptic problems: Symmetric Interior Penalty Galerkin method (SIPG) where
+\begin{equation}\label{eq:sipg}
+\elint\nabla\cdot(D\nabla p) w \approx - a^C_\mathrm{diff}(\mathbf{p}) 
+    + a^L_\mathrm{diff}(\mathbf{p}) + a^R_\mathrm{diff}(\mathbf{p}) 
+    - a^P_\mathrm{diff}(\mathbf{p}),
+\end{equation}
+Non-symmetric Interior Penalty Galerkin method (NIPG)
+\begin{equation}\label{eq:nipg}
+\elint\nabla\cdot(D\nabla p) w \approx - a^C_\mathrm{diff}(\mathbf{p})  
+    + a^L_\mathrm{diff}(\mathbf{p}) - a^R_\mathrm{diff}(\mathbf{p})  
+    - a^P_\mathrm{diff}(\mathbf{p}),
+\end{equation}
+Incomplete Interior Penalty Galerkin method (IIPG)
+\begin{equation}\label{eq:iipg}
+\elint\nabla\cdot(D\nabla p) w \approx - a^C_\mathrm{diff}(\mathbf{p})  
+    + a^L_\mathrm{diff}(\mathbf{p})
+    - a^P_\mathrm{diff}(\mathbf{p}).
+\end{equation}
 
 \subsection{Source term discretization}
 \label{se:source_term}
@@ -572,7 +586,7 @@ depend on time, that is
 \begin{equation}
     P^k_i = P^k_i(t).
 \end{equation}
-By applying analogous [\todo approximation] to the transient term we obtain
+By applying spatial discretization to the transient term we obtain
 \begin{equation}
     \elint\pdiff{p}{t}(t)w \approx  \fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j. 
 \end{equation}
@@ -673,21 +687,23 @@ accuracy in time.
 \end{equation}
 
 
-\subsection{Hyperbolic term stability requirement}
-\todo Courant-Fridrichs-Levy condition adjusted for high order approximation 
-mandates 
-\begin{equation}
-    \Delta t \leq c\frac{\Delta x^2}{D} \cdot \frac{1}{2M + 1},
-\end{equation} 
-where $c \leq 1$ is adjustable parameter.
-
-
-\subsection{Elliptic term stability requirement}
-\todo
+\paragraph{Hyperbolic term stability requirement}
+Use of explicit time stepping solvers poses strict upper bounds on size of time step, 
+for purely advection problems Courant-Friedrichs-Lewy condition adjusted for high order 
+approximation mandates \cite[p. 5]{Chalons2018}
 \begin{equation}\label{eq:cfl_cond}
-    \Delta t \leq c\frac{\Delta x}{\norm{\vec{a}}} \cdot \frac{1}{2M + 1},
+\Delta t \leq C_\mathrm{CFL}\frac{h}{\norm{\vec{a}}} \cdot \frac{1}{2M + 1},
 \end{equation}
-where $c \leq 1$ is adjustable parameter.
+where $0 < C_\mathrm{CFL} \leq 1$ is adjustable parameter of order 1.
+
+
+\paragraph{Elliptic term stability requirement}
+For problems including diffusion the CFL condition \eqref{eq:cfl_cond} is often 
+overridden by \cite{Hesthaven2008}
+\begin{equation}
+\Delta t \leq C_\mathrm{DIFF}\frac{h^2}{D}, % \cdot \frac{1}{2M + 1},
+\end{equation} 
+where $0 < C_\mathrm{DIFF} \leq 1$ is again adjustable parameter of order 1.
 
 \newpage
 \section{Initial condition discretization}
@@ -740,7 +756,7 @@ from \pysauce{DGField} through method \pysauce{get_both_facet_base_vals}.
 \section{Limiters}
 \label{se:limiters}
 In high order DG FEM oscillations, which can significantly decrease quality of 
-solution, occur even when Courant-Friedrichs-Levy condition \eqref{eq:cfl_cond} is met. 
+solution, occur even when Courant-Friedrichs-Lewy condition \eqref{eq:cfl_cond} is met. 
 To combat this limiter needs to be used, in the following section we present moment 
 limiters for 1D and 
 2D problems.
