@@ -15,15 +15,15 @@ resp.
 \begin{equation}
     \pdiff{p}{t} + \vec{a}\cdot\nabla{p} = 0.
 \end{equation}
-After applying discretizations devised in \Cref{ch:theory} we obtain both equations in 
-the same form
+After applying discretizations devised in \Cref{ch:theory} we obtain both 
+equations in the same form
 \begin{equation}
          \fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j 
          - \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j 
          + \int_{\partial{T^k}} \vec{n}
         \cdot f^{*} (p_{in}, p_{out})\cdot\psi_j = 0
 \end{equation}
-Equation expressed in Sfepy declarative notation can be found in Listing 
+Equation expressed in \sfepy{} declarative notation can be found in Listing 
 \ref{lst:advection} below;
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption={Advection equation}
@@ -38,19 +38,19 @@ equations = {'Advection':
   }
 \end{lstlisting}
 \begin{itemize}
-    \item[\ref{lsta:history}] \pysauce{"p[-1]"} ensures the variable object stores 
-    history one step backwards in time facilitating forward nature of time stepping 
-    solvers,
+    \item[\ref{lsta:history}] \pysauce{"p[-1]"} ensures the variable object 
+    stores history one step backwards in time facilitating forward nature of 
+    time stepping solvers,
     \item[\ref{lsta:flux}] \pysauce{"a.flux"} is an optional material argument 
     representing $\alpha$ coefficient in \eqref{eq:lax-frieflux}.
 \end{itemize}
 Laplace equation in two dimensions
 \begin{equation}
     \label{eq:ex_laplace}
-    - D \left(\pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} \right)= 0
+    - D \left(\pdiff{^2 p}{x^2} + \pdiff{^2 p}{y^2} \right)= 0.
 \end{equation}
-Employing symmetric discretization of diffusion term and adding diffusion penalty term 
-yields equation in the form
+Employing symmetric discretization of diffusion term and adding diffusion 
+penalty term yields equation in the form
 \begin{multline}
     \elint D\nabla P^k_i\psi_i \nabla \psi_j
     - \elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j 
@@ -58,22 +58,21 @@ yields equation in the form
     + \nu \elbint \sigma [P^k_i\psi_i]\psi_j 
     = 0.
 \end{multline}
-Discretization of this equation using Sfepy terms can be found in Listing 
+Discretization of this equation using \sfepy{} terms can be found in Listing 
 \ref{lst:laplace};\\
 Static advection-diffusion equation with right hand side of the form
 \begin{equation}
 \label{eq:ex_advdiff}
 \pdiff{p}{x} + \pdiff{p}{y} - D \cdot \left( \pdiff{^2 p}{x^2} + \pdiff{^2 
-p}{y^2} \right) = g
+p}{y^2} \right) = g,
 \end{equation}
 i.e.,
 \begin{equation}
 \vec{a} \cdot \nabla p - D \Delta p = g,
 \end{equation}
-where $\vec{a} = [1, 1]^T$ is advection velocity, $D$ is diffusion coefficient and $g$ is 
-a source function. Combining discretization of the two previous equations we 
-obtain 
-discretized form
+where $\vec{a} = [1, 1]^T$ is advection velocity, $D$ is diffusion coefficient 
+and $g$ is a source function. Combining discretization of the two previous 
+equations we obtain discretized form
 \begin{multline}
 - \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j 
 + \int_{\partial{T^k}} \vec{n}\cdot f^{*} (p_{in}, p_{out})\cdot\psi_j\\
@@ -84,7 +83,7 @@ discretized form
 - \elint g\cdot \psi_j
 = 0.
 \end{multline}
-In SfePy declarative notation this equation has the form presented in 
+In \sfepy{} declarative notation this equation has the form presented in 
 Listing \ref{lst:advdiff}.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Static advection-diffusion equation
@@ -132,7 +131,7 @@ Discretizing using all the terms derived before we get the same form for both 1D
     - \elint g\cdot \psi_j
     = 0.
 \end{multline}
-In SfePy declarative notation this equation has the form presented in 
+In \sfepy{} declarative notation this equation has the form presented in 
 Listing \ref{lst:burgers}.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Viscous Burgers equation \label{lst:burgers}]
@@ -177,15 +176,16 @@ in literature
 r = \frac{\log\left(\dfrac{\Ltwonorm{p - p_{h_{n}}}}{\Ltwonorm{p - p_{h_{n-1}}}}\right)}
 {\log\left(\dfrac{h^d_{n}}{h^d_{n-1}}\right)}.
 \end{equation}
-Inspired by \cite{Kucera} we present plots depicting average convergence rate over 
-several mesh refinements, this might not be ideal measure of the method behavior, 
-nevertheless it still provides us with convenient indicator. Accompanied with plots of 
-$L^2$ error it allows us to reason about method over several varying parameters, notably 
-it reveals relationship between diffusion coefficient and penalty term in examples 
-including diffusion terms.
+Inspired by \cite{Kucera} we present plots depicting average convergence rate 
+over several mesh refinements, this might not be ideal measure of the method 
+behavior, nevertheless it still provides us with convenient indicator. 
+Accompanied with plots of $L^2$ error it allows us to reason about method over 
+several varying parameters, notably it reveals relationship between diffusion 
+coefficient and penalty term in examples including diffusion terms.
 
 In \Cref{ex:adv1D} we explore behavior of DG FE method for 1D pure advection, 
 time dependent problem with and without limiting, examples \ref{ex:laplace}, 
-\ref{ex:quart1}, \ref{ex:quart2} and \ref{ex:quart3} importance of diffusion penalty 
-terms. 
-
+\ref{ex:quart1}, \ref{ex:quart2} and \ref{ex:quart3} importance of diffusion 
+penalty terms. All the test problems studied in Chapter \ref{ch:convergence} 
+are specified using this declarative approach, codes can be found in (\todo 
+Attachment? \url{https://github.com/zitkat/dg_examples})

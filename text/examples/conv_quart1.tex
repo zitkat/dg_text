@@ -12,7 +12,7 @@ we will solve equation \eqref{eq:ex_advdiff} in $\Omega = \langle 0, 1 \rangle^2
 %\end{equation}
 %where $\vec{a} = [1, 1]^T$ is advection velocity, $D$ is diffusion coefficient 
 %and $g$ is a source function.
-We setup boundary conditions and source function $g$ in such way that 
+We set up boundary conditions and source function $g$ in such a way that 
 the exact solution $u_{exact}$ is
 \begin{equation}
 	u_{exact}(x,y) =  -{\left(y^{2} - y\right)} \sin\left(2 \, \pi x\right).
@@ -29,7 +29,7 @@ Solving for $g$ yields
 matching  boundary conditions are
 \begin{equation}
 	\begin{aligned}
-	&u(x) = 0, \quad x \in \partial\Omega\\
+	&u(x) = 0, \quad x \in \partial\Omega,\\
 	&\nabla u(x) = [-2\pi(y^2 - y)\cos(2 \pi x), -(2 y - 1)\sin(2\pi  x)]^T, \quad x \in 
 	\partial\Omega.
 	\end{aligned}
