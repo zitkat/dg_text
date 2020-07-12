@@ -220,8 +220,11 @@
 \newpage
 \pagenumbering{roman}
 \tableofcontents
-\listoffigures
+
 \listoftheorems
+
+\listoffigures
+
 
 \makeatletter
 \if@twoside \ifodd\value{page}
@@ -265,7 +268,11 @@ In this chapter we first introduce PDEs used to study the behavior of DG FE
 method and provide a short guide to the convergence study setup. Finally, we 
 present the results of convergence studies for various problem setups.
 \input{4_ne_conv.tex}
+
+\newpage
 \input{examples/conv_advection_1D.tex}
+\newpage
+\input{examples/conv_advection_2D_kriv.tex}
 \newpage
 \input{examples/conv_laplace.tex}
 \newpage

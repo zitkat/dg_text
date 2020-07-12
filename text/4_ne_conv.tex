@@ -184,8 +184,10 @@ several varying parameters, notably it reveals relationship between diffusion
 coefficient and penalty term in examples including diffusion terms.
 
 In \Cref{ex:adv1D} we explore behavior of DG FE method for 1D pure advection, 
-time dependent problem with and without limiting, examples \ref{ex:laplace}, 
-\ref{ex:quart1}, \ref{ex:quart2} and \ref{ex:quart3} importance of diffusion 
-penalty terms. All the test problems studied in Chapter \ref{ch:convergence} 
-are specified using this declarative approach, codes can be found in (\todo 
-Attachment? \url{https://github.com/zitkat/dg_examples})
+time dependent problem with and without limiting, in \Cref{ex:adv2D_kriv} we do the same 
+for 2D problem although this time we omit the convergence study in favor of exploring 
+effectives of different approximation orders while keeping the number of DOFs constant. 
+Examples \ref{ex:laplace}, \ref{ex:quart1}, \ref{ex:quart2} and \ref{ex:quart3} 
+importance of diffusion penalty terms. All the test problems studied further
+are specified using this declarative approach introduced in \ref{ch:convergence}, 
+codes can be found in (\todo Attachment? \url{https://github.com/zitkat/dg_examples})

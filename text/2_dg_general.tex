@@ -112,7 +112,7 @@ In 1D setting $\psi_n^k(\vec{x})$ is composed of Legendre polynomials shifted
 and truncated to interval $[0, 1]$, we denote $L^r(x)$ the Legendre 
 polynomial of order $r$. These Legendre polynomials are orthogonal and hence 
 the set  $\{\psi_n^k(x)| \; \psi_n = L^n, \; n = 0,1, \dots  N_{base} - 
-1\}$ forms basis of  $N_{base}$ dimensional space we denote $M = N_{base} - 
+1\}$ forms basis of  $N_{base}$ dimensional space, we denote $M = N_{base} - 
 1$ maximal order of used Legendre polynomials.
 
 In 2D the basis functions $\psi_n^k(\vec{x})$ are composed from Legendre 
@@ -193,12 +193,12 @@ that is $Le_{\Omega_h}^{M} \subset  W^{1,2}(\Omega_h)$, $Le$ stands for Legendre
 dimension
 \begin{equation}
 \label{eq:dim_legh}
-N_{dof} = \text{dim}(Le_{\Omega_h}^{M}) = N\cdot N_{base}.
+N_{dof} = \text{dim}(Le_{\Omega_h}^{M}) = N\cdot N_{base},
 \end{equation}
-This is local basis commonly used in literature \cite{Hesthaven2008}, 
-\cite{Bokhove2008}, however there are also other usable bases, which must not 
-be orthogonal or polynomial \cite{Yuan2006}. We will always use full 
-basis of the functions, however implementations contains mechanism to omit 
+where subscript $dof$ stands for degrees of freedom (DOFs). This is local basis commonly 
+used in literature \cite{Hesthaven2008}, \cite{Bokhove2008}, however there are also other 
+usable bases, which must not be orthogonal or polynomial \cite{Yuan2006}. We will always 
+use full basis of the functions, however implementations contains mechanism to omit 
 some of them for testing purposes.
 
 \newpage

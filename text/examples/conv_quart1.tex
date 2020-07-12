@@ -28,18 +28,18 @@ Solving for $g$ yields
 \end{equation}
 matching  boundary conditions are
 \begin{equation}
-	\begin{aligned}
-	&u(x) = 0, \quad x \in \partial\Omega,\\
-	&\nabla u(x) = [-2\pi(y^2 - y)\cos(2 \pi x), -(2 y - 1)\sin(2\pi  x)]^T, \quad x \in 
-	\partial\Omega.
-	\end{aligned}
+u(x) = 0, \quad \nabla u(x) = [-2\pi(y^2 - y)\cos(2 \pi x), -(2 y - 1)\sin(2\pi  x)]^T, 
+\quad x \in \partial\Omega.
 \end{equation}
 Different values of coefficient $C_w$ in penalty term then yield different 
 convergence behavior as demonstrated in Figure \ref{fig:qconv1} and 
 \Cref{fig:orders_quarteroni1}. Both figures illustrate "gluing" effect of penalty term 
 which increases with $C_w$ coefficient and counteracts discontinuities between elements 
 which are the main source of error in this example. In \Cref{fig:sol_quart1} this effect 
-is clearly visible in sample solution.
+is clearly visible in sample solution. With growing value of $C_w$ convergence 
+behavior of the method improves, with exception of 0th order approximation for which it 
+has no effect as expected. Antonietti et al. \cite{Antonietti2013} report convergence for 
+order 1 and 2, these are in accord with ours. 
 
 \begin{figure}[h!]
 	\centering
@@ -50,7 +50,8 @@ is clearly visible in sample solution.
 		\vspace{0pt} 
 		\includegraphics[width=0.4\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni1_2_3}
 	\end{tabular}
-	\caption{\Cref{ex:quart1} average order for different choice of $C_w$}
+	\caption{\Cref{ex:quart1}. Average convergence rates for different choice of $C_w$ 
+	for quadrilaterals (left) and triangles (right).}
 	\label{fig:orders_quarteroni1}
 \end{figure}
 
@@ -59,15 +60,16 @@ is clearly visible in sample solution.
 	\centering
 	\begin{subfigure}{.5\textwidth}	
 		\centering	
-		\includegraphics[width=\linewidth]{../figs/sols/quart1_0_3_1_0_0-h1024o04.png}
+		\includegraphics[width=\linewidth]{../figs/sols/quart1-03100-sol-h1024o04.png}
 		\caption{$C_w = 1$}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering	
-		\includegraphics[width=\linewidth]{../figs/sols/quart1_5_3_1_0_0-h1024o04.png}
+		\includegraphics[width=\linewidth]{../figs/sols/quart1-53100-sol-h1024o04.png}
 		\caption{$C_w = 10^5$}
 	\end{subfigure}
-	\caption{Solutions of \Cref{ex:quart1} for $D = 1$ and for different values of $C_w$}
+	\caption{\Cref{ex:quart1}. Solutions on quadrilateral mesh for $D = 1$ and for 
+	different values of $C_w$.}
 	\label{fig:sol_quart1}
 \end{figure}
 
@@ -75,6 +77,7 @@ is clearly visible in sample solution.
 \begin{figure}[p!]
 	\centering
 	\includegraphics[height=\textheight]{../figs/parametric/advdiff_2D/quarteroni1.png}
-	\caption{\Cref{ex:quart1} convergence graphs for different choice of $C_w$}
+	\caption{\Cref{ex:quart1}. Relative errors for different choices of $C_w$ for 
+	quadrilaterals (left) and triangles (right).}
 	\label{fig:qconv1}
 \end{figure}

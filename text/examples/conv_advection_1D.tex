@@ -39,30 +39,31 @@ and basically enabling use of high order methods, which suffer from them the mos
 resulting errors are still significant as limiting introduces prominent 
 smoothing. Note that for both $u_{smooth}$ a $u_{step}$ with and without limiting the 
 convergence rate of the method is impacted by used 3rd order TVD Runge-Kutta 
-time-stepping solver. 
-\end{example}
+time-stepping solver. This behavior is consistent with that reported by Krivodonova 
+\cite{Krivodonova2007}.
 
+\end{example}
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}{.5\textwidth}	
 		\centering	
-		\includegraphics[width=\linewidth]{../figs/sols/adv1d_o2h100_limit}
+		\includegraphics[width=\linewidth]{../figs/sols/adv1d-sol-o2h100-limit}
 		\caption{Limit: True}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering	
-		\includegraphics[width=\linewidth]{../figs/sols/adv1d_o2h100_nolimit}
+		\includegraphics[width=\linewidth]{../figs/sols/adv1d-sol-o2h100-nolimit}
 		\caption{Limit: False}
 	\end{subfigure}
-	\caption{\Cref{ex:adv1D} Solution for $u_{step}$ for CFL coefficient $c=0.1$}
+	\caption{\Cref{ex:adv1D}. Solution for $u_{step}$ for CFL coefficient $c=0.1$.}
 	\label{fig:sol_adv1D} 
 \end{figure}
 
 \begin{figure}[p!]
 	\centering
 	\includegraphics[width=1.1\textwidth]{../figs/parametric/advection_1D/advection_1D_smooth_reduced.png}
-	\caption{\Cref{ex:adv1D} convergence plots for smooth initial condition 
-		$u_{smooth}$}
+	\caption{\Cref{ex:adv1D}. Relative errors for smooth initial condition 
+		$u_{smooth}$.}
 	\label{fig:adv_conv_1D}
 \end{figure}
 
@@ -70,7 +71,7 @@ time-stepping solver.
 \begin{figure}[p!]
 	\centering
 	\includegraphics[width=1.1\textwidth]{../figs/parametric/advection_1D/advection_1D_step_reduced.png}
-	\caption{\Cref{ex:adv1D} convergence plots for discontinuous initial 
-	condition $u_{step}$}
+	\caption{\Cref{ex:adv1D}. Relative errors for discontinuous initial 
+	condition $u_{step}$.}
 	\label{fig:adv_conv_1D_step}
 \end{figure}

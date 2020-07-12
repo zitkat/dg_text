@@ -95,7 +95,7 @@ treatment of boundary conditions, otherwise it is similar to original \sfepy{} \
 class and we its omit detailed description.
 
 
-\subsection{DG Field}
+\section{DG Field}
 \pysauce{DGField} class inherits from \pysauce{Field} base class, this provides it with the basic 
 functionality needed to be used in problem specification. From methods implemented in 
 \pysauce{DGField} the most relevant to DG FEM are:
@@ -153,11 +153,18 @@ for k in range(porder):
 To obtain values of Jacobi polynomials we used implementations provided by SciPy in the 
 \pysauce{special} module.
 
+
+\section{DG Terms}
+(\todo \pysauce{function} method) is called whenever value of the term is needed either 
+to build residual vector or right-hand side of an equation or to get terms contribution 
+to (\todo the matrix) (in case of implicit problems). The method returns values for 
+individual DOFs and in matrix mode also indices to build sparse matrix.
+
 \subsection{Hyperbolic flux term implementation}
 \label{se:adv_flux_term_imp}
-\pysauce{AdvectionDGFluxTerm} corresponds with discretized term \eqref{eq:hyp_flux_app} where 
-$\vec{f}(p) = \vec{a}p$. Part of the main term function capturing computation of cell fluxes can be 
-seen in Listing \ref{lst:adv_flux} below. 
+\pysauce{AdvectionDGFluxTerm} corresponds with discretized term \eqref{eq:hyp_flux_app} 
+where $\vec{f}(p) = \vec{a}p$. Part of the \pysauce{function} capturing computation of 
+cell fluxes can be seen in Listing \ref{lst:adv_flux} below. 
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of advection cell 
 fluxes \label{lst:adv_flux}]
@@ -186,19 +193,21 @@ cell_fluxes = nm.einsum("ifk,ifkq,dfq,ifq->id",
     \item[\ref{lsta:aflx_centr}] \pysauce{numpy.einsum} uses Einstein summation convention for 
     expressing tensor contractions for details see \cite{einsum-doc}.
 \end{itemize}
-The general hyperbolic term is implemented in class \pysauce{NonlinearHyperbolicDGFluxTerm}
+The general hyperbolic term is implemented in class 
+\pysauce{NonlinearHyperbolicDGFluxTerm}.
 
 
 
 \subsection{Diffusion flux term implementation}
 \label{se:diff_flux_term_imp}
 \pysauce{DiffusionDGFluxTerm} implements both terms in 
-\eqref{eq:diff_left_approx} and \eqref{eq:diff_right_approx} this is thanks to two modes in which it 
-can be used in equation, this has already been demonstrated in for Laplace equation in Listing 
-\ref{lst:laplace} where \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, p, v)"} corresponds to 
-$a^R_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_state'} (\ref{lsta:avg_state}), and 
-\pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, v, p)"} corresponds to $a^L_\mathrm{diff}(\mathbf{p})$ 
-and mode \pysauce{'avg_virtual'} (\ref{lsta:avg_virtual}).
+\eqref{eq:diff_left_approx} and \eqref{eq:diff_right_approx} this is thanks to two modes 
+in which it can be used in an equation, this has already been demonstrated in for Laplace 
+equation in Listing \ref{lst:laplace} where \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, 
+p, v)"} corresponds to $a^R_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_state'} 
+(\ref{lsta:avg_state}), and \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, v, p)"} 
+corresponds to $a^L_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_virtual'} 
+(\ref{lsta:avg_virtual}).
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of diffusion cell 
 fluxes]
