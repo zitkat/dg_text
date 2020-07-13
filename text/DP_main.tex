@@ -4,8 +4,8 @@
 %%
 %% Tomáš Zítka
 %%
-\documentclass{book}
-\usepackage[english]{babel} 
+\documentclass[openany]{book}
+\usepackage[english]{babel}
 \usepackage{a4wide}
 \usepackage{graphicx}
 \usepackage{caption}
@@ -51,7 +51,7 @@
 		stepnumber=2,
 		numbersep=5pt,
 		numbers=none,
-		tabsize=4,	
+		tabsize=4,
 		frame=lines,
 		language=Python,
 		otherkeywords={self},
@@ -75,7 +75,7 @@
 \newcommand{\shellcmd}[1]{\texttt{#1}}
 \newcommand{\pysauce}[1]{\lstinline!#1!}
 
-% some logos 
+% some logos
 \providecommand{\Microsoft}{{\sffamily Microsoft}}
 \providecommand{\Windows}{{\sffamily Windows}}
 \providecommand{\sfepy}{\textit{SfePy}}
@@ -149,29 +149,29 @@
 %\department{Department of Mathematics}
 %\subject{Diploma Thesis}
 %\town{Pilsen}
-\date{$2018/2019$}
+\date{$2020$}
 
 
 \begin{document}
 \pagenumbering{gobble}
-\begin{titlepage}	 
+\begin{titlepage}
 	\begin{figure}[h]
  	 \centering
  	 \includegraphics[scale=1]{./fav_cmyk.pdf}
  	\end{figure}
  	\center %{Fakulta aplikovaných věd Západočeské univerzity v Plzni}\\[4.5cm]
- 	
-	\textit{{\large Diploma Thesis}}\\[1.5cm]
-	\textsc{\LARGE  Discontinuous Galerkin method, its analysis and 
+
+	\textit{{\large Diplomová práce}}\\[1.5cm]
+	\textsc{\LARGE  Discontinuous Galerkin method, its analysis and
 	implementation into SfePy package}\\
 
 	\vfill
 	\begin{minipage}{0.4 \textwidth}
 		\begin{flushleft}
 		Tomáš \textsc{Zítka}\\
-		\end{flushleft}	
+		\end{flushleft}
 	\end{minipage}
-	\begin{minipage}{0.4\textwidth}	
+	\begin{minipage}{0.4\textwidth}
 		\begin{flushright}
 		Pilsen $2020$
 		\end{flushright}
@@ -181,7 +181,7 @@
 
 %\chapter*{Prohlášení}
 %\thispagestyle{empty}
-%\begin{otherlanguage}{czech}
+%%\begin{otherlanguage}{czech}
 %Prohlašuji, že jsem závěrečnou práci vypracoval samostatně 
 %s~použitím odborné literatury a~pramenů, uvedených
 %v seznamu, který tvoří přílohu této práce.\\[1.5cm]
@@ -197,25 +197,25 @@
 %		Tomáš \textsc{Zítka}
 %	\end{flushright}
 %\end{minipage}\\[1.5cm]
-%\end{otherlanguage}
+%%\end{otherlanguage}
 %
 %
 %
 %\newpage
 %\thispagestyle{empty}
-%\begin{otherlanguage}{czech}
+%%\begin{otherlanguage}{czech}
 %\chapter*{Poděkování}
 %Rád bych poděkoval svému školiteli Mgr. Robertu Cimrmanovi, Ph.D. za trpělivost a~cenné 
 %rady při vedení této práce.
-%\end{otherlanguage}
+%%\end{otherlanguage}
 %
 %\thispagestyle{empty}
 %\chapter*{Abstract}
 %
 %{\let\clearpage\relax\chapter*{Abstrakt}}
-%\begin{otherlanguage}{czech}
+%%\begin{otherlanguage}{czech}
 %	
-%\end{otherlanguage}
+%%\end{otherlanguage}
 
 \newpage
 \pagenumbering{roman}
@@ -239,33 +239,33 @@
 
 \chapter{Discontinous Galerkin Method}
 \label{ch:theory}
-In this chapter, we lay the oretical background for the concepts necessary to 
-describe the method and then derive the discretization of advection term 
-$\vec{a}\cdot\nabla(p)$, general nonlinear hyperbolic term $\nabla\cdot 
-\vec{f}(p)$, diffusion term $\nabla \cdot (D \nabla p)$ and source term $g(x)$ 
-occurring in various PDEs namely, from the simplest one: linear advection 
-equation with constant and non-constant velocity, advection with diffusion and 
-sources, general nonlinear hyperbolic equation. Using the discretized terms we 
-will formulate the method for these equations. Towards the end of the chapter, 
-we introduce limiters necessary for stabilization of the high order versions 
+In this chapter, we lay the theoretical background for the concepts necessary to
+describe the method and then derive the discretization of the advection term
+$\vec{a}\cdot\nabla(p)$, the general nonlinear hyperbolic term $\nabla\cdot
+\vec{f}(p)$, the diffusion term $\nabla \cdot (D \nabla p)$ and the source term $g(x)$
+occurring in various PDEs, namely, from the simplest one: the linear advection
+equation with a constant and non-constant velocity, the advection with diffusion and
+sources, the general nonlinear hyperbolic equation. Using the discretized terms we
+will formulate the method for these equations. Towards the end of the chapter,
+we introduce limiters necessary for stabilization of the high order versions
 of the method.
 \input{2_dg_general.tex}
 
 
 \chapter{Discontinous Galerkin Method implementation}
 \label{ch:implementation}
-In this chapter we explore in detail \sfepy{} package application interface 
-(API) as well as its inner workings in order to explain the implementation 
-details of the method. We will show several usage examples and hopefully 
-provide enough information for users to use the method effectively and even 
+In this chapter we explore in detail \sfepy{} package application interface
+(API) as well as its inner workings in order to explain the implementation
+details of the method. We will show several usage examples and hopefully
+provide enough information for users to use the method effectively and even
 modify it.
 \input{3_sfepy.tex}
 \input{3_dg_implementation.tex}
 
 \chapter{Numerical experiments}
 \label{ch:convergence}
-In this chapter we first introduce PDEs used to study the behavior of DG FE 
-method and provide a short guide to the convergence study setup. Finally, we 
+In this chapter we first introduce PDEs used to study the behavior of DG FE
+method and provide a short guide to the convergence study setup. Finally, we
 present the results of convergence studies for various problem setups.
 \input{4_ne_conv.tex}
 
@@ -300,9 +300,9 @@ This work was partially supported by project GACR 16-03823S.
 
 \addtocontents{toc}{\protect\enlargethispage{2\baselineskip}}
 \begin{appendix}
-	
 
-	
+
+
 \end{appendix}
 
 

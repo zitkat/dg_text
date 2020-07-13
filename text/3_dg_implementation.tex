@@ -5,107 +5,107 @@
 %% Tomáš Zítka
 %%
 \section{DG method components}
-Having laid out structure of the \sfepy{} problem and objects needed to create 
-it and work with it we now present classes needed to implement DG FEM. Following the 
-architecture of \sfepy{}, DG FE method implementation comprises of: 
+Having laid out the structure of the \sfepy{} problem and objects needed to create
+it and work with it we now present classes needed to implement the DG FEM. Following the
+architecture of \sfepy{}, the DG FE method implementation comprises of:
 \begin{itemize}
-    \item \pysauce{DGField}, 
+    \item \pysauce{DGField},
     \item \pysauce{LegendrePolySpace} and its subclasses,
     \item \pysauce{LegendreTensorProductPolySpace} and
     \item \pysauce{LegendreSimplexPolySpace};
 \end{itemize}
-DG specific terms are summarized top portion of in \Cref{tab:terms}.
+DG specific terms are summarized in the top portion of \Cref{tab:terms}.
 \begin{landscape}
     \begin{table}[p!]
-        \centering    
-        \caption{Table of terms used in DG method}    
+        \centering
+        \caption{Table of terms used in DG method}
         \label{tab:terms}
         \begin{tabular}{lccc}
             \toprule
-            Class & Name & Symbol & Expression  \\ 
+            Class & Name & Symbol & Expression  \\
             \midrule
-            \pysauce{AdvectionDGFluxTerm} & 
+            \pysauce{AdvectionDGFluxTerm} &
             \pysauce{"dw_dg_advect_laxfrie_flux"}
-            & $a^F_\mathrm{adv}(\mathbf{p})$ 
-            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
-            p_{out})\cdot\psi_j$ \\ 
-            \pysauce{NonlinearHyperbolicDGFluxTerm} & 
+            & $a^F_\mathrm{adv}(\mathbf{p})$
+            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in},
+            p_{out})\cdot\psi_j$ \\
+            \pysauce{NonlinearHyperbolicDGFluxTerm} &
             \pysauce{"dw_dg_nonlinear_laxfrie_flux"}
-            & $a^F_\mathrm{hyp}(\mathbf{p})$ 
-            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, 
-            p_{out})\cdot\psi_j$ \\  
-            \pysauce{NonlinearScalarDotGradTerm} & 
-            \pysauce{"dw_ns_dot_grad_s"} 
+            & $a^F_\mathrm{hyp}(\mathbf{p})$
+            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in},
+            p_{out})\cdot\psi_j$ \\
+            \pysauce{NonlinearScalarDotGradTerm} &
+            \pysauce{"dw_ns_dot_grad_s"}
             & $a^C_\mathrm{hyp}(\mathbf{p})$
-            & $\int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j$ \\ 
-            \pysauce{DiffusionDGFluxTerm} & \pysauce{"dw_dg_diffusion_flux"} 
+            & $\int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j$ \\
+            \pysauce{DiffusionDGFluxTerm} & \pysauce{"dw_dg_diffusion_flux"}
             & \begin{tabular}{c}
                 $a^R_\mathrm{diff}(\mathbf{p})$\\
                 $a^L_\mathrm{diff}(\mathbf{p})$
-            \end{tabular}  
+            \end{tabular}
             & \begin{tabular}{c}
                 $\elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n}[P^k_i\psi_i]$\\
                 $\elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j$
-            \end{tabular}  \\ 
-            \pysauce{DiffusionInteriorPenaltyTerm}& 
-            \pysauce{"dw_dg_interior_penalty"} 
-            & $a^P_\mathrm{diff}(\mathbf{p})$ & $\elbint \sigma 
-            [P^k_i\psi_i]\psi_j$ \\ 
+            \end{tabular}  \\
+            \pysauce{DiffusionInteriorPenaltyTerm}&
+            \pysauce{"dw_dg_interior_penalty"}
+            & $a^P_\mathrm{diff}(\mathbf{p})$ & $\elbint \sigma
+            [P^k_i\psi_i]\psi_j$ \\
             \midrule
-            
+
             \pysauce{ScalarDotMGradScalarTerm} & \pysauce{"dw_s_dot_mgrad_s"}
-            & $a^C_\mathrm{adv}(\mathbf{p})$ 
-            & $\int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j$ 
+            & $a^C_\mathrm{adv}(\mathbf{p})$
+            & $\int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j$
             \\
-            \pysauce{LaplaceTerm} & \pysauce{"dw_laplace"} 
-            & $a^C_\mathrm{diff}(\mathbf{p})$ 
-            & $\elint D\nabla 
+            \pysauce{LaplaceTerm} & \pysauce{"dw_laplace"}
+            & $a^C_\mathrm{diff}(\mathbf{p})$
+            & $\elint D\nabla
             P^k_i\psi_i \nabla \psi_j$ \\
-            \pysauce{DotProductVolumeTerm} & \pysauce{"dw_volume_dot"} & -- & 
-            $\fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j$ \\ 
-            \bottomrule 
-        \end{tabular} 
+            \pysauce{DotProductVolumeTerm} & \pysauce{"dw_volume_dot"} & -- &
+            $\fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j$ \\
+            \bottomrule
+        \end{tabular}
     \end{table}
 \end{landscape}
-DG specific boundary conditions:
+\noindent DG specific boundary conditions:
 \begin{itemize}
     \item \pysauce{DGEssentialBC},
     \item \pysauce{DGPeriodicBC};
 \end{itemize}
-multistage time-stepping solvers: 
+multistage time-stepping solvers:
 \begin{itemize}
     \item abstract base class \pysauce{DGMultiStageTS} and two solvers used in numerical experiments:
     \item \pysauce{EulerStepSolver},
     \item \pysauce{TVDRK3StepSolver}.
 \end{itemize}
-Finally limiters were implemented as subclasses of \pysauce{DGLimiter} abstract class (which has no 
+Finally limiters were implemented as subclasses of \pysauce{DGLimiter} abstract class (which has no
 counterpart in \sfepy{}):
 \begin{itemize}
-    \item \pysauce{IdentityLimiter} -- provided for convenience to enable 
-    easily disabling limiter without changing 
+    \item \pysauce{IdentityLimiter} -- provided for convenience to enable
+    easily disabling limiter without changing
     syntax,
     \item \pysauce{MomentLimiter1D} -- for 1D problems only,
-    \item \pysauce{MommentLimiter2D} -- only for 2D problems on regular tensor 
-    product 
-    meshes,
-\end{itemize} 
-Limiters are in problem composition used as post-stage hooks passed to time-stepping solvers. For 
-technical we also created \pysauce{DGVariable} class this was necessary to bypass classical FE 
-treatment of boundary conditions, otherwise it is similar to original \sfepy{} \pysauce{Variable} 
-class and we its omit detailed description.
+    \item \pysauce{MommentLimiter2D} -- only for 2D problems on regular tensor
+    product
+    meshes.
+\end{itemize}
+The limiters are used in the problem composition as post-stage hooks passed to time-stepping solvers. For
+technical reasons we also created the \pysauce{DGVariable} class in order to bypass the classical FE
+treatment of boundary conditions, otherwise it is similar to the original \sfepy{} \pysauce{Variable}
+class and we omit its detailed description.
 
 
 \section{DG Field}
-\pysauce{DGField} class inherits from \pysauce{Field} base class, this provides it with the basic 
-functionality needed to be used in problem specification. From methods implemented in 
-\pysauce{DGField} the most relevant to DG FEM are:
+The \pysauce{DGField} class inherits from the \pysauce{Field} base class. This provides it with the basic
+functionality needed to be used in problem specification. From methods implemented in
+\pysauce{DGField}, the most relevant to DG FEM are:
 \begin{itemize}
-    \item \pysauce{get_both_facet_state_vals} -- which returns values of state on opposing sides of 
+    \item \pysauce{get_both_facet_state_vals} -- which returns values of state on opposing sides of
     the boundary for each element
-    \item \pysauce{get_both_facet_base_vals} -- which returns values of basis functions on opposing 
+    \item \pysauce{get_both_facet_base_vals} -- which returns values of basis functions on opposing
     sides of the boundary for each element
-    \item \pysauce{get_facet_neighbor_idx} -- which returns indices of cell neighbors for individual 
-    facets along with index of the facet within th neighboring cell 
+    \item \pysauce{get_facet_neighbor_idx} -- which returns indices of cell neighbors for individual
+    facets along with index of the facet within the neighboring cell
     \item \pysauce{get_bc_facet_values}
     \item \pysauce{get_facet_boundary_idx}
     \item \pysauce{get_facet_vols}
@@ -114,25 +114,28 @@ functionality needed to be used in problem specification. From methods implement
 \end{itemize}
 
 \subsection{Legendre polynomial spaces implementation}
-Legendre polynomial spaces are implemented in two classes 
-\pysauce{LegendreTensorProductPolySpace} and 
-\pysauce{LegendreSimplexPolySpace}. Both are derived from abstract class 
-\pysauce{LegendrePolySpace} which inherits from \sfepy{} 
-\pysauce{PolySpace}. It implements method \pysauce{_eval_base} which is used to get values of basis 
-functions as well as their derivatives. It also contains methods for evaluating Legendre and Jacobi 
-polynomials common to tensor-product and simplex subclasses. These classes are accompanied by two 
-function \pysauce{get_n_el_nod}, which returns number of basis functions for given order , dimension 
-and type of basis, and generator \pysauce{iter_by_order} (\ref{lst:iter_by_order}) which generates 
-tuples of $r$ and $s$ in desired hierarchical order for example for approximation order $2$ and 
-tensor-product basis this is: 
+Legendre polynomial spaces are implemented in two classes
+\pysauce{LegendreTensorProductPolySpace} and
+\pysauce{LegendreSimplexPolySpace}. Both are derived from the abstract class
+\pysauce{LegendrePolySpace} which inherits from \sfepy{}
+\pysauce{PolySpace}. It implements the method \pysauce{_eval_base} which is used to get values of basis
+functions as well as their derivatives. It also contains methods for evaluating Legendre and Jacobi
+polynomials common to tensor-product and simplex subclasses. These classes are accompanied by the
+function \pysauce{get_n_el_nod}, which returns number of basis functions for the given order, dimension
+and type of basis, and the generator \pysauce{iter_by_order} (\ref{lst:iter_by_order}) which generates
+tuples of $r$ and $s$ in desired hierarchical order. For example, for the approximation order $2$ and the
+tensor-product basis this is:
 \pysauce{(0, 0),
     (0, 1),
     (1, 0),
     (0, 2),
     (1, 1),
-    (2, 0)}. 
+    (2, 0),
+    (2, 1),
+    (1, 2),
+    (2, 2)}.
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption= Iteration over $r$ and $s$ 
+\begin{lstlisting}[language=Python, caption= Iteration over $r$ and $s$
 indicies of basis functions \label{lst:iter_by_order}]
 for k in range(porder):
   for r in range(k + 1):
@@ -145,28 +148,28 @@ for k in range(porder):
       yield r, s
 \end{lstlisting}
 \begin{itemize}
-    \item[\ref{lsta:yield}] \pysauce{yield} keyword turns function into generator usable in for 
+    \item[\ref{lsta:yield}] \pysauce{yield} keyword turns a function into a generator usable in for
     cycles, for example in Listing \ref{lst:limiter_2D}.
-    \item[\ref{lsta:extended}] \pysauce{extended} flag differentiates simplex basis from 
+    \item[\ref{lsta:extended}] \pysauce{extended} flag distinguishes the simplex basis from
     tensor-product one which uses more basis functions.
 \end{itemize}
-To obtain values of Jacobi polynomials we used implementations provided by SciPy in the 
+To obtain values of Jacobi polynomials, we used implementations provided by SciPy in the
 \pysauce{special} module.
 
 
 \section{DG Terms}
-(\todo \pysauce{function} method) is called whenever value of the term is needed either 
-to build residual vector or right-hand side of an equation or to get terms contribution 
-to (\todo the matrix) (in case of implicit problems). The method returns values for 
+(\todo \pysauce{function} method) is called whenever value of the term is needed either
+to build residual vector or right-hand side of an equation or to get terms contribution
+to (\todo the matrix) (in case of implicit problems). The method returns values for
 individual DOFs and in matrix mode also indices to build sparse matrix.
 
 \subsection{Hyperbolic flux term implementation}
 \label{se:adv_flux_term_imp}
-\pysauce{AdvectionDGFluxTerm} corresponds with discretized term \eqref{eq:hyp_flux_app} 
-where $\vec{f}(p) = \vec{a}p$. Part of the \pysauce{function} capturing computation of 
-cell fluxes can be seen in Listing \ref{lst:adv_flux} below. 
+\pysauce{AdvectionDGFluxTerm} corresponds to the discretized term \eqref{eq:hyp_flux_app}
+where $\vec{f}(p) = \vec{a}p$. The part of the \pysauce{function} capturing computation of
+cell fluxes can be seen in Listing \ref{lst:adv_flux} below.
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption=Computation of advection cell 
+\begin{lstlisting}[language=Python, caption=Computation of advection cell
 fluxes \label{lst:adv_flux}]
 fc_n = field.get_cell_normals_per_facet(region)
 # get maximal wave speeds at facets
@@ -190,37 +193,37 @@ cell_fluxes = nm.einsum("ifk,ifkq,dfq,ifq->id",
                         fc_n, central + upwind, fc_b, weights)
 \end{lstlisting}
 \begin{itemize}
-    \item[\ref{lsta:aflx_centr}] \pysauce{numpy.einsum} uses Einstein summation convention for 
-    expressing tensor contractions for details see \cite{einsum-doc}.
+    \item[\ref{lsta:aflx_centr}] \pysauce{numpy.einsum} uses the Einstein summation convention for
+    expressing tensor contractions, for details see \cite{einsum-doc}.
 \end{itemize}
-The general hyperbolic term is implemented in class 
+The general hyperbolic term is implemented in the class
 \pysauce{NonlinearHyperbolicDGFluxTerm}.
 
 
 
 \subsection{Diffusion flux term implementation}
 \label{se:diff_flux_term_imp}
-\pysauce{DiffusionDGFluxTerm} implements both terms in 
-\eqref{eq:diff_left_approx} and \eqref{eq:diff_right_approx} this is thanks to two modes 
-in which it can be used in an equation, this has already been demonstrated in for Laplace 
-equation in Listing \ref{lst:laplace} where \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, 
-p, v)"} corresponds to $a^R_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_state'} 
-(\ref{lsta:avg_state}), and \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, v, p)"} 
-corresponds to $a^L_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_virtual'} 
+\pysauce{DiffusionDGFluxTerm} implements both terms in
+\eqref{eq:diff_left_approx} and \eqref{eq:diff_right_approx}. This is thanks to two modes
+in which it can be used in an equation --- this has already been demonstrated for the Laplace
+equation in Listing \ref{lst:laplace} where \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val,
+p, v)"} corresponds to $a^R_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_state'}
+(\ref{lsta:avg_state}), and \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, v, p)"}
+corresponds to $a^L_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_virtual'}
 (\ref{lsta:avg_virtual}).
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption=Computation of diffusion cell 
+\begin{lstlisting}[language=Python, caption=Computation of diffusion cell
 fluxes]
 if self.mode == 'avg_state': /*!\lann{lsta:avg_state}!*/
-  avgDdState = (nm.einsum("ikl,ifkq->ifkq", 
+  avgDdState = (nm.einsum("ikl,ifkq->ifkq",
                           D, inner_facet_state_d) +
-                nm.einsum("ikl,ifkq->ifkq", 
+                nm.einsum("ikl,ifkq->ifkq",
                           D, outer_facet_state_d)) / 2.
-  # outer_facet_base is in DG zero 
+  # outer_facet_base is in DG zero
   # hence the jump is inner value
   jmpBase = inner_facet_base
 
-  cell_fluxes = nm.einsum("ifkq ,ifk,idfq,ifq->id", 
+  cell_fluxes = nm.einsum("ifkq ,ifk,idfq,ifq->id",
                           avgDdState, fc_n, jmpBase, weights)
 
 elif self.mode == 'avg_virtual': /*!\lann{lsta:avg_virtual}!*/
@@ -228,7 +231,7 @@ elif self.mode == 'avg_virtual': /*!\lann{lsta:avg_virtual}!*/
                          D, inner_facet_base_d)) / 2.
 
   jmpState = inner_facet_state - outer_facet_state
-  cell_fluxes = nm.einsum("idfkq, ifk, ifq , ifq -> id", 
+  cell_fluxes = nm.einsum("idfkq, ifk, ifq , ifq -> id",
                           avgDdbase, fc_n, jmpState, weights)
 \end{lstlisting}
 
@@ -236,7 +239,7 @@ elif self.mode == 'avg_virtual': /*!\lann{lsta:avg_virtual}!*/
 \subsection{Difusion penalty term implementation}
 \label{se:diff_penal_term_imp}
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption=Computation of penalty cell 
+\begin{lstlisting}[language=Python, caption=Computation of penalty cell
 fluxes]
 approx_order = field.approx_order
 
@@ -250,11 +253,11 @@ nu = nm.trace(diff_tensor, axis1=-2, axis2=-1)[..., None] / \
 sigma = nu * Cw * approx_order ** 2 / facet_vols
 
 inner_facet_state, outer_facet_state, whs = \
-    field.get_both_facet_state_vals(state, region, 
+    field.get_both_facet_state_vals(state, region,
                                     derivative=False)
 
 inner_facet_base, outer_facet_base, _ = \
-    field.get_both_facet_base_vals(state, region, 
+    field.get_both_facet_base_vals(state, region,
                                    derivative=False)
 
 jmp_state = inner_facet_state - outer_facet_state
@@ -267,15 +270,15 @@ cell_penalty = nm.einsum("nf,nfq,ndfq,nfq->nd",
 \end{lstlisting}
 
 \section{Limiters implementation}
-Following design patterns used in \sfepy{} and Python in general limiters are 
-implemented as objects, base class providing only the constructor is called \pysauce{DGLimiter}, its 
-subclasses then implement abstract method \pysauce{__call__}, this makes all limiters callable 
-objects, allowing one to pass them as post-step or post-stage or other hooks to time-stepping 
+Following design patterns used in \sfepy{} and Python in general, the limiters are
+implemented as classes. The base class providing only the constructor is called \pysauce{DGLimiter}, its
+subclasses then implement the abstract method \pysauce{__call__} --- this makes all limiters callable
+objects, allowing one to pass them as post-step or post-stage or other hooks to time-stepping
 solvers. For convenience the neutral limiter is implemented in \pysauce{IdentityLimiter}.
 
 \subsubsection{Moment limiter -- 1D}
 \label{se:i_moment_lim_1D}
-Code listing below shows implementation of moment limiter introduced in \ref{sse:moment_lim_1D} 
+The code listing below shows the implementation of the moment limiter introduced in Section~\ref{sse:moment_lim_1D},
 omitting some details for brevity.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Moment limiter for 1D]
@@ -284,9 +287,9 @@ idx = nm.arange(nm.shape(u[0, 1:-1])[0])
 nu = nm.copy(u)
 tilu = nm.zeros(u.shape[1:])
 for ll in range(self.n_el_nod - 1, 0, -1):
-  tilu[idx] = minmod(nu[ll, 1:-1][idx], 
-  nu[ll-1, 2:][idx] - nu[ll-1, 1:-1][idx],
-  nu[ll-1, 1:-1][idx] - nu[ll-1, :-2][idx]) /*!\lann{lsta:lim1}!*/
+  tilu[idx] = minmod(nu[ll, 1:-1][idx],
+                     nu[ll-1, 2:][idx] - nu[ll-1, 1:-1][idx],
+                     nu[ll-1, 1:-1][idx] - nu[ll-1, :-2][idx]) /*!\lann{lsta:lim1}!*/
 
   idx = idx[nm.where(abs(tilu[idx] - nu[ll, 1:-1][idx])
             > MACHINE_EPS)[0]] /*!\lann{lsta:lim2}!*/
@@ -296,24 +299,24 @@ for ll in range(self.n_el_nod - 1, 0, -1):
 \end{lstlisting}
 \begin{itemize}
     \item [\ref{lsta:lim1}] Compute the limiting value $\tilde{u}$.
-    \item [\ref{lsta:lim2}] Extract indicies where the limiting value is 
-    larger than 
+    \item [\ref{lsta:lim2}] Extract indicies where the limiting value is
+    larger than the
     current solution.
-    \item[\ref{lsta:lim3}] If none of the coefficients required limiting we 
+    \item[\ref{lsta:lim3}] If none of the coefficients requires limiting we
     stop.
     \item [\ref{lsta:lim3}] Replace old values with limited ones.
-    
+
 \end{itemize}
 
 \subsubsection{Moment limiter -- 2D}
 \label{se:i_moment_lim_2D}
-We list implementation of 2D limiter for reference in Listing \ref{lst:limiter_2D}. Limiter is 
+We list the implementation of the 2D limiter for reference in Listing \ref{lst:limiter_2D}. The Limiter is
 implemented according to \Cref{se:limiters}.
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption=Moment limiter for 
+\begin{lstlisting}[language=Python, caption=Moment limiter for
 cartesian grid \label{lst:limiter_2D}]
 for ll, (ii, jj) in enumerate(
-                     iter_by_order(self.field.approx_order, 
+                     iter_by_order(self.field.approx_order,
                                    2,   # dim
                                    extended=ex)):
   nu[ii, jj, ...] = u[ll] /*!\lann{lsta:indx_to}!*/
@@ -348,25 +351,24 @@ for ii, jj in reversed(list(
 
 resu = nm.zeros(u.shape)
 for ll, (ii, jj) in enumerate(
-                     iter_by_order(self.field.approx_order, 
+                     iter_by_order(self.field.approx_order,
                                    2,   # dim
                                    extended=ex)):
   resu[ll] = nu[ii, jj] /*!\lann{lsta:indx_from}!*/
 \end{lstlisting}
 \begin{itemize}
-    \item[\ref{lsta:indx_to}] Reshape solution array for indexing using $r$ and $s$ indicies, 
-    effectively removing need for explicit inverse of index mapping from \eqref{eq:bindx}.
-    \item [\ref{lsta:indx_from}] Convert back to linear index.
+    \item[\ref{lsta:indx_to}] Reshape the solution array for indexing using $r$ and $s$ indicies,
+    effectively removing need for the explicit inverse of index mapping from \eqref{eq:bindx}.
+    \item [\ref{lsta:indx_from}] Convert back to the linear index.
 \end{itemize}
 
 
 \section{Time-stepping solvers implementation}
-As demonstrated in \Cref{se:time_theory} explicit DG FEM requires explicit time stepping solvers 
-with multiple stages in one time step. These are not part of the rich collection of time-stepping 
-solvers included in \sfepy{}. We implemented two of them: basic Euler solver, total-variations 
-diminishing Runge-Kutta of 3rd order (TVD RK-3). Again following structure of \sfepy{} they are 
-implemented as subclasses of \pysauce{TimeSteppingSolver}. The abstract class 
-\pysauce{DGMultiStageTS} extends basic \pysauce{TimeSteppingSolver} with the option to provide 
-pre-stage and post-stage hooks, allowing to apply limiters between stages. The two time-stepping 
-solvers are then implemented in classes \pysauce{EulerStepSolver} and \pysauce{TVDRK3StepSolver}
-
+As demonstrated in \Cref{se:time_theory}, the explicit DG FEM requires explicit time stepping solvers
+with multiple stages in one time step. These had not been part of the rich collection of time-stepping
+solvers included in \sfepy{}, so two new solvers were implemented: the basic Euler solver, the total-variations
+diminishing Runge-Kutta of the 3rd order (TVD RK-3). Again following the structure of \sfepy{}, they are
+implemented as subclasses of \pysauce{TimeSteppingSolver}. The abstract class
+\pysauce{DGMultiStageTS} extends the basic \pysauce{TimeSteppingSolver} with the option to provide
+pre-stage and post-stage hooks, allowing to apply limiters between stages. The two time-stepping
+solvers are then implemented in classes \pysauce{EulerStepSolver} and \pysauce{TVDRK3StepSolver}.

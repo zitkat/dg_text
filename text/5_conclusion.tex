@@ -4,48 +4,46 @@
 %%
 %% Tomáš Zítka
 %%
-\paragraph{Implementation}
-In this work, we implemented the discontinuous Galerkin method into \sfepy{} 
-package. \sfepy{} uses term based syntax for building discretizations of 
-equations, we implemented several new terms, namely linear advection flux 
-term, general hyperbolic flux term, diffusion flux and diffusion penalty term, 
-and the general term for computing integral
+In this work, we implemented the discontinuous Galerkin method into \sfepy{}
+package. \sfepy{} uses a term based syntax for building discretizations of
+equations. We implemented several new terms, namely the linear advection flux
+term, the general hyperbolic flux term, the diffusion flux and the diffusion
+penalty terms, and the general term for computing the integral
 $$
-\int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j. 
+\int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j.
 $$
-Along with a wide range of terms already present in \sfepy{} this allows users 
-to discretize a variety of useful equations. To enable solving transient 
-equations we implemented two explicit time-stepping solvers, forward Euler and 
-TVD Runge-Kutta of 3rd order solver. Moreover, we implemented the moment 
-limiters for 1D and 2D transient problems.
+Along with a wide range of terms already present in \sfepy{} this allows users
+to discretize a variety of useful equations. To enable solving transient
+equations we implemented two explicit time-stepping solvers, the forward Euler
+solver and the TVD Runge-Kutta of the 3rd order solver. Moreover, we
+implemented the moment limiters for 1D and 2D transient problems.
 
-\paragraph{Analysis}
-To study properties of the method we measured convergence rates for seven 
-example problems chosen from the literature. For some of them, we present 
-results which complement already published parametric studies. For transient 
-problems, the performance of the method is hindered by used time stepping 
+To study properties of the method we measured convergence rates for seven
+example problems chosen from the literature. For some of them, we present
+results which complement already published parametric studies. For transient
+problems, the performance of the method is hindered by used time stepping
 solvers, nevertheless, the method still performs to the expectations.
 [\todo more on examples when they are finished]
 
-This fulfills all the major goals of this work. There are, however, still many 
-possible improvements and opportunities for future work. Although from the 
-time and memory requirements perspective the implementation of the method 
-scales well enough with \sfepy{} capabilities, there is still room for 
-improvement. Calls of \pysauce{numpy.einsum} could use an optimized tensor 
-contraction path, which could be retained between individual term evaluations 
-(i.e., between time steps). The implementation of limiters is rather ad-hoc and 
-refactoring it to bring it in line with the design of other \sfepy{} elements 
-would help to make their code more readable and their usage simpler and more 
-versatile. 
+This fulfills all the major goals of this work. There are, however, still many
+possible improvements and opportunities for future work. Although from the
+time and memory requirements perspective the implementation of the method
+scales well enough with \sfepy{} capabilities, there is still room for
+improvement. Calls of \pysauce{numpy.einsum} could use an optimized tensor
+contraction path, which could be retained between individual term evaluations
+(i.e., between time steps). The implementation of limiters is rather ad-hoc and
+refactoring it to bring it in line with the design of other \sfepy{} elements
+would help to make their code more readable and their usage simpler and more
+versatile.
 
-One important feature available in \sfepy{} missing from this DG FEM 
-implementation is the ability to solve systems of PDEs. This lack could 
-inspire future work as it would require substantial modification of flux terms 
-as well as the implementation of  strategies for evolving systems of interest 
-like Euler or Navier-Stokes equations \cite{Hesthaven2008}. Further besides 
-implemented Lax-Friedrichs flux, there is a variety of other fluxes for 
-example Godunov flux \cite{DiPietro2012} or fluxes designed specifically for 
-solving Euler equations \cite[Section 3.3]{Kucera} which could be added to 
-broaden the selection of tools available in \sfepy{}. Thanks to the versatility of 
-problem specification this would also unlock large potential for further study of the 
-method behavior.
+One important feature available in \sfepy{} missing from this DG FEM
+implementation is the ability to solve systems of PDEs. This lack could inspire
+future work as it would require substantial modification of flux terms as well
+as the implementation of strategies for evolving systems of interest like Euler
+or Navier-Stokes equations \cite{Hesthaven2008}. Further besides the
+implemented Lax-Friedrichs flux, there is a variety of other fluxes for example
+the Godunov flux \cite{DiPietro2012} or fluxes designed specifically for
+solving Euler equations \cite[Section 3.3]{Kucera} which could be added to
+broaden the selection of tools available in \sfepy{}. Thanks to the versatility
+of the problem specification this would also unlock a large potential for
+further study of the method behavior.

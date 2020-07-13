@@ -1,66 +1,65 @@
 \begin{example}[Viscous Burgers 1D]
 \label{ex:burgers_hest}
-Based on \cite[Section 7.1.2, Example 7.5,  p. 255]{Hesthaven2008} example 7.5.
-On $\Omega = \langle -1, 1 \rangle$ we will solve viscous Burgers’ equation 
-\eqref{eq:ex_burgers} with zero source function.
+Based on \cite[Section 7.1.2, Example 7.5,  p. 255]{Hesthaven2008}.
+On $\Omega = [-1, 1]$ we will solve the viscous Burgers’ equation
+\eqref{eq:ex_burgers} with the zero source function.
 %\begin{equation}
 %	\pdiff{u}{t} + \pdiff{}{x}\left(\frac{u^2}{2}\right) = D \pdiff{^2u}{x^2}
 %\end{equation}
-%where $D$ is diffusion coefficient. 
-This equation has an exact solution of traveling wave 
+%where $D$ is diffusion coefficient.
+This equation has an exact solution of a traveling wave
 \begin{equation}
 	u_{exact} =  -\tanh\left(-\frac{2 \, t - 2 \, x - 1}{4 \,D}\right) + 1.
 \end{equation}
 We set boundary conditions to match the solution
 \begin{equation}
 	\begin{aligned}
-	& u(-1, t) = -\tanh\left(-\frac{2 \, t  + 1}{4 \,D}\right) + 1, 
+	& u(-1, t) = -\tanh\left(-\frac{2 \, t  + 1}{4 \,D}\right) + 1,
 	&  u(-1, t) = -\tanh\left(-\frac{2 \, t - 3}{4 \,D}\right) + 1,\\
-	&u_x(-1, t) = \frac{1}{2D}\tanh\left(-\frac{2 \, t + 1}{4 \, D}\right)^{2} - 
-	\frac{1}{2D}, 
-	&u_x(1, t) = \frac{1}{2D}\tanh\left(-\frac{2 \, t - 3}{4 \, D}\right)^{2} - 
+	&u_x(-1, t) = \frac{1}{2D}\tanh\left(-\frac{2 \, t + 1}{4 \, D}\right)^{2} -
+	\frac{1}{2D},
+	&u_x(1, t) = \frac{1}{2D}\tanh\left(-\frac{2 \, t - 3}{4 \, D}\right)^{2} -
 	\frac{1}{2D}.
 	\end{aligned}
 \end{equation}
-We will study solution at time $t = 1$ with $D = 0.001$ and $D = 0.01$. The exact 
-solution is shown in \Cref{fig:burgess_hesthaven_ext}.
+We will study the solution at time $t = 1$ with $D = 0.001$ and $D = 0.01$. The exact
+solution is shown in \Cref{fig:burgers_hesthaven_ext}.
 \begin{figure}[h]
 	\centering
 %	\begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
-%		\vspace{0pt} 
+%		\vspace{0pt}
 %		\includegraphics[width=0.4\textwidth]{../figs/burgess_hesthaven_exact_t1_e001.png}
 %		&
-%		\vspace{0pt} 
+%		\vspace{0pt}
 %		\includegraphics[width=0.4\textwidth]{../figs/burgess_hesthaven_exact_t1_e01.png}
 %	\end{tabular}
-%	
+%
 	\includegraphics[scale=0.45]{../figs/burgers_hesthaven_exact_t1.png}
 	\caption{\Cref{ex:burgers_hest}. Exact solution at $t = 1$.}
-	\label{fig:burgess_hesthaven_ext}
+	\label{fig:burgers_hesthaven_ext}
 \end{figure}
-Different values of coefficient $C_w$ in penalty term yield different convergence 
-behavior as demonstrated in \Cref{fig:burgers_conv}. In this case increasing 
-coefficient $C_w$ is detrimental to the accuracy of the solution for $D=0.001$ as it 
-develops into steep step (cf. \cref{fig:burgers_hesthaven_ext}) whose approximation 
-requires discontinuity in approximate solution. For $D=0.01$ the diffusion leads to much 
-more gradual solution and the penalty term counteracting discontinuity between elements 
-is beneficial, it also helps counteract oscillations similarly to the limiter in 
-\Cref{ex:adv1D}. 
+Different values of the coefficient $C_w$ in the penalty term yield different convergence
+behavior as demonstrated in \Cref{fig:burgers_conv}. In this case increasing $C_w$ is detrimental to the accuracy of the solution for $D=0.001$ as it
+develops into a steep step, see \Cref{fig:burgers_hesthaven_ext}, whose approximation
+requires discontinuity in the approximate solution. For $D=0.01$ the diffusion leads to a much
+more gradual solution and the penalty term counteracting discontinuity between elements
+is beneficial, it also helps to counteract oscillations similarly to the limiter in
+\Cref{ex:adv1D}.
 %Figure \ref{fig:err_sol_burges_hest} demonstrates where the errors come from.
 \end{example}
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}{.5\textwidth}	
-        \centering	
+    \begin{subfigure}{.5\textwidth}
+        \centering
         \includegraphics[width=\linewidth]{../figs/sols/burg1D-0002000100000-sol-h4o4}
         \caption{Limit: False}
     \end{subfigure}%
     \begin{subfigure}{.5\textwidth}
-        \centering	
+        \centering
         \includegraphics[width=\linewidth]{../figs/sols/burg1D-0002000000000-sol-h4o4}
         \caption{Limit: True}
     \end{subfigure}
-    \caption{\Cref{ex:burgers_hest}. 4th order solution for $D=0.001$ with and without 
+    \caption{\Cref{ex:burgers_hest}. 4th order solution for $D=0.001$ with and without
     limiting.}
     \label{fig:burgers_sol}
 \end{figure}
@@ -68,15 +67,15 @@ is beneficial, it also helps counteract oscillations similarly to the limiter in
 %\begin{figure}[h!]
 %	\centering
 %	\begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
-%		\vspace{0pt} 
-%		
+%		\vspace{0pt}
+%
 %\includegraphics[width=0.49\textwidth]{../figs/parametric/burgers_1D/orders_unlimited}
 %		&
-%		\vspace{0pt} 
-%		
+%		\vspace{0pt}
+%
 %\includegraphics[width=0.49\textwidth]{../figs/parametric/burgers_1D/orders_limited}
 %	\end{tabular}
-%	\caption{\Cref{ex:burgers_hest} average convergence rates for different choices of 
+%	\caption{\Cref{ex:burgers_hest} average convergence rates for different choices of
 %	$C_w$}
 %	\label{fig:burgess_orders}
 %\end{figure}
@@ -93,7 +92,7 @@ is beneficial, it also helps counteract oscillations similarly to the limiter in
 %	\centering
 %	\includegraphics[width=\textwidth]{../figs/err-sols/burgess_hesthaven-err-sol-i20cw1_d001_t2}
 %	\includegraphics[width=\textwidth]{../figs/err-sols/burgess_hesthaven-err-sol-i20cw10_d001_t2}
-%	\caption{Example 9 Exact solution (gray), numerical solution (orange) and their absolute difference (red) for 
+%	\caption{Example 9 Exact solution (gray), numerical solution (orange) and their absolute difference (red) for
 %	different orders and $h$. The left $y$ axes correspond to the solutions, the right ones to their difference.}
 %	\label{fig:err_sol_burges_hest}
 %\end{figure}
