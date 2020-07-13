@@ -266,7 +266,7 @@ cell_penalty = nm.einsum("nf,nfq,ndfq,nfq->nd",
 
 \end{lstlisting}
 
-\subsection{Limiters implementation}
+\section{Limiters implementation}
 Following design patterns used in \sfepy{} and Python in general limiters are 
 implemented as objects, base class providing only the constructor is called \pysauce{DGLimiter}, its 
 subclasses then implement abstract method \pysauce{__call__}, this makes all limiters callable 
@@ -360,7 +360,7 @@ for ll, (ii, jj) in enumerate(
 \end{itemize}
 
 
-\subsection{Time-stepping solvers implementation}
+\section{Time-stepping solvers implementation}
 As demonstrated in \Cref{se:time_theory} explicit DG FEM requires explicit time stepping solvers 
 with multiple stages in one time step. These are not part of the rich collection of time-stepping 
 solvers included in \sfepy{}. We implemented two of them: basic Euler solver, total-variations 
