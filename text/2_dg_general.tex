@@ -16,10 +16,9 @@ the stationary form
 \nabla\cdot \vec{f}(p) -  \nabla \cdot (D \nabla p) = g,
 \end{equation}
 where $f$ is a sufficiently smooth vector function $f: \realc
-\rightarrow\realc^n$, with the boundary conditions
+\rightarrow\realc^n$, with the Dirichlet boundary conditions
 \begin{align}\label{eq:diff_bcs}
-p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in }
-\Gamma_{Dir} \subset \partial\Omega,
+p(t, \vec{x}) = p_D(t, \vec{x}) & \text{ for } \vec{x} \text{ in } \partial\Omega,
 % \\ \pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{
 %in
 %} \Gamma_{New} \subset \partial\Omega
@@ -176,7 +175,7 @@ with its reverses
 r = indx_1(n),\; s = indx_2(n),
 \end{equation}
 is theoretically arbitrary. In practice we choose it so that the basis
-functions are ordered hierarchically i.e.
+functions are ordered lexically i.e.
 \begin{equation}
 n \leq m \Leftrightarrow indx_1(n) + indx_2(n) \leq indx_1(m) + indx_2(m).
 \end{equation}
@@ -258,19 +257,21 @@ elements with a polygonal boundary, the integral over the boundary can be expres
 of integrals over line segments ${F^k_i}$, $i=0,1,2$ for triangular meshes or
 $i=0,1,2,3$ for quadrilateral meshes, forming the boundary:
 \begin{equation}
-\sum_{i=0}^{N_f} \int_{F^k_i} \vec{n_f}\vec{f}(p)w.
+\label{eq:hyp_int_facets}
+\sum_{i=0}^{N_f} \int_{F^k_i} \vec{n}_f\vec{f}(p)w.
 \end{equation}
 If we denote $T^{k(i)}$ the element sharing the line segment $F^k_i$ with the
 element $T^k$, the
 value $p_{out}$ corresponds to the approximation in this element, i.e., $p_{out} =
 p^{k(i)}_h$. For simplicity of notation we continue using integral over the whole
 boundary of $T^k$ implicitly assuming that $p_{out}$ changes as described above. To
-approximate the unknown value of $\vec{f}(p)$  we will use the approximate flux $f^*(p_{in},
+approximate the unknown value of $\vec{f}(p)$  we will use the approximate flux 
+$\vec{f}^*(p_{in},
 p_{out})$ obtaining the first term on the right-hand side in the form
 \begin{equation}
 \label{eq:flux_integral}
 \int_{\partial{T^k}} \vec{n}\vec{f}(p)w = \int_{\partial{T^k}} \vec{n}
-\cdot f^{*} (p_{in}, p_{out})\cdot w.
+\cdot \vec{f}^{*} (p_{in}, p_{out})\cdot w.
 \end{equation}
 In our setting we will use the so-called local Lax-Friedrichs flux
 exclusively, although there are many other possible fluxes, for examples see
@@ -280,7 +281,8 @@ in Section \ref{se:adv_flux_term_imp}). The Lax-Friedrichs flux as given in
 is of the form
 \begin{equation}
 \label{eq:lax-frieflux}
-f^{*}(p_{in}, p_{out}) =   \frac{\vec{f}(p_{in}) + \vec{f}(p_{out})}{2}  + (1-\alpha)
+\vec{f}^{*}(p_{in}, p_{out}) =   \frac{\vec{f}(p_{in}) + \vec{f}(p_{out})}{2}  + 
+(1-\alpha)
 \vec{n}\frac{C}{2}(p_{in} -
 p_{out}),
 \end{equation}
@@ -294,7 +296,8 @@ C = \max_{p \in [p_{in} : p_{out}]} \abs{n_1 \pdiff{f_1}{p} + n_2 \pdiff{f_2}{p}
 where $[p_{in} : p_{out}]$ denotes the closed interval
 $$\big[\min_{\partial{T^k}} (\min(p_{in}, p_{out})),
 \max_{\partial{T^k}}(\max(p_{in}, p_{out}))\big].$$
-Note that in the linear case, where $f(p) = \vec{a}p$ and $\frac{d\vec{f}}{dp}(p) = \vec{a}$, $C$ reduces to
+Note that in the linear case, where $\vec{f}(p) = \vec{a}p$ and $\frac{d\vec{f}}{dp}(p) = 
+\vec{a}$, $C$ reduces to
 \begin{equation}
 C = |\vec{n}\vec{a}|.
 \end{equation}
@@ -311,7 +314,7 @@ and the average of $p$ across the boundary
 \end{equation}
 Using this notation we can write
 \begin{equation}
-f^*(p_{in}, p_{out}) = \manglebracs{p} + (1-\alpha) \vec{n}\frac{C}{2}[p].
+\vec{f}^*(p_{in}, p_{out}) = \manglebracs{p} + (1-\alpha) \vec{n}\frac{C}{2}[p].
 \end{equation}
 
 After approximating $p$ and $w$ on each element $T^k$ as linear combinations of
@@ -329,7 +332,7 @@ and substituting \eqref{eq:flux_integral} to \eqref{eq:hyp_term} we arrive to
 %    \sum\limits_{k=0}^{N}
 %        \left(
 %            \int_{T^k}\pdiff{p}{t}\cdot w + \int_{T^k} \vec{f}(p)\cdot\nabla w -
-%\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot w
+%\int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot w
 %        \right)
 %    = 0.
 %\end{equation}
@@ -343,7 +346,7 @@ and substituting \eqref{eq:flux_integral} to \eqref{eq:hyp_term} we arrive to
 %       +&\int_{T^k} \vec{f}\Big(\sum\limits_{i=0}^{N_{base}-1}
 %P_i^k(t)\psi_i\Big)\cdot\nabla\Big(\sum\limits_{j=0}^{N_{base}-1}
 %W_j^k\psi_j\Big)\nonumber\\
-%       -&\left.\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot
+%       -&\left.\int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot
 %\sum\limits_{j=0}^{N_{base}-1}
 %W_j^k\psi_j \right) = 0.
 %\end{align}
@@ -353,7 +356,7 @@ and substituting \eqref{eq:flux_integral} to \eqref{eq:hyp_term} we arrive to
 \vec{f}\Big(\sum\limits_{i=0}^{N_{base} - 1}
 P_i^k\psi_i\Big)\cdot\nabla\Big(\sum\limits_{j=0}^{N_{base} - 1}
 W_j^k\psi_j\Big)\\
--\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot
+-\int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot
 \sum\limits_{j=0}^{N_{base} - 1} W_j^k\psi_j.
 \end{multline}
 Since this approximation holds for every test function $w \in
@@ -366,7 +369,7 @@ a^C_\mathrm{hyp}(\mathbf{p}) = \int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j,
 \end{equation}
 \begin{equation}
 \label{eq:hyp_flux_app}
-a^F_\mathrm{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in},
+a^F_\mathrm{hyp}(\mathbf{p}) = \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in},
 p_{out})\cdot\psi_j.
 \end{equation}
 where $\mathbf{p}$ denotes vector of unknowns $P^k_i$ grouped by element as follows
@@ -377,10 +380,9 @@ P^{N}_0, P^{N}_1, P^{N}_2, \ldots, P^{N}_{N_{base} - 1}  \right).
 Note that in \eqref{eq:hyp_flux_app} we do not include the minus sign in front
 of the flux term. In the linear case the term defined in \eqref{eq:hyp_flux_app} can be
 rewritten as
-\begin{equation}
+\begin{equation}\label{eq:adv_flux_app}
 a^C_\mathrm{adv}(\mathbf{p}) = \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j.
 \end{equation}
-
 
 This finalizes discretization of the general hyperbolic term
 $\nabla\cdot\vec{f}(p)
@@ -398,7 +400,8 @@ the implementation.
 %    \left(
 %        \int_{T^k}\pdiff{}{t}P_i^k\psi^i\cdot W_j^k\psi^j +
 %        \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla W_j^k\psi^j
-%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%        - \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot 
+%W_j^k\psi^j
 %    \right) = 0.
 %\end{equation}
 %and using orthogonality of basis ${\psi_i}$ we get
@@ -407,7 +410,8 @@ the implementation.
 %    \left(
 %        \int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j +
 %        \int_{T^k} \vec{f}(P_i^k\psi^i)\cdot\nabla W_j^k\psi^j
-%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%        - \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot 
+%W_j^k\psi^j
 %    \right) = 0.
 %\end{equation}
 %For simplicity we will be now concerned with the linear scalar advection equation with
@@ -421,7 +425,8 @@ the implementation.
 %    \left(
 %        \int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j +
 %        \int_{T^k} \vec{a}P_i^k\psi^i\cdot\nabla W_j^k\psi^j
-%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%        - \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot 
+%W_j^k\psi^j
 %    \right) = 0.
 %\end{equation}
 %\begin{eqnarray}
@@ -430,7 +435,8 @@ the implementation.
 %    \left(
 %        \int_{T^k}\pdiff{}{t}P_i^k \psi^2_i\cdot W^k_j +
 %        \int_{T^k} \vec{a}P_i^kW_j^k\psi^i\cdot\nabla \psi^j
-%        - \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot W_j^k\psi^j
+%        - \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot 
+%W_j^k\psi^j
 %    \right) = 0.
 %\end{eqnarray}
 %...
@@ -459,7 +465,8 @@ On the boundary $\partial T^k$ we define, using notation from \eqref{eq:avrg},
 \nabla p = \frac{\nabla p_{in} + \nabla p_{out}}{2} = \manglebracs{\nabla p}.
 \label{eq:avrg_grad_state}
 \end{equation}
-Substituting \eqref{eq:avrg_grad_state} to \eqref{eq:diff_after_green} we get
+Substituting \eqref{eq:avrg_grad_state} to \eqref{eq:diff_after_green} and using the fact 
+that the test function $w$ vanishes outside the element we get
 the so-called incomplete scheme
 \begin{equation}
 \elbint D \manglebracs{\nabla p} \cdot \vec{n} [w] - \elint D\nabla p
@@ -567,7 +574,7 @@ FEM. In the term
 \begin{equation}
 \int_{\Omega_h} g\cdot w
 \end{equation}
-we take the test function from the broken Legendre space $Le_h^M$ obtaining
+we take the test function from the broken Legendre space $Le_{\Omega_h}^M$ obtaining
 \begin{equation}
 \sum\limits_{k=0}^{N}\left(\elint g\cdot w\right).
 \end{equation}
@@ -627,7 +634,7 @@ form
 Since the basis functions are orthogonal with respect to the scalar product
 \eqref{eq:scalar_prod_dk}, the individual blocks are diagonal and since basis
 functions $\psi^k_i$ vanish outside of the element $T^k$, the matrix $\mathbf{M}$
-is block diagonal
+is diagonal
 \begin{equation}
 \mathbf{M}  = \begin{pmatrix}
 M^{0,0}      &    0   &\cdots&  0   &\cdots&0\\
@@ -766,11 +773,12 @@ and
 the missing outer value $p_{out}$ in boundary elements is substituted by
 \begin{itemize}
     \item the value of the Dirichlet boundary condition, or
-    \item the value in the corresponding neighbor cell on the periodic boundary,
+    \item the value in the corresponding neighbor cell where the periodic boundary 
+    conditions are defined,
 \end{itemize}
 whenever there is no direct neighbor.
 In implementations this is ensured in terms themselves by getting corresponding values
-from \pysauce{DGField} through method \pysauce{get_both_facet_base_vals(}.
+from \pysauce{DGField} through method \pysauce{get_both_facet_base_vals}.
 
 \newpage
 \section{Limiters}
@@ -829,8 +837,9 @@ Choosing $\alpha_i$ outside this region results in either a loss of accuracy or
 a numerical
 instability \cite[p. 882]{Krivodonova2007}. The lower bound of the interval corresponds to
 the strictest limiting, whereas $\alpha_i = 1$ is the mildest limiter possible \cite[p.
-882]{Krivodonova2007}. The one-dimensional limiter is implemented in
-\pysauce{dg.limiters.MomentLimiter1D}, see Section \ref{se:i_moment_lim_1D} for details.
+882]{Krivodonova2007} and we set it as the value of $\alpha$. The one-dimensional limiter 
+is implemented in \pysauce{dg.limiters.MomentLimiter1D}, see Section 
+\ref{se:i_moment_lim_1D} for details.
 
 \subsubsection{Two-dimensional limiting}
 In this section we describe extension of the moment limiter to regular

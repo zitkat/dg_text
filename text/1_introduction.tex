@@ -16,12 +16,10 @@ advection problem for variable $p$ with constant advection velocity $\vec{a}$
 $$
 \pdiff{p}{t} - \vec{a}\cdot\nabla p = 0,
 $$
-with boundary conditions
+with a Dirichlet boundary conditions
 $$
 %\begin{array}{ll}
-p(t, \vec{x}) = p_D(t, \vec{x}) \; \text{ for } \vec{x} \text{ in } \Gamma_D
-\subset
-\partial\Omega, \\
+p(t, \vec{x}) = p_D(t, \vec{x}) \; \text{ for } \vec{x} \text{ in } \partial\Omega,
 $$
 %$$
 %\pdiff{p}{\vec{n}}(t, \vec{x}) = p_N(t, \vec{x}) & \text{ for }\vec{x}\text{
@@ -29,8 +27,8 @@ $$
 %\Gamma_N \subset \partial\Omega.
 %\end{array}
 %$$
-which we gradually generalize by adding source term $g$, nonlinearity $\vec{f}$
-and diffusion $D$
+which we gradually generalize by adding diffusion $D$, source term $g$ and nonlinearity 
+$\vec{f}$
 \begin{equation*}
 \pdiff{p}{t} + \nabla\cdot \vec{f}(p) - D\Delta p = g.
 \end{equation*}

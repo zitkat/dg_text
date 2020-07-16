@@ -44,9 +44,9 @@ develops into a steep step, see \Cref{fig:burgers_hesthaven_ext}, whose approxim
 requires discontinuity in the approximate solution. For $D=0.01$ the diffusion leads to a much
 more gradual solution and the penalty term counteracting discontinuity between elements
 is beneficial, it also helps to counteract oscillations similarly to the limiter in
-\Cref{ex:adv1D}.
-%Figure \ref{fig:err_sol_burges_hest} demonstrates where the errors come from.
-\end{example}
+\Cref{ex:adv1D}. \todo Figure \ref{fig:burgers_sol} demonstrates where the errors come 
+from.
+
 \begin{figure}[h!]
     \centering
     \begin{subfigure}{.5\textwidth}
@@ -60,9 +60,11 @@ is beneficial, it also helps to counteract oscillations similarly to the limiter
         \caption{Limit: True}
     \end{subfigure}
     \caption{\Cref{ex:burgers_hest}. 4th order solution for $D=0.001$ with and without
-    limiting.}
+        limiting.}
     \label{fig:burgers_sol}
 \end{figure}
+
+\end{example}
 
 %\begin{figure}[h!]
 %	\centering

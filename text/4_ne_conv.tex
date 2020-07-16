@@ -5,7 +5,8 @@
 %% Tomáš Zítka
 %%
 \section{Example PDEs}
-In the following examples we will busy ourselves solving following equations:\\
+In the following examples we will be demonstrating the behavior of the method by solving 
+the following equations:
 \paragraph{Transient advection equation in one resp. two dimensions}
 \begin{equation}
     \label{eq:ex_advection}
@@ -21,7 +22,7 @@ equations in the same form
          \fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j
          - \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j
          + \int_{\partial{T^k}} \vec{n}
-        \cdot f^{*} (p_{in}, p_{out})\cdot\psi_j = 0.
+        \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot\psi_j = 0.
 \end{equation}
 The Equation expressed in \sfepy{} declarative notation can be found in Listing
 \ref{lst:advection} below;
@@ -59,7 +60,7 @@ penalty term yields the equation in the form
     = 0.
 \end{multline}
 The discretization of this equation using \sfepy{} terms can be found in Listing
-\ref{lst:laplace};\\
+\ref{lst:laplace};
 \paragraph{Static advection-diffusion equation with a right hand side}
 \begin{equation}
 \label{eq:ex_advdiff}
@@ -75,7 +76,7 @@ and $g$ is a source function. Combining discretizations of the two previous
 equations we obtain the discretized form
 \begin{multline}
 - \int_{T^k} \vec{a}P_i^k\psi_i\cdot\nabla\psi_j
-+ \int_{\partial{T^k}} \vec{n}\cdot f^{*} (p_{in}, p_{out})\cdot\psi_j\\
++ \int_{\partial{T^k}} \vec{n}\cdot \vec{f}^{*} (p_{in}, p_{out})\cdot\psi_j\\
 + \elint D\nabla P^k_i\psi_i \nabla \psi_j
 - \elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j
 - \elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n} [P^k_i\psi_i] \\
@@ -103,7 +104,7 @@ equations = {'adv_diff' :
     "= 0"
     }
 \end{lstlisting}
-\paragraph{Transient viscous Burgers equation in one resp. two dimensions}
+\paragraph{Transient viscous Burgers' equation in one resp. two dimensions}
 \begin{equation}
 \pdiff{p}{t} + \frac{1}{2}\pdiff{p^2}{x} - D \cdot\pdiff{^2 p}{x^2} = g,
 \end{equation}
@@ -123,7 +124,7 @@ Discretizing using all the terms derived before we get the same form for both 1D
 \begin{multline}
     \fdiff{P^k_i}{t}(t)\elint\psi_i\psi_j
     - \int_{T^k} \vec{f}(P_i^k\psi_i)\cdot\nabla\psi_j
-    + \int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in}, p_{out})\cdot\psi_j\\
+    + \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}, p_{out})\cdot\psi_j\\
     + \elint D\nabla P^k_i\psi_i \nabla \psi_j
     - \elbint D \manglebracs{P^k_i\nabla\psi_i} \cdot \vec{n}\psi_j
     - \elbint D \frac{\nabla \psi_j}{2}\cdot \vec{n} [P^k_i\psi_i] \\
@@ -134,7 +135,7 @@ Discretizing using all the terms derived before we get the same form for both 1D
 In \sfepy{} declarative notation this equation has the form presented in
 Listing \ref{lst:burgers}.
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption=Viscous Burgers equation \label{lst:burgers}]
+\begin{lstlisting}[language=Python, caption=Viscous Burgers' equation \label{lst:burgers}]
 burg_velo = nm.array([1., 1.])
 
 def f(p):
@@ -190,7 +191,7 @@ effectiveness of different approximation orders while keeping the number of DOFs
 constant. Examples \ref{ex:laplace}, \ref{ex:quart1}, \ref{ex:quart2} and \ref{ex:quart3}
 demonstrate importance of diffusion penalty terms. Final two examples
 \ref{ex:burgers_hest} and
-\ref{ex:kucera} show usage of the method on the Burgers equation. All the test problems
+\ref{ex:kucera} show usage of the method on the Burgers' equation. All the test problems
 studied further are specified using this declarative approach introduced in
 \ref{ch:convergence}, codes can be found in (\todo Attachment?
 \url{https://github.com/zitkat/dg_examples})

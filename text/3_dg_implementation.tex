@@ -17,8 +17,8 @@ architecture of \sfepy{}, the DG FE method implementation comprises of:
 DG specific terms are summarized in the top portion of \Cref{tab:terms}.
 \begin{landscape}
     \begin{table}[p!]
-        \centering
-        \caption{Table of terms used in DG method}
+%        \centering
+        \caption{Table of terms used in DG method.}
         \label{tab:terms}
         \begin{tabular}{lccc}
             \toprule
@@ -27,12 +27,12 @@ DG specific terms are summarized in the top portion of \Cref{tab:terms}.
             \pysauce{AdvectionDGFluxTerm} &
             \pysauce{"dw_dg_advect_laxfrie_flux"}
             & $a^F_\mathrm{adv}(\mathbf{p})$
-            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in},
+            & $\int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in},
             p_{out})\cdot\psi_j$ \\
             \pysauce{NonlinearHyperbolicDGFluxTerm} &
             \pysauce{"dw_dg_nonlinear_laxfrie_flux"}
             & $a^F_\mathrm{hyp}(\mathbf{p})$
-            & $\int_{\partial{T^k}} \vec{n} \cdot f^{*} (p_{in},
+            & $\int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in},
             p_{out})\cdot\psi_j$ \\
             \pysauce{NonlinearScalarDotGradTerm} &
             \pysauce{"dw_ns_dot_grad_s"}
@@ -86,13 +86,13 @@ counterpart in \sfepy{}):
     syntax,
     \item \pysauce{MomentLimiter1D} -- for 1D problems only,
     \item \pysauce{MommentLimiter2D} -- only for 2D problems on regular tensor
-    product
-    meshes.
+    product meshes.
 \end{itemize}
-The limiters are used in the problem composition as post-stage hooks passed to time-stepping solvers. For
-technical reasons we also created the \pysauce{DGVariable} class in order to bypass the classical FE
-treatment of boundary conditions, otherwise it is similar to the original \sfepy{} \pysauce{Variable}
-class and we omit its detailed description.
+The limiters are used in the problem composition as post-stage hooks passed to 
+time-stepping solvers. For technical reasons we also created the \pysauce{DGVariable} 
+class in order to bypass the classical FE treatment of boundary conditions, otherwise it 
+is similar to the original \sfepy{} \pysauce{Variable} class and we omit its detailed 
+description.
 
 
 \section{DG Field}
@@ -136,16 +136,22 @@ tensor-product basis this is:
     (2, 2)}.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption= Iteration over $r$ and $s$
-indicies of basis functions \label{lst:iter_by_order}]
-for k in range(porder):
-  for r in range(k + 1):
-    yield r, k - r /*!\lann{lsta:yield}!*/
-  if not extended: return /*!\lann{lsta:extended}!*/
-  for s in range(1, porder):
-    for r in range(1, porder):
-      if r + s <= porder - 1:
-        continue
-      yield r, s
+indicies of basis functions \label{lst:iter_by_order}.]
+
+def iter_by_order(order, dim, extended=False):
+  
+  ...
+  
+  porder = order + 1
+  for k in range(porder):
+    for r in range(k + 1):
+      yield r, k - r /*!\lann{lsta:yield}!*/
+    if not extended: return /*!\lann{lsta:extended}!*/
+    for s in range(1, porder):
+      for r in range(1, porder):
+        if r + s <= porder - 1:
+          continue
+        yield r, s
 \end{lstlisting}
 \begin{itemize}
     \item[\ref{lsta:yield}] \pysauce{yield} keyword turns a function into a generator usable in for
@@ -158,10 +164,17 @@ To obtain values of Jacobi polynomials, we used implementations provided by SciP
 
 
 \section{DG Terms}
-(\todo \pysauce{function} method) is called whenever value of the term is needed either
-to build residual vector or right-hand side of an equation or to get terms contribution
-to (\todo the matrix) (in case of implicit problems). The method returns values for
-individual DOFs and in matrix mode also indices to build sparse matrix.
+Besides terms listed in \Cref{tab:terms} we implemented the abstract class 
+\pysauce{DGTerm} from which the other terms inherit. Methods \pysauce{eval_real} and 
+\pysauce{call_function} implemented in this class manage calling the method named 
+\pysauce{function}, which each term implements, and returning the results to the 
+evaluation engine of \sfepy{}. The \pysauce{function} method comes from architecture of 
+the terms already present in \sfepy{} where it is used to call extensions programmed and 
+optimized using C programing language. This method is called whenever value of the term 
+is needed either to build residual vector (i.e. right-hand side of an equation) or to get 
+terms contribution to the matrix form of $\mathcal{L}$ (in case of implicit problem). The 
+method returns the residual values corresponding to the individual DOFs and in the matrix 
+mode also the indices to build the sparse matrix representation.
 
 \subsection{Hyperbolic flux term implementation}
 \label{se:adv_flux_term_imp}
@@ -170,50 +183,146 @@ where $\vec{f}(p) = \vec{a}p$. The part of the \pysauce{function} capturing comp
 cell fluxes can be seen in Listing \ref{lst:adv_flux} below.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of advection cell
-fluxes \label{lst:adv_flux}]
-fc_n = field.get_cell_normals_per_facet(region)
-# get maximal wave speeds at facets
-C = nm.abs(nm.einsum("ifk,ik->if", fc_n, advelo))
+fluxes. \label{lst:adv_flux}]
+def function(self, out, state, diff_var, field, region, advelo):
 
-facet_base_vals = field.get_facet_base(base_only=True)
-in_fc_v, out_fc_v, weights = field.get_both_facet_state_vals(state,
-                                                             region)
-# reshape facet base
-fc_b = facet_base_vals[:, 0, :, 0, :].T
-# (n_el_nod, n_el_facet, n_qp)
-
-fc_v_avg = (in_fc_v + out_fc_v)/2.
-fc_v_jmp = in_fc_v - out_fc_v
-
-central = nm.einsum("ik,ifq->ifkq", advelo, fc_v_avg) /*!\lann{lsta:aflx_centr}!*/
-upwind = (1 - self.alpha)/2. * nm.einsum("if,ifk,ifq->ifkq",
-                                         C, fc_n, fc_v_jmp)
-
-cell_fluxes = nm.einsum("ifk,ifkq,dfq,ifq->id",
-                        fc_n, central + upwind, fc_b, weights)
+  fc_n = field.get_cell_normals_per_facet(region)
+  # get maximal wave speeds at facets
+  C = nm.abs(nm.einsum("ifk,ik->if", fc_n, advelo))  /*!\lann{lsta:einsm}!*/
+    
+  if diff_var is not None: /*!\lann{lsta:mtx_mode}!*/
+  
+    nbrhd_idx = field.get_facet_neighbor_idx(region, state.eq_map)
+    active_cells, active_facets = nm.where(nbrhd_idx[:, :, 0] >= 0)
+    active_nrbhs = nbrhd_idx[active_cells, active_facets, 0]
+    
+    in_fc_b, out_fc_b, whs = field.get_both_facet_base_vals(state, region)
+    
+    inner_diff = nm.einsum("nfk, nfk->nf",  /*!\lann{lsta:diff}!*/
+                           fc_n,
+                           advelo[:, None, :]
+                           + nm.einsum("nfk, nf->nfk",
+                             (1 - self.alpha) * fc_n, C)) / 2.
+    outer_diff = nm.einsum("nfk, nfk->nf",
+                           fc_n,
+                           advelo[:, None, :]
+                           - nm.einsum("nfk, nf->nfk",
+                           (1 - self.alpha) * fc_n, C)) / 2.
+    
+    inner_vals = nm.einsum("nf, ndfq, nbfq, nfq -> ndb",  /*!\lann{lsta:vals}!*/
+                           inner_diff,
+                           in_fc_b,
+                           in_fc_b,
+                           whs)
+    outer_vals = nm.einsum("i, idq, ibq, iq -> idb",
+                          outer_diff[active_cells, active_facets],
+                          in_fc_b[active_cells, :, active_facets],
+                          out_fc_b[active_cells, :, active_facets],
+                          whs[active_cells, active_facets])
+    
+    vals = nm.vstack((inner_vals, outer_vals))
+    vals = vals.flatten()
+    
+    # compute positions within matrix
+    iels = self._get_nbrhd_dof_indexes(active_cells, active_nrbhs, field)
+    
+    out = (vals, iels[:, 0], iels[:, 1], state, state)
+    
+  else:
+  
+    facet_base_vals = field.get_facet_base(base_only=True)
+    in_fc_v, out_fc_v, weights = field.get_both_facet_state_vals(state, region)
+    
+    # reshape facet base to (n_el_nod, n_el_facet, n_qp)
+    fc_b = facet_base_vals[:, 0, :, 0, :].T
+    
+    fc_v_avg = (in_fc_v + out_fc_v)/2.
+    fc_v_jmp = in_fc_v - out_fc_v
+    
+    central = nm.einsum("ik,ifq->ifkq", advelo, fc_v_avg) 
+    upwind = (1 - self.alpha)/2. * nm.einsum("if,ifk,ifq->ifkq",
+                                           C, fc_n, fc_v_jmp)
+    
+    cell_fluxes = nm.einsum("ifk,ifkq,dfq,ifq->id",
+                          fc_n, central + upwind, fc_b, weights)
+    out [0, 0, :, 0] = cell_fluxes
+  
+  return out
 \end{lstlisting}
 \begin{itemize}
-    \item[\ref{lsta:aflx_centr}] \pysauce{numpy.einsum} uses the Einstein summation convention for
-    expressing tensor contractions, for details see \cite{einsum-doc}.
+    \item[\ref{lsta:einsm}] \pysauce{numpy.einsum} uses the Einstein summation 
+    notation for expressing tensor contractions, for details see \cite{einsum-doc}.
+    \item[\ref{lsta:mtx_mode}] The presence of \pysauce{diff_var} denotes an evaluation 
+    in the matrix mode.
+    \item[\ref{lsta:diff}, \ref{lsta:vals}] Variables \pysauce{inner_diff}, 
+    \pysauce{outer_diff} and \pysauce{inner_vals} and \pysauce{outer_vals} correspond to 
+    the decomposition of the term \eqref{eq:hyp_flux_app}
+    \begin{equation}
+        \int_{\partial{T^k}} \vec{n} \cdot \vec{f}^{*} (p_{in}.
+            p_{out})\cdot\psi_j
+    \end{equation}
+    First we substitute the flux $\vec{f}^*$ from ,\eqref{eq:lax-frieflux} using 
+    $\vec{f}(p) = \vec{a}p$ we get
+    \begin{equation}
+        \int_{\partial{T^k}} \vec{n} \left(\frac{\vec{a}p_{in} + \vec{a}p_{out}}{2}  
+        + (1-\alpha) \vec{n}\frac{C}{2}(p_{in} - p_{out}) \right)\psi_j
+    \end{equation}
+    and then expand and split the integral
+    \begin{equation}
+        \int_{\partial{T^k}} \vec{n}\frac{\vec{a}p_{in}}{2}\psi_j
+      + \int_{\partial{T^k}} \vec{n}\frac{\vec{a}p_{out}}{2}\psi_j
+      + \int_{\partial{T^k}} \vec{n} (1-\alpha) \vec{n}\frac{C}{2}p_{in}\psi_j
+      - \int_{\partial{T^k}} \vec{n} (1-\alpha) \vec{n}\frac{C}{2}p_{out}\psi_j.
+    \end{equation}
+    Rearranging yields
+    \begin{equation}
+      \int_{\partial{T^k}} \vec{n}\frac{\vec{a}p_{in}}{2}\psi_j
+    + \int_{\partial{T^k}} \vec{n} (1-\alpha) \vec{n}\frac{C}{2}p_{in}\psi_j
+    + \int_{\partial{T^k}} \vec{n}\frac{\vec{a}p_{out}}{2}\psi_j
+    - \int_{\partial{T^k}} \vec{n} (1-\alpha) \vec{n}\frac{C}{2}p_{out}\psi_j,
+    \end{equation}
+    \begin{equation}
+    \int_{\partial{T^k}}  \frac{1}{2}(\vec{n}\vec{a}
+        + \vec{n} (1-\alpha) \vec{n}C)p_{in}\psi_j
+    +\int_{\partial{T^k}}  \frac{1}{2}(\vec{n}\vec{a}
+        - \vec{n} (1-\alpha) \vec{n}C)p_{out}\psi_j,
+    \end{equation}
+    after substituting corresponding outer and inner values of $p$ we get the coefficient 
+    for $P^k_{i}$ in the form
+     \begin{equation}
+    \overbrace{\int_{\partial{T^k}}  \underbrace{\frac{1}{2}\vec{n}(\vec{a}
+    +  (1-\alpha) 
+    \vec{n}C)}_{\text{\pysauce{inner_diff}}}\psi^{k}_i\psi_j}^{\text{\pysauce{inner_vals}}}
+    +\overbrace{\int_{\partial{T^k}} \underbrace{ \frac{1}{2}\vec{n}(\vec{a} - (1-\alpha) 
+    \vec{n}C)}_{\text{\pysauce{outer_diff}}}\psi^{k(l)}_i\psi^k_j}^{\text{\pysauce{outer_vals}}},
+    \end{equation}
+    where $k(l)$ denotes the coefficients in the neighboring element like in 
+    \eqref{eq:hyp_int_facets}.
 \end{itemize}
 The general hyperbolic term is implemented in the class
-\pysauce{NonlinearHyperbolicDGFluxTerm}.
+\pysauce{NonlinearHyperbolicDGFluxTerm} unlike linear advection term above it does not 
+support evaluation in matrix mode.
 
 
 
 \subsection{Diffusion flux term implementation}
 \label{se:diff_flux_term_imp}
-\pysauce{DiffusionDGFluxTerm} implements both terms in
-\eqref{eq:diff_left_approx} and \eqref{eq:diff_right_approx}. This is thanks to two modes
-in which it can be used in an equation --- this has already been demonstrated for the Laplace
-equation in Listing \ref{lst:laplace} where \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val,
+
+Implementation of the diffusion flux terms follows the same course as the implementation 
+of hyperbolic flux terms, with the important difference that 
+\pysauce{DiffusionDGFluxTerm} 
+implements both terms in \eqref{eq:diff_left_approx} and \eqref{eq:diff_right_approx}. 
+This is thanks to two modes in which it can be used in an equation --- this has already 
+been demonstrated for the Laplace equation in Listing \ref{lst:laplace} where 
+\pysauce{"dw_dg_diffusion_flux.i.Omega(D.val,
 p, v)"} corresponds to $a^R_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_state'}
 (\ref{lsta:avg_state}), and \pysauce{"dw_dg_diffusion_flux.i.Omega(D.val, v, p)"}
 corresponds to $a^L_\mathrm{diff}(\mathbf{p})$ and mode \pysauce{'avg_virtual'}
-(\ref{lsta:avg_virtual}).
+(\ref{lsta:avg_virtual}). The implementation of residual mode computation is presented in 
+Listing \ref{lst:diffusion_flux}.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of diffusion cell
-fluxes]
+fluxes. \label{lst:diffusion_flux}]
 if self.mode == 'avg_state': /*!\lann{lsta:avg_state}!*/
   avgDdState = (nm.einsum("ikl,ifkq->ifkq",
                           D, inner_facet_state_d) +
@@ -240,14 +349,14 @@ elif self.mode == 'avg_virtual': /*!\lann{lsta:avg_virtual}!*/
 \label{se:diff_penal_term_imp}
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Computation of penalty cell
-fluxes]
+fluxes.]
 approx_order = field.approx_order
 
 inner_facet_base, outer_facet_base, whs = \
     field.get_both_facet_base_vals(state, region, derivative=False)
 facet_vols = nm.sum(whs, axis=-1)
 
-# nu characterizes diffusion tensor, so far we user diagonal average
+# nu characterizes diffusion tensor, so far we use diagonal average
 nu = nm.trace(diff_tensor, axis1=-2, axis2=-1)[..., None] / \
                         diff_tensor.shape[1]
 sigma = nu * Cw * approx_order ** 2 / facet_vols
@@ -274,14 +383,15 @@ Following design patterns used in \sfepy{} and Python in general, the limiters a
 implemented as classes. The base class providing only the constructor is called \pysauce{DGLimiter}, its
 subclasses then implement the abstract method \pysauce{__call__} --- this makes all limiters callable
 objects, allowing one to pass them as post-step or post-stage or other hooks to time-stepping
-solvers. For convenience the neutral limiter is implemented in \pysauce{IdentityLimiter}.
+solvers. For convenience the identity limiter which does not alter the solution is 
+implemented in the class \pysauce{IdentityLimiter}.
 
 \subsubsection{Moment limiter -- 1D}
 \label{se:i_moment_lim_1D}
 The code listing below shows the implementation of the moment limiter introduced in Section~\ref{sse:moment_lim_1D},
 omitting some details for brevity.
 \setcounter{lstannotation}{0}
-\begin{lstlisting}[language=Python, caption=Moment limiter for 1D]
+\begin{lstlisting}[language=Python, caption=Moment limiter for 1D.]
 idx = nm.arange(nm.shape(u[0, 1:-1])[0])
 
 nu = nm.copy(u)
@@ -314,7 +424,7 @@ We list the implementation of the 2D limiter for reference in Listing \ref{lst:l
 implemented according to \Cref{se:limiters}.
 \setcounter{lstannotation}{0}
 \begin{lstlisting}[language=Python, caption=Moment limiter for
-cartesian grid \label{lst:limiter_2D}]
+cartesian grid. \label{lst:limiter_2D}]
 for ll, (ii, jj) in enumerate(
                      iter_by_order(self.field.approx_order,
                                    2,   # dim

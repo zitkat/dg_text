@@ -113,8 +113,6 @@
 % number classes
 \providecommand{\realc}{\mathbb{R}}
 \providecommand{\naturc}{\mathbb{N}}
-\providecommand{\finaturc}{\mathbb{FN}}
-\providecommand{\fisnaturc}{\mathbb{F^*N}}
 \providecommand{\comc}{\mathbb{C}}
 
 % convenient math functions
@@ -137,20 +135,13 @@
 
 \numberwithin{equation}{section}
 \usepackage{chngcntr}
-\counterwithout{figure}{chapter}
+\counterwithout{figure}{section}
 \numberwithin{table}{section}
 
 
-
-\title{Discontinuous Galerkin method, its analysis and implementation into \sfepy{} package}
+\title{Discontinuous Galerkin method, its analysis and implementation into SfePy package}
 \author{Tomáš Zítka}
-%\university{University of West Bohemia in Pilsen}
-%\faculty{Faculty of Applied Science}
-%\department{Department of Mathematics}
-%\subject{Diploma Thesis}
-%\town{Pilsen}
 \date{$2020$}
-
 
 \begin{document}
 \pagenumbering{gobble}
@@ -168,12 +159,12 @@
 	\vfill
 	\begin{minipage}{0.4 \textwidth}
 		\begin{flushleft}
-		Tomáš \textsc{Zítka}\\
+			Plzeň $2020$
 		\end{flushleft}
 	\end{minipage}
 	\begin{minipage}{0.4\textwidth}
 		\begin{flushright}
-		Pilsen $2020$
+            Tomáš \textsc{Zítka}\\
 		\end{flushright}
 	\end{minipage}
 \end{titlepage}
@@ -188,7 +179,7 @@
 %%\vfill
 %\begin{minipage}{0.4 \textwidth}
 %	\begin{flushleft}
-%		V Plzni dne $31.\,6.\,2020$
+%		V Plzni dne $17.\,7.\,2020$
 %	\end{flushleft}
 %\end{minipage}
 %\begin{minipage}{0.4\textwidth}	

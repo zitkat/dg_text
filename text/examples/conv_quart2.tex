@@ -21,7 +21,7 @@ solution $u_{exact}$ is
 \end{equation}
 We omit analytical forms of $g$ and boundary conditions for brevity, they can be found in
 the code. Different values of the coefficient $C_w$ in the penalty term yield different
-convergence behavior as demonstrated in \Cref{fig:orders_quarteroni2} and 
+convergence behavior as demonstrated in Figures \ref{fig:orders_quarteroni2} and 
 \ref{fig:conv_qart2}. For very low values of the diffusion coefficient $D$ the
 solution develops into a cylinder. In this state high values of $C_w$ are detrimental as
 they prevent steep edges and cause artifacts in the solution, for illustration compare
@@ -29,21 +29,6 @@ they prevent steep edges and cause artifacts in the solution, for illustration c
 the approximate solution significantly less then in (b) despite visible discontinuities.
 Antonietti et al. \cite{Antonietti2013} report convergence for order 1 and 2, these are
 in accord with ours.
-
-\end{example}
-\begin{figure}[h!]
-\centering
-\begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
-	\vspace{0pt}
-	\includegraphics[width=0.4\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni2_2_4}
-	&
-	\vspace{0pt}
-	\includegraphics[width=0.4\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni2_2_3}
-\end{tabular}
-\caption{\Cref{ex:quart2}. Average convergence rate for different choices of $C_w$ for
-quadrilaterals (left) and triangles (right).}
-\label{fig:orders_quarteroni2}
-\end{figure}
 
 \begin{figure}[h!]
     \centering
@@ -60,11 +45,25 @@ quadrilaterals (left) and triangles (right).}
         \label{fig:sol_quart2_b}
     \end{subfigure}
     \caption{\Cref{ex:quart2}. Solutions for $D = 10^{-5}$, on triangular mesh with
-    $4096$ elements, 4th order approximation. The visualization was scaled
-    down by factor $0.1$ in vertical axis.}
+        $4096$ elements, 4th order approximation. The visualization was scaled
+        down by factor $0.1$ in vertical axis.}
     \label{fig:sol_quart2}
 \end{figure}
 
+\begin{figure}[h!]
+    \centering
+    \begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
+        \vspace{0pt}
+        \includegraphics[width=0.5\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni2_2_4}
+        &
+        \vspace{0pt}
+        \includegraphics[width=0.5\textwidth]{../figs/parametric/advdiff_2D/ord_quarteroni2_2_3}
+    \end{tabular}
+    \caption{\Cref{ex:quart2}. Average convergence rate for different choices of $C_w$ for
+        quadrilaterals (left) and triangles (right).}
+    \label{fig:orders_quarteroni2}
+\end{figure}
+\end{example}
 
 \begin{figure}[p!]
 	\centering
